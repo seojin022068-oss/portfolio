@@ -21,7 +21,7 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 38%,var(--sky-low) 78%) fixed,var(--sky-low);color:var(--ink);font-family:var(--ui);font-size:15px;line-height:1.6;
+body{background:#FCFCFE;color:var(--ink);font-family:var(--ui);font-size:15px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow-x:hidden}
 :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:999px}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
@@ -105,7 +105,7 @@ a{color:inherit}
 
 /* ── 물감 번짐 배경 (커서를 따라 흐름) ── */
 #ink{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-#paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(28px) saturate(1.15);mix-blend-mode:multiply;opacity:.9}
+#paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(34px) saturate(1.4);mix-blend-mode:multiply;opacity:1}
 
 /* ── 전체 화면 CAD 십자선 커서 ── */
 @media (pointer:fine){html.xh,html.xh *{cursor:none!important}}
@@ -370,40 +370,46 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     const cv = document.getElementById('paint'), ctx = cv.getContext('2d');
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const S = 4; // 1/4 해상도로 그리고 CSS 블러로 번지게
-    const COLORS = [[227,72,158],[255,196,60],[110,110,240],[62,198,168],[255,138,61],[196,107,255]];
+    const COLORS = [[255,79,160],[255,140,60],[255,224,70],[120,230,110],[60,214,232],[100,120,255],[196,100,255]];
     let W = 0, H = 0;
     const mk = document.createElement('canvas'), mctx = mk.getContext('2d');      // 흐트린 자리 마스크
     const ink = document.getElementById('ink'), ictx = ink.getContext('2d');       // 드러나는 글자
     const txt = document.createElement('canvas'), tctx = txt.getContext('2d');    // 글자 원본(미리 그림)
-    const LINES = [
-      ['Seojin Lim', 'big'], ['임서진 · 숭실대학교 실내건축학전공 · Interior Architecture · 공간 · 빛 · 머무름', 'small'],
-      ['공간을 짓고, 계속 짓기', 'big'], ['Miffy Open House · 계속-짓기 · 비어 있는 공공성 · REEL:IF · SKEIN · 발길', 'small'],
-      ['Space · Furniture · Exhibition', 'big'], ['빛 관찰 일지 · 성수동 대기줄 연구 · 사진 에세이 · Research · Photo', 'small'],
-    ];
+    const LABELS = ['Seojin Lim','임서진','Interior Architecture','Miffy Open House','계속-짓기','비어 있는 공공성','REEL:IF','SKEIN','발길','빛 관찰 일지','성수동 대기줄','Space','Furniture','Exhibition','Research','Photo','숭실대학교','Plan 1:100',"Section A-A'",'Light','Material','Threshold','Rest','Walk','Queue','Memory','Distance','Designer'];
     function drawText(){
       const dpr = Math.min(2, devicePixelRatio || 1), w = innerWidth, h = innerHeight;
       ink.width = txt.width = Math.round(w * dpr); ink.height = txt.height = Math.round(h * dpr);
       tctx.setTransform(dpr,0,0,dpr,0,0); tctx.clearRect(0,0,w,h);
-      tctx.fillStyle = '#2C2A4A'; tctx.textBaseline = 'alphabetic';
-      let y = 0, row = 0;
-      while (y < h + 80){
-        const [str, kind] = LINES[row % LINES.length], big = kind === 'big';
-        const fs = big ? Math.max(48, Math.min(110, w * .085)) : Math.max(15, Math.min(22, w * .016));
-        tctx.font = `${big ? 900 : 500} ${big ? 'italic ' : ''}${fs}px "Noto Sans KR", "Apple SD Gothic Neo", sans-serif`;
-        y += big ? fs * 1.02 : fs * 1.9;
-        const unit = str + (big ? '   ' : '   ·   '), uw = tctx.measureText(unit).width;
-        let x = -((row * 137) % uw);
-        while (x < w){ tctx.fillText(unit, x, y); x += uw; }
-        row++;
+      tctx.fillStyle = '#2C2A4A'; tctx.textBaseline = 'middle';
+      tctx.font = '500 12px "DM Mono", "Noto Sans KR", monospace';
+      let seed = 7; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      const cw = w < 640 ? 150 : 190, ch = w < 640 ? 70 : 84; let i = 0;
+      for (let y = 60; y < h - 40; y += ch) for (let x = 40; x < w - 60; x += cw){
+        const px = x + r() * (cw - 110), py = y + r() * (ch - 20), label = LABELS[i++ % LABELS.length];
+        tctx.beginPath(); tctx.arc(px, py, 3, 0, Math.PI * 2); tctx.fill();
+        tctx.fillText(label, px + 8, py + .5);
       }
+    }
+    function axes(){ // 차트처럼 가장자리 눈금 (항상 보임)
+      const dpr = Math.min(2, devicePixelRatio || 1), w = innerWidth, h = innerHeight, L = 26, B = h - 24;
+      ictx.setTransform(dpr,0,0,dpr,0,0);
+      ictx.strokeStyle = '#C9C7DA'; ictx.fillStyle = '#9A98B8'; ictx.lineWidth = 1;
+      ictx.beginPath(); ictx.moveTo(L, 110); ictx.lineTo(L, B); ictx.lineTo(w - 16, B); ictx.stroke();
+      ictx.font = '400 9px "DM Mono", monospace'; ictx.textAlign = 'center'; ictx.textBaseline = 'top';
+      for (let x = L, k = 0; x < w - 30; x += 100, k++){ ictx.beginPath(); ictx.moveTo(x, B); ictx.lineTo(x, B + 4); ictx.stroke(); ictx.fillText(String(k * 1000), x, B + 6); }
+      ictx.textAlign = 'right'; ictx.textBaseline = 'middle';
+      for (let y = B, k = 0; y > 120; y -= 100, k++){ ictx.beginPath(); ictx.moveTo(L - 4, y); ictx.lineTo(L, y); ictx.stroke(); }
+      ictx.save(); ictx.translate(12, (110 + B) / 2); ictx.rotate(-Math.PI / 2); ictx.textAlign = 'center';
+      ictx.fillText('SPACE  ←   SEOJIN LIM · DESIGN FIELD (mm)   →  DETAIL', 0, 0); ictx.restore();
+      ictx.setTransform(1,0,0,1,0,0);
     }
     function size(){ W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S); cv.width = mk.width = W; cv.height = mk.height = H; drawText(); }
     size(); addEventListener('resize', size);
-    if (document.fonts) document.fonts.ready.then(drawText);
+    if (document.fonts) document.fonts.ready.then(() => { drawText(); reveal(); });
 
     const target = {x: innerWidth * .62, y: innerHeight * .45};
     let lastMove = -1e9, hue = 0, travel = 0, prev = null;
-    const blobs = [0,1,2].map(i => ({x: target.x, y: target.y, vx: 0, vy: 0, k: [.06,.035,.02][i], d: [.78,.84,.88][i], c: i * 2, r: [120,170,220][i]}));
+    const blobs = [0,1,2].map(i => ({x: target.x, y: target.y, vx: 0, vy: 0, k: [.06,.035,.02][i], d: [.78,.84,.88][i], c: i * 2, r: [170,240,310][i]}));
     const drops = [];
 
     function mix(t){ // 팔레트를 부드럽게 순환
@@ -424,7 +430,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
       ictx.clearRect(0,0,ink.width,ink.height); ictx.drawImage(txt,0,0);
       ictx.globalCompositeOperation = 'destination-in'; ictx.imageSmoothingEnabled = true;
       ictx.drawImage(mk, 0, 0, ink.width, ink.height);
-      ictx.globalCompositeOperation = 'source-over';
+      ictx.globalCompositeOperation = 'source-over'; axes();
     }
 
     addEventListener('pointermove', e => {
@@ -444,8 +450,8 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
       }
       // 이전 물감을 아주 천천히 지움 → 번진 자국이 남음
       ctx.globalCompositeOperation = 'destination-out';
-      ctx.fillStyle = 'rgba(0,0,0,0.035)'; ctx.fillRect(0, 0, W, H);
-      mctx.globalCompositeOperation = 'destination-out'; mctx.fillStyle = 'rgba(0,0,0,0.03)'; mctx.fillRect(0, 0, W, H); mctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgba(0,0,0,0.012)'; ctx.fillRect(0, 0, W, H);
+      mctx.globalCompositeOperation = 'destination-out'; mctx.fillStyle = 'rgba(0,0,0,0.014)'; mctx.fillRect(0, 0, W, H); mctx.globalCompositeOperation = 'source-over';
       ctx.globalCompositeOperation = 'source-over';
 
       hue += dt * .08;
@@ -453,13 +459,13 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
         b.vx = (b.vx + (target.x - b.x) * b.k) * b.d; b.vy = (b.vy + (target.y - b.y) * b.k) * b.d;
         b.x += b.vx; b.y += b.vy;
         const speed = Math.min(1, Math.hypot(b.vx, b.vy) / 25);
-        blot(b.x, b.y, b.r * (1 + speed * .6), mix(hue + b.c).join(','), .07 + speed * .05);
+        blot(b.x, b.y, b.r * (1 + speed * .6), mix(hue + b.c).join(','), .12 + speed * .08);
       });
       for (let i = drops.length - 1; i >= 0; i--){
         const d = drops[i]; d.t += dt / 3.2;
         if (d.t >= 1){ drops.splice(i, 1); continue; }
         const e = 1 - Math.pow(1 - d.t, 3);
-        blot(d.x, d.y, d.r0 + 240 * e, d.c, .10 * (1 - d.t));
+        blot(d.x, d.y, d.r0 + 330 * e, d.c, .16 * (1 - d.t));
       }
       reveal();
       if (!reduce) requestAnimationFrame(frame);
