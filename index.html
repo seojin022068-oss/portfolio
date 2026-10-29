@@ -63,6 +63,19 @@ a{color:inherit}
 
 .hint{position:fixed;z-index:4;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(40px + env(safe-area-inset-bottom,0px));font-family:var(--serif);font-style:italic;color:var(--soft);font-size:14px;pointer-events:none;padding-left:18px}
 
+/* ── Journal (공간디자인세미나) ── */
+.page .jsub{margin:-36px 0 56px;font-family:var(--kr);font-weight:300;font-size:16px;color:var(--soft)}
+.jlist{list-style:none;margin:0;padding:0;display:grid;border-top:1px solid rgba(44,42,74,.12)}
+.jentry{display:grid;grid-template-columns:130px minmax(0,1fr) 240px;gap:28px;align-items:start;width:100%;text-align:left;padding:28px 0;border:0;border-bottom:1px solid rgba(44,42,74,.12);background:none;cursor:pointer;font:inherit;color:inherit}
+.jentry .d{font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);font-variant-numeric:tabular-nums;line-height:1.9}
+.jentry .d b{display:block;font-weight:300;font-size:13px;letter-spacing:.06em}
+.jentry h3{font-family:var(--kr);font-weight:300;font-size:clamp(22px,2.4vw,30px);line-height:1.35;margin:0 0 10px;color:var(--ink)}
+.jentry p{margin:0;font-family:var(--kr);font-weight:300;font-size:15px;line-height:1.75;color:var(--soft);max-width:34em}
+.jentry .th{aspect-ratio:4/3;max-width:100%;overflow:hidden;background:#E9EBED}
+.jentry .th img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.jentry:hover .th img{transform:scale(1.04)}
+.jentry:hover h3{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
+@media (max-width:760px){.jentry{grid-template-columns:1fr;gap:12px}.jentry .th{order:-1}}
 /* ── 프로젝트 보기 (전체 화면) ── */
 .detail{position:fixed;inset:0;z-index:30;overflow:auto;background:#FFFFFF;color:var(--ink);
   padding:calc(28px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(80px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));
@@ -149,6 +162,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 <nav class="menu" aria-label="메뉴">
   <a href="#home" data-v="home">Home</a>
   <a href="#gallery" data-v="gallery">Gallery</a>
+  <a href="#journal" data-v="journal">Journal</a>
   <a href="#info" data-v="info">Info</a>
 </nav>
 
@@ -167,6 +181,13 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 <main class="page" id="gallery" hidden>
   <h1>Gallery</h1>
   <div class="grid" id="grid"></div>
+</main>
+
+<!-- JOURNAL -->
+<main class="page" id="journal" hidden>
+  <h1>Journal</h1>
+  <p class="jsub">공간디자인세미나 · 2026</p>
+  <ol class="jlist" id="jlist"></ol>
 </main>
 
 <!-- INFO -->
@@ -489,35 +510,6 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
   "y0": 84
  },
  {
-  "id": "essay",
-  "t": "나는 건축을 좋아하는 사람인가?",
-  "k": "Photo Essay",
-  "y": "2026",
-  "sub": "공간디자인세미나",
-  "meta": [
-   [
-    "COURSE",
-    "공간디자인세미나"
-   ],
-   [
-    "DATE",
-    "2026.09.10"
-   ]
-  ],
-  "lead": "…건축 말고는 뭐 좋아하지?",
-  "body": [
-   "나는 건축을 좋아하는 사람인지 스스로에게 묻고, 직접 걷고 머물며 찍은 사진으로 그 답을 찾아간 포토 에세이입니다."
-  ],
-  "img": [
-   "essay-1",
-   "essay-2",
-   "essay-3",
-   "essay-4"
-  ],
-  "x": 66,
-  "y0": 90
- },
- {
   "id": "dalchan",
   "t": "달찮은 하루",
   "k": "Exhibition",
@@ -719,7 +711,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let lastFocus = null;
   function open(id){
-    const w = WORKS.find(x => x.id === id); lastFocus = document.activeElement;
+    const w = typeof id === 'object' ? id : WORKS.find(x => x.id === id); lastFocus = document.activeElement;
     detail.innerHTML = `<div class="in">
       <button class="x" aria-label="닫기">Close ✕</button>
       <span class="kind">${esc(w.k)} · ${esc(w.y)}</span>
@@ -958,10 +950,27 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     requestAnimationFrame(frame);
   })();
 
+  /* ── Journal: 공간디자인세미나 저널. 새 글은 이 목록 맨 앞에 추가 ── */
+  const JOURNAL = [
+    {id:'j01', no:'01', date:'2026.09.10', t:'나는 건축을 좋아하는 사람인가?', k:'Journal 01', y:'2026.09.10', sub:'공간디자인세미나',
+     meta:[['COURSE','공간디자인세미나'],['DATE','2026.09.10'],['TYPE','포토 에세이']],
+     lead:'…건축 말고는 뭐 좋아하지?',
+     body:['나는 건축을 좋아하는 사람인지 스스로에게 묻고, 직접 걷고 머물며 찍은 사진으로 그 답을 찾아간 포토 에세이입니다.'],
+     img:['essay-1','essay-2','essay-3','essay-4']},
+  ];
+  const jlist = $('#jlist');
+  JOURNAL.forEach(j => {
+    const li = document.createElement('li'), b = document.createElement('button');
+    b.className = 'jentry';
+    b.innerHTML = `<span class="d"><b>NO. ${j.no}</b>${j.date}</span><span><h3>${j.t}</h3><p>${j.lead}</p></span><span class="th"><img src="images/${j.img[0]}.jpg" alt="" loading="lazy"></span>`;
+    b.addEventListener('click', () => open(j));
+    li.append(b); jlist.append(li);
+  });
+
   /* ── 페이지 전환 (#home / #gallery / #info) ── */
   function route(){
-    const v = ['gallery','info'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
-    $('#home').hidden = v !== 'home'; $('#gallery').hidden = v !== 'gallery'; $('#info').hidden = v !== 'info';
+    const v = ['gallery','info','journal'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
+    $('#home').hidden = v !== 'home'; $('#gallery').hidden = v !== 'gallery'; $('#info').hidden = v !== 'info'; $('#journal').hidden = v !== 'journal';
     document.body.classList.toggle('off-home', v !== 'home'); document.body.classList.toggle('on-info', v === 'info'); if (v === 'gallery') requestAnimationFrame(drawArts);
     document.querySelectorAll('.menu a').forEach(a => a.classList.toggle('on', a.dataset.v === v));
     detail.hidden = true; scrollTo(0,0);
