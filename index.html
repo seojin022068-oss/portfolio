@@ -6,17 +6,17 @@
 <title>임서진 포트폴리오</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: 한 장의 놀이판 — 왼쪽 위 소개 문장, 오른쪽 위 노란 알약 메뉴, 화면 전체에 떠다니는 작업 오브제. 단일 테마(라벤더 하늘) */
 :root{
   --sky-top:#C9C2FF; --sky-mid:#E6E3FF; --sky-low:#FBFAFF;
   --pink:#E3489E; --blue:#5B5BE8; --ink:#2C2A4A; --soft:#7A78A6;
   --pill:#FFF27A; --pill-ink:#3A3510; --card:#FFFFFF;
-  --serif:"Instrument Serif","Gowun Batang",serif;
-  --kr:"Gowun Batang","Instrument Serif",serif;
+  --serif:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --kr:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --mono:"DM Mono",ui-monospace,Menlo,monospace;
-  --ui:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --ui:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -36,7 +36,7 @@ a{color:inherit}
 /* ── 소개 ── */
 .intro{position:relative;z-index:5;max-width:min(640px,calc(100% - 110px));padding-top:calc(14px + env(safe-area-inset-top,0px))}
 .intro p{margin:0;font-family:var(--kr);font-size:clamp(16px,1.6vw,20px);line-height:1.45;color:var(--blue)}
-.intro .name{font-family:var(--serif);font-style:italic;color:var(--pink);font-size:clamp(46px,6.4vw,78px);line-height:.9;letter-spacing:-.01em;margin-right:.18em;vertical-align:-.08em}
+.intro .name{font-family:var(--serif);font-style:italic;font-weight:700;color:var(--pink);font-size:clamp(46px,6.4vw,78px);line-height:.9;letter-spacing:-.03em;margin-right:.18em;vertical-align:-.08em}
 .intro .name .kr{font-family:var(--kr);font-style:normal;font-size:.42em;letter-spacing:0;margin-left:.2em;vertical-align:.5em}
 .intro em{font-family:var(--serif);font-style:italic;color:var(--pink);font-size:1.12em}
 
