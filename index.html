@@ -78,19 +78,21 @@ a{color:inherit}
 .detail .imgph{aspect-ratio:4/3;max-width:100%;display:grid;place-items:center;margin-bottom:12px;font-family:var(--serif);font-style:italic;font-size:15px}
 
 /* ── 페이지 (Gallery / Info) ── */
-.page{position:relative;z-index:5;max-width:860px;margin:0 auto;padding-block:calc(120px + env(safe-area-inset-top,0px)) 80px}
-.page h1{font-family:var(--serif);font-style:italic;color:var(--pink);font-weight:400;font-size:clamp(48px,8vw,84px);line-height:1;margin:0 0 28px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
-.tile{background:rgba(255,255,255,.65);border-radius:22px;padding:16px;display:grid;gap:6px;text-align:left;transition:transform .35s cubic-bezier(.3,1.5,.5,1),background .2s}
-.tile:hover{transform:translateY(-6px) rotate(-1deg);background:#fff}
-.tile .art{display:grid;place-items:center;aspect-ratio:4/3;max-width:100%;background:linear-gradient(160deg,var(--sky-mid),var(--sky-low));border-radius:14px}
-.tile .art .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;padding:12px;max-width:100%}
-.tile .art .chips i{font-style:normal;display:inline-block;font-family:var(--ui);font-weight:600;font-size:20px;color:var(--c);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
-.tile .art .chips i.sp{width:10px;background:none}
-.tile:hover .art .chips i{transform:translateY(-4px)}
-.tile:hover .art .chips i:nth-child(2n){transform:translateY(4px)}
-.tile h3{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--pink);font-size:24px;margin:4px 0 0;line-height:1.1}
-.tile p{margin:0;font-size:13px;color:var(--soft)}
+.page{position:relative;z-index:5;max-width:1080px;margin:0 auto;padding-block:calc(120px + env(safe-area-inset-top,0px)) 96px}
+.page h1{font-family:var(--serif);font-style:normal;color:var(--ink);font-weight:300;font-size:40px;line-height:1.1;letter-spacing:-.01em;margin:0 0 48px}
+body.off-home #paint,body.off-home #ink{display:none}
+body.off-home{background:#F4F5F6}
+.grid{display:grid;grid-template-columns:1fr;gap:72px}
+.tile{display:grid;gap:14px;text-align:left;padding:0;background:none}
+.tile .art{position:relative;aspect-ratio:16/9;max-width:100%;overflow:hidden;background:#DCE1E6}
+.tile .art canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tile .cap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;align-items:baseline}
+.tile h3{font-family:var(--serif);font-style:normal;font-weight:300;color:var(--ink);font-size:40px;margin:0;line-height:1.1;letter-spacing:-.01em}
+.tile p{margin:0;font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);grid-column:1/-1}
+.tile .k{font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);letter-spacing:.04em}
+.tile h3,.tile .art{transition:opacity .3s}
+.tile:hover .art{opacity:.92}
+@media (max-width:640px){.tile h3{font-size:32px}.grid{gap:48px}}
 
 .block{display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;padding-block:26px;border-top:1px solid rgba(91,91,232,.2)}
 .block>h2{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--blue);font-size:28px;margin:0;line-height:1.1}
@@ -270,16 +272,64 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
   detail.addEventListener('click', e => { if (e.target.closest('.x')) detail.hidden = true; });
   addEventListener('keydown', e => { if (e.key === 'Escape') detail.hidden = true; });
 
-  /* ── 갤러리 ── */
-  WORKS.forEach(w => {
+  /* ── 갤러리: 회색 화면 위 가는 흰 선과 점, 반투명 덩어리 ── */
+  const ARTBG = ['#DCE1E6','#E7ECEB','#DFE3E0','#E3E1E8'];
+  function drawArt(cv, seed, t){
+    const dpr = Math.min(2, devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight;
+    if (!W) return;
+    if (cv.width !== Math.round(W*dpr)){ cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
+    const c = cv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0);
+    let s = seed * 7919 + 13; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    const green = seed % 3 === 1;
+    c.fillStyle = ARTBG[seed % ARTBG.length]; c.fillRect(0,0,W,H);
+    const ox = W * (.2 + r()*.3), oy = H * (.25 + r()*.3), spread = Math.min(W, H);
+    // 반투명 덩어리
+    for (let i = 0; i < 5; i++){
+      c.save(); c.translate(ox + (r()-.2)*W*.45 + Math.sin(t/3000 + i)*4, oy + (r()-.3)*H*.4);
+      c.rotate(r()*Math.PI); c.beginPath(); c.ellipse(0, 0, spread*(.12 + r()*.12), spread*(.09 + r()*.1), 0, 0, Math.PI*2);
+      c.fillStyle = 'rgba(255,255,255,.32)'; c.fill(); c.restore();
+    }
+    // 점
+    const N = W < 600 ? 11 : 22, P = [];
+    for (let i = 0; i < N; i++) P.push({x: ox + (r()-.2)*W*.65 + Math.sin(t/2600 + i)*3, y: oy + (r()-.3)*H*.75 + Math.cos(t/3100 + i)*3, rad: 2.5 + r()*3});
+    const stroke = green ? 'rgba(120,200,95,.75)' : 'rgba(255,255,255,.9)', fill = green ? 'rgba(130,205,105,.9)' : 'rgba(255,255,255,.95)';
+    c.strokeStyle = stroke; c.lineWidth = 1;
+    // 가까운 점끼리 둥근 선으로 이음
+    P.forEach((p, i) => {
+      const near = P.map((q, j) => ({j, d: Math.hypot(q.x - p.x, q.y - p.y)})).filter(o => o.j !== i).sort((a,b) => a.d - b.d).slice(0, 3);
+      near.forEach(({j}) => {
+        if (j < i) return; const q = P[j], L = Math.hypot(q.x - p.x, q.y - p.y) * .9 + (W < 600 ? 14 : 40);
+        c.beginPath(); c.moveTo(p.x, p.y);
+        c.bezierCurveTo(p.x + (r()-.5)*L, p.y - r()*L*.8, q.x + (r()-.5)*L, q.y + r()*L*.8, q.x, q.y); c.stroke();
+      });
+    });
+    // 크게 휘도는 선 두어 개
+    c.globalAlpha = .55;
+    for (let i = 0; i < 3; i++){
+      c.beginPath(); c.moveTo(-20, oy + (r()-.5)*H*.8);
+      c.bezierCurveTo(W*.3, oy + (r()-.5)*H, W*.6, oy + (r()-.5)*H, W + 20, oy + (r()-.5)*H*.9); c.stroke();
+    }
+    c.globalAlpha = 1;
+    P.forEach(p => { c.beginPath(); c.arc(p.x, p.y, p.rad, 0, Math.PI*2); c.fillStyle = fill; c.fill(); });
+  }
+  const arts = [];
+  WORKS.forEach((w, i) => {
     const t = document.createElement('button');
     t.className = 'tile';
-    const CH = ['#C23D80', '#963DC2', '#3D69C2', '#3DC2B7', '#3DC269', '#C2963D'];
-    const chips = [...w.t].map((c,k) => c === ' ' ? '<i class="sp"></i>' : `<i style="--c:${CH[(k*3+w.id.length)%CH.length]}">${c}</i>`).join('');
-    t.innerHTML = `<div class="art"><span class="chips">${chips}</span></div><h3>${w.t}</h3><p>${w.k} · ${w.sub}</p>`;
+    t.innerHTML = `<div class="art"><canvas aria-hidden="true"></canvas></div><div class="cap"><h3>${w.t}</h3><span class="k">${w.k}</span><p>${w.sub}</p></div>`;
     t.addEventListener('click', () => open(w.id));
     grid.append(t);
+    const cv = t.querySelector('canvas'), a = {cv, seed: i + 2, hover: false};
+    t.addEventListener('pointerenter', () => { a.hover = true; });
+    t.addEventListener('pointerleave', () => { a.hover = false; });
+    arts.push(a);
   });
+  function drawArts(){ arts.forEach(a => drawArt(a.cv, a.seed, 0)); }
+  (function loop(now){ // 마우스를 올린 그림만 천천히 숨 쉬듯 움직임
+    if (!$('#gallery').hidden) arts.forEach(a => { if (a.hover) drawArt(a.cv, a.seed, now); });
+    requestAnimationFrame(loop);
+  })(0);
+  addEventListener('resize', drawArts);
 
   /* ── 복사 버튼 ── */
   document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', () => {
@@ -413,6 +463,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
   function route(){
     const v = ['gallery','info'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
     $('#home').hidden = v !== 'home'; $('#gallery').hidden = v !== 'gallery'; $('#info').hidden = v !== 'info';
+    document.body.classList.toggle('off-home', v !== 'home'); if (v === 'gallery') requestAnimationFrame(drawArts);
     document.querySelectorAll('.menu a').forEach(a => a.classList.toggle('on', a.dataset.v === v));
     detail.hidden = true; scrollTo(0,0);
   }
