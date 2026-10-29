@@ -84,7 +84,7 @@ a{color:inherit}
 .tile:hover{transform:translateY(-6px) rotate(-1deg);background:#fff}
 .tile .art{display:grid;place-items:center;aspect-ratio:4/3;max-width:100%;background:linear-gradient(160deg,var(--sky-mid),var(--sky-low));border-radius:14px}
 .tile .art .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;padding:12px;max-width:100%}
-.tile .art .chips i{font-style:normal;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--ui);font-weight:500;font-size:14px;color:var(--c);border:1.3px solid var(--c);background:color-mix(in srgb, var(--c) 12%, transparent);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.tile .art .chips i{font-style:normal;display:inline-block;font-family:var(--ui);font-weight:600;font-size:20px;color:var(--c);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
 .tile .art .chips i.sp{width:10px;background:none}
 .tile:hover .art .chips i{transform:translateY(-4px)}
 .tile:hover .art .chips i:nth-child(2n){transform:translateY(4px)}
@@ -352,9 +352,9 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     const blobs = [0,1,2].map(i => ({x: target.x, y: target.y, vx: 0, vy: 0, k: [.06,.035,.02][i], d: [.78,.84,.88][i], c: i * 2, r: [170,240,310][i]}));
     const drops = [];
 
-    function mix(t){ // 팔레트를 부드럽게 순환
-      const n = COLORS.length, i = ((Math.floor(t) % n) + n) % n || 0, j = (i + 1) % n, f = t - Math.floor(t);
-      return COLORS[i].map((v,k) => Math.round(v + (COLORS[j][k] - v) * f));
+    const GRAY = [214,210,228]; let curC = COLORS[0].slice();
+    function mix(t){ // 지금 강조색 하나 + 라벤더 회색만 (레퍼런스처럼 한 가지 색으로 번짐)
+      return (Math.round(t) % 4 === 2) ? GRAY : curC.map(Math.round);
     }
     function blot(x, y, r, col, a){
       const g = ctx.createRadialGradient(x/S, y/S, 0, x/S, y/S, r/S);
@@ -395,6 +395,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
       ctx.globalCompositeOperation = 'source-over';
 
       hue += dt * .08;
+      const tc = COLORS[(window.__acc || 0) % COLORS.length]; curC = curC.map((v,k) => v + (tc[k] - v) * .03);
       blobs.forEach((b, i) => {
         b.vx = (b.vx + (target.x - b.x) * b.k) * b.d; b.vy = (b.vy + (target.y - b.y) * b.k) * b.d;
         b.x += b.vx; b.y += b.vy;
@@ -415,69 +416,73 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     } else requestAnimationFrame(frame);
   })();
 
-  /* ── 글자 들판: 동그라미 속 글자들이 자석처럼 커서를 따라오고, + 표시에 가면 모여서 제목이 됨 ── */
+  /* ── 글자 들판: 흩어진 글자가 자석처럼 커서를 따라오고, + 표시에 가면 모여서 제목이 됨 ── */
   (function(){
     const cv = document.getElementById('letters'), ctx = cv.getContext('2d'), home = document.getElementById('home');
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const PAL = ['#C23D80', '#963DC2', '#3D69C2', '#3DC2B7', '#3DC269', '#C2963D']; // 같은 채도·명도, 색상만 다르게
-    const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
-    const POOL = [...new Set(WORKS.map(x => x.t).join('').replace(/\s/g,''))].concat(['↗','→','+','↗']);
-    let w, h, dpr, T = [], seed = 3, R0 = 12;
+    const PAL = ['#C23D80', '#963DC2', '#3D69C2', '#3DC2B7', '#3DC269', '#C2963D']; // 같은 채도·명도
+    const FONT = '"Futura", "Futura PT", "Jost", "Noto Sans KR", sans-serif';
+    const POOL = [...new Set(WORKS.map(x => x.t).join('').replace(/[\s:\-]/g,''))];
+    const WORDS = ['space','light','threshold','rest','walk','memory','distance','material','plan 1:100','머무름','빛','공간','짓기','stream of','noise around','thinking','queue'];
+    let w, h, dpr, T = [], seed = 3;
     const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     const formed = new Map(), pinned = new Set(), carried = [];
-    function avoid(){ // 이름·메뉴 위에는 글자를 두지 않음
-      return [...document.querySelectorAll('.intro .name, .intro .role, .cats, .menu')].map(el => { const b = el.getBoundingClientRect(); return [b.left - 14, b.top - 14, b.right + 14, b.bottom + 14]; });
+    let acc = 0; window.__acc = 0;
+    const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
+    function avoid(){
+      return [...document.querySelectorAll('.intro .name, .intro .role, .cats, .menu')].map(el => { const b = el.getBoundingClientRect(); return [b.left - 10, b.top - 10, b.right + 10, b.bottom + 10]; });
     }
     function build(){
       dpr = Math.min(2, devicePixelRatio || 1); w = innerWidth; h = innerHeight;
       cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
       [...formed.keys()].forEach(unform); carried.length = 0;
-      T = []; seed = 3; const gap = w < 640 ? 46 : 54, A = avoid(); R0 = w < 640 ? 12 : 13;
-      for (let y = 30; y < h - 20; y += gap) for (let x = 30; x < w - 20; x += gap){
-        const hx = x + (r()-.5)*22, hy = y + (r()-.5)*22;
+      T = []; seed = 3; const A = avoid(), gap = w < 640 ? 44 : 52;
+      for (let y = 26; y < h - 20; y += gap) for (let x = 26; x < w - 20; x += gap){
+        if (r() < .35) continue;
+        const hx = x + (r()-.5)*30, hy = y + (r()-.5)*30;
         if (A.some(([l,t,rr,b]) => hx > l && hx < rr && hy > t && hy < b)) continue;
-        if (r() < .12) continue; // 군데군데 비워 숨 쉬게
-        const ch = POOL[Math.floor(r()*POOL.length)];
-        T.push({hx, hy, x:hx, y:hy, vx:0, vy:0, base:ch, ch, busy:null, tx:0, ty:0, col:PAL[Math.floor(r()*PAL.length)], a:0, mag:-1});
+        const word = r() < .07;
+        const ch = word ? WORDS[Math.floor(r()*WORDS.length)] : POOL[Math.floor(r()*POOL.length)];
+        T.push({hx, hy, x:hx, y:hy, vx:0, vy:0, base:ch, ch, word, busy:null, tx:0, ty:0, a:0, mag:-1, ord:0});
       }
     }
     function center(work){ const b = work.el.getBoundingClientRect(); return [b.left + b.width/2, b.top + b.height/2]; }
+    // 제목을 계단처럼 흘러내리게 배치 (레퍼런스의 b r / e a / t h / e 처럼)
     function layout(title, cx, cy){
-      let lines = [title];
-      if (title.length > 9 && title.includes(' ')){
-        const sp = [...title].map((c,i) => c === ' ' ? i : -1).filter(i => i > 0);
-        const mid = sp.reduce((a,b) => Math.abs(b - title.length/2) < Math.abs(a - title.length/2) ? b : a);
-        lines = [title.slice(0, mid), title.slice(mid + 1)];
-      }
-      const step = w < 640 ? 34 : 42, out = [];
-      lines.forEach((ln, li) => {
-        const chars = [...ln], width = (chars.length - 1) * step;
-        const x0 = Math.min(Math.max(cx - width/2, 26), w - 26 - width);
-        const y = cy + (li - (lines.length - 1)/2) * (step + 4);
-        chars.forEach((c, k) => { if (c !== ' ') out.push({ch:c, x:x0 + k*step, y}); });
+      const words = title.split(' '), out = [], step = w < 640 ? 18 : 24, drop = w < 640 ? 18 : 22;
+      let x = 0, y = 0, k = 0;
+      words.forEach((wd, wi) => {
+        [...wd].forEach((c, ci) => {
+          out.push({ch:c, x, y: y + (k % 2 ? -drop*.35 : drop*.35)});
+          x += step; y += drop * .55; k++;
+        });
+        x += step * .9; y += drop * .4;
       });
+      const minx = Math.min(...out.map(p => p.x)), maxx = Math.max(...out.map(p => p.x)), maxy = Math.max(...out.map(p => p.y));
+      let ox = cx - (minx + maxx)/2, oy = cy - maxy/2;
+      ox = Math.min(Math.max(ox, 28 - minx), w - 28 - maxx); oy = Math.min(Math.max(oy, 40), h - 40 - maxy);
+      out.forEach(p => { p.x += ox; p.y += oy; });
       return out;
     }
     function release(t){ const i = carried.indexOf(t); if (i >= 0) carried.splice(i, 1); t.mag = -1; }
     function form(id){
       if (formed.has(id)) return;
-      const work = WORKS.find(x => x.id === id), [cx, cy] = center(work), used = [];
+      const wi = WORKS.findIndex(x => x.id === id), work = WORKS[wi], [cx, cy] = center(work), used = [];
+      acc = wi % PAL.length; window.__acc = acc;
       layout(work.t, cx, cy).forEach((p, k) => {
         let best = -1, bs = 1e9;
         T.forEach((t, i) => {
-          if (t.busy) return;
-          const d = Math.hypot(t.x - p.x, t.y - p.y) - (t.base === p.ch ? 220 : 0) - (t.mag >= 0 ? 160 : 0);
+          if (t.busy || t.word) return;
+          const d = Math.hypot(t.x - p.x, t.y - p.y) - (t.base === p.ch ? 200 : 0) - (t.mag >= 0 ? 180 : 0);
           if (d < bs){ bs = d; best = i; }
         });
         if (best < 0) return;
-        const t = T[best]; release(t); t.busy = id; t.tx = p.x; t.ty = p.y; t.ch = p.ch;
-        t.col = PAL[(k * 3 + id.length) % PAL.length]; used.push(best);
+        const t = T[best]; release(t); t.busy = id; t.tx = p.x; t.ty = p.y; t.ch = p.ch; t.ord = k; used.push(best);
       });
-      formed.set(id, used); work.el.classList.add('formed');
-      [...carried].forEach(release); // 제목이 생기면 꼬리는 내려놓음
+      formed.set(id, {used, col: PAL[acc]}); work.el.classList.add('formed');
+      [...carried].forEach(release);
     }
     function unform(id){
-      (formed.get(id) || []).forEach(i => { const t = T[i]; if (t) t.busy = null; });
+      const f = formed.get(id); (f ? f.used : []).forEach(i => { const t = T[i]; if (t) t.busy = null; });
       formed.delete(id); const work = WORKS.find(x => x.id === id); if (work) work.el.classList.remove('formed');
     }
     function cat(k){
@@ -486,12 +491,11 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     }
     window.__sj = {form, unform, cat};
 
-    // 커서 자취: 붙은 글자들이 이 자취를 따라 꼬리처럼 늘어섬
     const m = {x:-999, y:-999}, trail = []; let lastMove = 0;
     function move(e){
       m.x = e.clientX; m.y = e.clientY; lastMove = performance.now();
       const p = trail[0];
-      if (!p || Math.hypot(p.x - m.x, p.y - m.y) > 6){ trail.unshift({x:m.x, y:m.y}); if (trail.length > 400) trail.pop(); }
+      if (!p || Math.hypot(p.x - m.x, p.y - m.y) > 5){ trail.unshift({x:m.x, y:m.y}); if (trail.length > 500) trail.pop(); }
     }
     addEventListener('pointermove', move, {passive:true});
     addEventListener('pointerdown', move, {passive:true});
@@ -499,67 +503,71 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     if (document.fonts) document.fonts.ready.then(build);
     addEventListener('hashchange', () => { pinned.clear(); [...formed.keys()].forEach(unform); });
 
-    const MAX = 28;
+    function curve(pts, wob){ // 글자 사이를 지나는 가는 손선
+      if (pts.length < 2) return;
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++){
+        const a = pts[i-1], b = pts[i], mx = (a.x + b.x)/2, my = (a.y + b.y)/2;
+        const nx = -(b.y - a.y), ny = (b.x - a.x), L = Math.hypot(nx, ny) || 1, s = (i % 2 ? 1 : -1) * wob;
+        ctx.quadraticCurveTo(mx + nx/L*s, my + ny/L*s, b.x, b.y);
+      }
+      ctx.stroke();
+    }
+    const MAX = 22;
     function frame(now){
       ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
       if (home.hidden){ requestAnimationFrame(frame); return; }
-      // + 표시에 머물면 제목, 멀어지면 풀기
       WORKS.forEach(work => {
         const [cx, cy] = center(work), d = Math.hypot(m.x - cx, m.y - cy), s = work.__h || (work.__h = {in:0, out:0});
-        if (d < 100){ s.out = 0; s.in = s.in || now; if (now - s.in > 160) form(work.id); }
-        else { s.in = 0; if (formed.has(work.id) && !pinned.has(work.id) && document.activeElement !== work.el && d > 220){ s.out = s.out || now; if (now - s.out > 600) unform(work.id); } }
+        if (d < 90){ s.out = 0; s.in = s.in || now; if (now - s.in > 160) form(work.id); }
+        else { s.in = 0; if (formed.has(work.id) && !pinned.has(work.id) && document.activeElement !== work.el && d > 240){ s.out = s.out || now; if (now - s.out > 700) unform(work.id); } }
       });
       let nearTitle = false;
       formed.forEach((_, id) => { const [cx, cy] = center(WORKS.find(x => x.id === id)); if (Math.hypot(m.x - cx, m.y - cy) < 260) nearTitle = true; });
       const idleLong = now - lastMove > 1600;
-      // 자석: 커서 가까이 있는 글자를 붙잡음
       if (nearTitle) [...carried].forEach(release);
       if (!idleLong && !nearTitle) T.forEach(t => {
-        if (carried.length >= MAX || t.busy || t.mag >= 0) return;
-        if (Math.hypot(t.x - m.x, t.y - m.y) < 46){ t.mag = 1; carried.push(t); }
+        if (carried.length >= MAX || t.busy || t.word || t.mag >= 0) return;
+        if (Math.hypot(t.x - m.x, t.y - m.y) < 40){ t.mag = 1; carried.push(t); }
       });
-      // 오래 멈추면 하나씩 떨어져 제자리로
-      if (idleLong && carried.length && Math.random() < .25) release(carried[carried.length - 1]);
-      const sp = (R0 * 2 + 3);
+      if (idleLong && carried.length && Math.random() < .2) release(carried[carried.length - 1]);
+      const sp = 20;
       carried.forEach((t, j) => {
-        // 자취를 따라 j번째 자리 찾기
-        let need = (j + 1) * sp * .92, acc = 0, prev = {x:m.x, y:m.y}, q = trail[trail.length - 1] || prev;
-        for (let i = 0; i < trail.length; i++){ const p = trail[i], d = Math.hypot(p.x - prev.x, p.y - prev.y); if (acc + d >= need){ const f = (need - acc) / (d || 1); q = {x: prev.x + (p.x - prev.x)*f, y: prev.y + (p.y - prev.y)*f}; break; } acc += d; prev = p; q = p; }
+        let need = (j + 1) * sp, ac = 0, prev = {x:m.x, y:m.y}, q = trail[trail.length - 1] || prev;
+        for (let i = 0; i < trail.length; i++){ const p = trail[i], d = Math.hypot(p.x - prev.x, p.y - prev.y); if (ac + d >= need){ const f = (need - ac) / (d || 1); q = {x: prev.x + (p.x - prev.x)*f, y: prev.y + (p.y - prev.y)*f}; break; } ac += d; prev = p; q = p; }
         t.tx = q.x; t.ty = q.y;
       });
-      const idle = [], hot = [];
       T.forEach(t => {
         const follow = t.busy || t.mag >= 0, tx = follow ? t.tx : t.hx, ty = follow ? t.ty : t.hy;
-        const k = t.busy ? .1 : t.mag >= 0 ? .16 : .04;
+        const k = t.busy ? .08 : t.mag >= 0 ? .16 : .035;
         let fx = (tx - t.x) * k, fy = (ty - t.y) * k;
-        if (!follow){ const dx = t.x - m.x, dy = t.y - m.y, d = Math.hypot(dx, dy); if (d < 70 && d > .1){ const f = (70 - d) / 70 * 2.5; fx += dx/d*f; fy += dy/d*f; } }
-        t.vx = (t.vx + fx) * .74; t.vy = (t.vy + fy) * .74; t.x += t.vx; t.y += t.vy;
-        t.a += ((follow ? 1 : 0) - t.a) * .14;
+        if (!follow){ const dx = t.x - m.x, dy = t.y - m.y, d = Math.hypot(dx, dy); if (d < 60 && d > .1){ const f = (60 - d) / 60 * 1.6; fx += dx/d*f; fy += dy/d*f; } }
+        t.vx = (t.vx + fx) * .76; t.vy = (t.vy + fy) * .76; t.x += t.vx; t.y += t.vy;
+        t.a += ((follow ? 1 : 0) - t.a) * .12;
         if (!t.busy && t.a < .5) t.ch = t.base;
-        (t.a > .03 ? hot : idle).push(t);
       });
-      // 서로 겹치지 않게 살짝 밀어냄 (붙은 글자끼리)
-      for (let i = 0; i < hot.length; i++) for (let j = i + 1; j < hot.length; j++){
-        const a = hot[i], b = hot[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy), min = R0 * 2;
-        if (d < min && d > .01){ const push = (min - d) / 2 / d; a.x -= dx*push; a.y -= dy*push; b.x += dx*push; b.y += dy*push; }
-      }
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
-      ctx.strokeStyle = 'rgba(42,40,56,.35)'; ctx.fillStyle = 'rgba(255,255,255,.55)';
-      idle.forEach(t => { ctx.beginPath(); ctx.arc(t.x, t.y, R0, 0, Math.PI*2); ctx.fill(); ctx.stroke(); });
-      ctx.fillStyle = 'rgba(42,40,56,.75)'; ctx.font = `500 ${R0}px "Futura", "Futura PT", "Jost", "Noto Sans KR", sans-serif`;
-      idle.forEach(t => ctx.fillText(t.ch, t.x, t.y + 1));
-      hot.sort((a,b) => (a.busy ? 1 : 0) - (b.busy ? 1 : 0));
-      hot.forEach(t => {
-        const rad = R0 + (t.busy ? 5 : 3) * t.a;
-        ctx.beginPath(); ctx.arc(t.x, t.y, rad, 0, Math.PI*2);
-        // 반투명 유리알: 옅은 색 + 색 테두리
-        ctx.fillStyle = `rgba(255,255,255,${.55 - .25 * t.a})`; ctx.fill();
-        ctx.fillStyle = rgba(t.col, .14 * t.a); ctx.fill();
-        ctx.lineWidth = 1 + .6 * t.a;
-        ctx.strokeStyle = t.a > .05 ? rgba(t.col, .4 + .6 * t.a) : 'rgba(42,40,56,.35)'; ctx.stroke(); ctx.lineWidth = 1;
-        ctx.fillStyle = t.a > .3 ? rgba(t.col, .7 + .3 * t.a) : 'rgba(42,40,56,.75)';
-        ctx.font = `500 ${Math.round(R0 + (t.busy ? 5 : 2) * t.a)}px "Futura", "Futura PT", "Jost", "Noto Sans KR", sans-serif`;
-        ctx.fillText(t.ch, t.x, t.y + 1);
+      const col = PAL[acc];
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      // 손선: 꼬리
+      ctx.strokeStyle = 'rgba(70,68,84,.45)'; ctx.lineWidth = .8; ctx.lineCap = 'round';
+      if (carried.length > 1) curve([{x:m.x, y:m.y}, ...carried.map(t => ({x:t.x, y:t.y + 9}))], 7);
+      // 손선: 제목
+      formed.forEach(f => { const pts = f.used.map(i => T[i]).filter(Boolean).sort((a,b) => a.ord - b.ord); curve(pts.map(t => ({x:t.x - 6, y:t.y + 10})), 10); });
+      // 흩어진 글자 (아주 옅은 회색)
+      T.forEach(t => {
+        if (t.a > .04) return;
+        ctx.fillStyle = t.word ? 'rgba(60,58,74,.22)' : 'rgba(60,58,74,.30)';
+        ctx.font = t.word ? `500 12px ${FONT}` : `400 14px ${FONT}`;
+        ctx.fillText(t.ch, t.x, t.y);
+      });
+      // 붙은 글자 / 제목 글자 (한 가지 색)
+      formed.forEach(f => f.used.forEach(i => { const t = T[i]; if (t) t.col = f.col; }));
+      T.forEach(t => {
+        if (t.a <= .04) return;
+        const c = t.busy ? (t.col || col) : col;
+        ctx.fillStyle = rgba(c, .35 + .65 * t.a);
+        ctx.font = `600 ${Math.round(14 + (t.busy ? 6 : 2) * t.a)}px ${FONT}`;
+        ctx.fillText(t.ch, t.x, t.y);
       });
       requestAnimationFrame(frame);
     }
