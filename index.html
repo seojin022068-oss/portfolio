@@ -104,6 +104,7 @@ a{color:inherit}
 
 
 /* ── 물감 번짐 배경 (커서를 따라 흐름) ── */
+#ink{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 #paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(28px) saturate(1.15);mix-blend-mode:multiply;opacity:.9}
 
 /* ── 전체 화면 CAD 십자선 커서 ── */
@@ -122,6 +123,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 <body>
 
 <canvas id="paint" aria-hidden="true"></canvas>
+<canvas id="ink" aria-hidden="true"></canvas>
 <nav class="menu" aria-label="메뉴">
   <a href="#home" data-v="home">Home</a>
   <a href="#gallery" data-v="gallery">Gallery</a>
@@ -368,8 +370,34 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     const S = 4; // 1/4 해상도로 그리고 CSS 블러로 번지게
     const COLORS = [[227,72,158],[255,196,60],[110,110,240],[62,198,168],[255,138,61],[196,107,255]];
     let W = 0, H = 0;
-    function size(){ W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S); cv.width = W; cv.height = H; }
+    const mk = document.createElement('canvas'), mctx = mk.getContext('2d');      // 흐트린 자리 마스크
+    const ink = document.getElementById('ink'), ictx = ink.getContext('2d');       // 드러나는 글자
+    const txt = document.createElement('canvas'), tctx = txt.getContext('2d');    // 글자 원본(미리 그림)
+    const LINES = [
+      ['Seojin Lim', 'big'], ['임서진 · 숭실대학교 실내건축학전공 · Interior Architecture · 공간 · 빛 · 머무름', 'small'],
+      ['공간을 짓고, 계속 짓기', 'big'], ['Miffy Open House · 계속-짓기 · 비어 있는 공공성 · REEL:IF · SKEIN · 발길', 'small'],
+      ['Space · Furniture · Exhibition', 'big'], ['빛 관찰 일지 · 성수동 대기줄 연구 · 사진 에세이 · Research · Photo', 'small'],
+    ];
+    function drawText(){
+      const dpr = Math.min(2, devicePixelRatio || 1), w = innerWidth, h = innerHeight;
+      ink.width = txt.width = Math.round(w * dpr); ink.height = txt.height = Math.round(h * dpr);
+      tctx.setTransform(dpr,0,0,dpr,0,0); tctx.clearRect(0,0,w,h);
+      tctx.fillStyle = '#2C2A4A'; tctx.textBaseline = 'alphabetic';
+      let y = 0, row = 0;
+      while (y < h + 80){
+        const [str, kind] = LINES[row % LINES.length], big = kind === 'big';
+        const fs = big ? Math.max(48, Math.min(110, w * .085)) : Math.max(15, Math.min(22, w * .016));
+        tctx.font = `${big ? 900 : 500} ${big ? 'italic ' : ''}${fs}px "Noto Sans KR", "Apple SD Gothic Neo", sans-serif`;
+        y += big ? fs * 1.02 : fs * 1.9;
+        const unit = str + (big ? '   ' : '   ·   '), uw = tctx.measureText(unit).width;
+        let x = -((row * 137) % uw);
+        while (x < w){ tctx.fillText(unit, x, y); x += uw; }
+        row++;
+      }
+    }
+    function size(){ W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S); cv.width = mk.width = W; cv.height = mk.height = H; drawText(); }
     size(); addEventListener('resize', size);
+    if (document.fonts) document.fonts.ready.then(drawText);
 
     const target = {x: innerWidth * .62, y: innerHeight * .45};
     let lastMove = -1e9, hue = 0, travel = 0, prev = null;
@@ -384,6 +412,17 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
       const g = ctx.createRadialGradient(x/S, y/S, 0, x/S, y/S, r/S);
       g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(.6, `rgba(${col},${a*.45})`); g.addColorStop(1, `rgba(${col},0)`);
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x/S, y/S, r/S, 0, Math.PI*2); ctx.fill();
+      // 같은 자리를 마스크에도 더 진하게 → 글자가 드리워질 자리
+      const m = mctx.createRadialGradient(x/S, y/S, 0, x/S, y/S, r*.85/S);
+      m.addColorStop(0, `rgba(0,0,0,${Math.min(1, a*3.2)})`); m.addColorStop(.55, `rgba(0,0,0,${Math.min(1, a*2)})`); m.addColorStop(1, 'rgba(0,0,0,0)');
+      mctx.fillStyle = m; mctx.beginPath(); mctx.arc(x/S, y/S, r*.85/S, 0, Math.PI*2); mctx.fill();
+    }
+    function reveal(){ // 글자 원본을 마스크 모양으로 오려서 보여줌
+      ictx.setTransform(1,0,0,1,0,0); ictx.globalCompositeOperation = 'source-over';
+      ictx.clearRect(0,0,ink.width,ink.height); ictx.drawImage(txt,0,0);
+      ictx.globalCompositeOperation = 'destination-in'; ictx.imageSmoothingEnabled = true;
+      ictx.drawImage(mk, 0, 0, ink.width, ink.height);
+      ictx.globalCompositeOperation = 'source-over';
     }
 
     addEventListener('pointermove', e => {
@@ -404,6 +443,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
       // 이전 물감을 아주 천천히 지움 → 번진 자국이 남음
       ctx.globalCompositeOperation = 'destination-out';
       ctx.fillStyle = 'rgba(0,0,0,0.035)'; ctx.fillRect(0, 0, W, H);
+      mctx.globalCompositeOperation = 'destination-out'; mctx.fillStyle = 'rgba(0,0,0,0.03)'; mctx.fillRect(0, 0, W, H); mctx.globalCompositeOperation = 'source-over';
       ctx.globalCompositeOperation = 'source-over';
 
       hue += dt * .08;
@@ -419,10 +459,11 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
         const e = 1 - Math.pow(1 - d.t, 3);
         blot(d.x, d.y, d.r0 + 240 * e, d.c, .10 * (1 - d.t));
       }
+      reveal();
       if (!reduce) requestAnimationFrame(frame);
     }
     if (reduce){ // 움직임 줄이기 설정: 정지된 번짐만
-      blobs.forEach((b,i) => blot(innerWidth*(.4+.2*i), innerHeight*(.4+.15*i), 300, mix(i*2).join(','), .25));
+      blobs.forEach((b,i) => blot(innerWidth*(.4+.2*i), innerHeight*(.4+.15*i), 300, mix(i*2).join(','), .25)); reveal();
     } else requestAnimationFrame(frame);
   })();
 
