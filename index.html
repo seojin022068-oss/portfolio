@@ -6,7 +6,7 @@
 <title>임서진 포트폴리오</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,700;1,500;1,700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,700;1,500;1,700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: 한 장의 놀이판 — 왼쪽 위 소개 문장, 오른쪽 위 노란 알약 메뉴, 화면 전체에 떠다니는 작업 오브제. 단일 테마(라벤더 하늘) */
 :root{
@@ -28,15 +28,16 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 a{color:inherit}
 
 /* ── 메뉴 (오른쪽 위 알약) ── */
-.menu{position:fixed;z-index:20;top:calc(14px + env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-.menu a{background:var(--pill);color:var(--pill-ink);text-decoration:none;font-family:var(--serif);font-size:17px;padding:3px 16px 4px;border-radius:999px;box-shadow:0 1px 0 rgba(58,53,16,.15);transition:transform .25s cubic-bezier(.3,1.6,.5,1),background .2s}
-.menu a:hover{transform:translateX(-4px) rotate(-2deg)}
-.menu a.on{background:var(--blue);color:#fff}
+.menu{position:fixed;z-index:20;top:calc(30px + env(safe-area-inset-top,0px));right:max(26px,env(safe-area-inset-right,0px));display:flex;gap:22px;align-items:baseline}
+.menu a{color:var(--soft);text-decoration:none;font-family:var(--ui);font-size:15px;transition:color .2s}
+.menu a:hover{color:var(--ink)}
+.menu a.on{color:var(--ink);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
 
 /* ── 소개 ── */
-.intro{position:relative;z-index:5;max-width:min(640px,calc(100% - 110px));padding-top:calc(14px + env(safe-area-inset-top,0px))}
-.intro .role{margin:6px 0 0;font-family:var(--ui);font-weight:500;font-size:clamp(16px,1.8vw,22px);letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
-.intro .name{margin:0;font-family:var(--serif);font-style:italic;font-weight:700;color:var(--pink);font-size:clamp(56px,9vw,120px);line-height:.95;letter-spacing:-.02em}
+.intro{position:relative;z-index:5;display:inline-block;padding-top:calc(28px + env(safe-area-inset-top,0px));padding-left:12px}
+#home .cats{display:none}
+.intro .role{margin:4px 0 0;font-family:var(--ui);font-weight:400;font-size:15px;letter-spacing:.02em;color:var(--soft)}
+.intro .name{margin:0;font-family:var(--serif);font-style:normal;font-weight:400;color:var(--ink);font-size:clamp(30px,3.4vw,44px);line-height:1;letter-spacing:-.01em}
 .page .lead{margin:-8px 0 36px;max-width:40em;font-family:var(--kr);font-size:clamp(17px,1.8vw,21px);line-height:1.7;color:var(--blue)}
 .page .lead em{font-style:italic;font-weight:700;color:var(--pink)}
 
@@ -52,7 +53,7 @@ a{color:inherit}
 #home{position:relative;height:100vh;height:100svh;overflow:hidden}
 .stage{position:absolute;left:0;right:0;top:0;height:100%;z-index:1}
 .station{position:absolute;width:150px;height:70px;transform:translate(-50%,-50%);border-radius:999px;cursor:pointer}
-.station i{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;transition:opacity .3s,transform .3s}
+.station i{display:none;position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;transition:opacity .3s,transform .3s}
 .station i::before,.station i::after{content:"";position:absolute;background:var(--pink);border-radius:1px}
 .station i::before{left:6px;top:0;width:2px;height:14px}
 .station i::after{top:6px;left:0;width:14px;height:2px}
@@ -106,8 +107,8 @@ a{color:inherit}
 
 
 /* ── 물감 번짐 배경 (커서를 따라 흐름) ── */
-#ink{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-#paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(34px) saturate(1);mix-blend-mode:multiply;opacity:.4}
+#ink{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+#paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(22px);transform:scale(1.06)}
 
 /* ── 전체 화면 CAD 십자선 커서 ── */
 @media (pointer:fine){html.xh,html.xh *{cursor:none!important}}
@@ -126,7 +127,6 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 
 <canvas id="paint" aria-hidden="true"></canvas>
 <canvas id="ink" aria-hidden="true"></canvas>
-<canvas id="letters" aria-hidden="true"></canvas>
 <nav class="menu" aria-label="메뉴">
   <a href="#home" data-v="home">Home</a>
   <a href="#gallery" data-v="gallery">Gallery</a>
@@ -142,7 +142,6 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     <p class="role">Designer</p>
     <div class="cats" id="cats" role="group" aria-label="카테고리"></div>
   </header>
-  <p class="hint">분홍 + 표시 가까이 커서를 가져가 보세요</p>
 </div>
 
 <!-- GALLERY -->
@@ -314,263 +313,98 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(paint); }, {passive:true});
   }
 
-  /* ── 물감 번짐: 커서(십자선)를 따라 색이 번지고 흘러감 ── */
+  /* ── 색 밀어내기: 화면을 덮은 색을 십자선이 밀어내면 하얀 자리에 얇은 글자가 드러남 ── */
   (function(){
-    const cv = document.getElementById('paint'), ctx = cv.getContext('2d');
+    const home = document.getElementById('home');
+    const pc = document.getElementById('paint'), pctx = pc.getContext('2d');   // 보이는 색 (저해상도 + 블러)
+    const ink = document.getElementById('ink'), ictx = ink.getContext('2d');   // 드러나는 글자
+    const txt = document.createElement('canvas'), tctx = txt.getContext('2d'); // 글자 원본
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const S = 4; // 1/4 해상도로 그리고 CSS 블러로 번지게
-    const COLORS = [[235, 142, 189], [204, 142, 235], [142, 173, 235], [142, 235, 227], [142, 235, 173], [235, 204, 142]]; // 같은 채도·명도
-    let W = 0, H = 0;
-    const mk = document.createElement('canvas'), mctx = mk.getContext('2d');      // 흐트린 자리 마스크
-    const ink = document.getElementById('ink'), ictx = ink.getContext('2d');       // 드러나는 글자
-    const txt = document.createElement('canvas'), tctx = txt.getContext('2d');    // 글자 원본(미리 그림)
-    const LABELS = ['Seojin Lim','임서진','Interior Architecture','Miffy Open House','계속-짓기','비어 있는 공공성','REEL:IF','SKEIN','발길','빛 관찰 일지','성수동 대기줄','Space','Furniture','Exhibition','Research','Photo','숭실대학교','Plan 1:100',"Section A-A'",'Light','Material','Threshold','Rest','Walk','Queue','Memory','Distance','Designer'];
+    const S = 5, FONT = '"Futura", "Futura PT", "Jost", "Noto Sans KR", sans-serif';
+    const ACC = [[239,189,214],[223,189,239],[189,206,239],[189,239,235],[189,239,206],[239,223,189]]; // 같은 채도·명도 파스텔
+    const BASE = [236,234,246];
+    const WORDS = ['space','light','threshold','rest','walk','memory','distance','material','머무름','빛','공간','쉼','plan 1:100',"section A-A'"];
+    let W, H, dpr, blobs = [], cur = ACC[0].slice(), target = 0;
+    let seed = 9; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     function drawText(){
-      const dpr = Math.min(2, devicePixelRatio || 1), w = innerWidth, h = innerHeight;
-      ink.width = txt.width = Math.round(w * dpr); ink.height = txt.height = Math.round(h * dpr);
+      const w = innerWidth, h = innerHeight; dpr = Math.min(2, devicePixelRatio || 1);
+      ink.width = txt.width = Math.round(w*dpr); ink.height = txt.height = Math.round(h*dpr);
       tctx.setTransform(dpr,0,0,dpr,0,0); tctx.clearRect(0,0,w,h);
+      tctx.textAlign = 'center'; tctx.textBaseline = 'middle';
+      // 흩어진 얇은 단어
+      seed = 9; tctx.fillStyle = 'rgba(44,42,74,.45)'; tctx.font = `300 14px ${FONT}`;
+      for (let i = 0; i < Math.round(w*h/26000); i++) tctx.fillText(WORDS[i % WORDS.length], r()*w, r()*h);
+      // 작업 제목 (자리 = 클릭하면 열리는 곳)
+      const big = Math.max(26, Math.min(46, w * .034));
+      WORKS.forEach(x => {
+        const b = x.el.getBoundingClientRect(), cx = b.left + b.width/2, cy = b.top + b.height/2;
+        tctx.fillStyle = 'rgba(44,42,74,.92)'; tctx.font = `300 ${big}px ${FONT}`; tctx.fillText(x.t, cx, cy);
+        tctx.fillStyle = 'rgba(44,42,74,.6)'; tctx.font = `300 13px ${FONT}`; tctx.fillText(x.sub, cx, cy + big * .78);
+      });
     }
-    function axes(){ // 차트처럼 가장자리 눈금 (항상 보임)
-      const dpr = Math.min(2, devicePixelRatio || 1), w = innerWidth, h = innerHeight, L = 26, B = h - 24;
-      ictx.setTransform(dpr,0,0,dpr,0,0);
-      ictx.strokeStyle = '#C9C7DA'; ictx.fillStyle = '#9A98B8'; ictx.lineWidth = 1;
-      ictx.beginPath(); ictx.moveTo(L, 110); ictx.lineTo(L, B); ictx.lineTo(w - 16, B); ictx.stroke();
-      ictx.font = '400 9px "DM Mono", monospace'; ictx.textAlign = 'center'; ictx.textBaseline = 'top';
-      for (let x = L, k = 0; x < w - 30; x += 100, k++){ ictx.beginPath(); ictx.moveTo(x, B); ictx.lineTo(x, B + 4); ictx.stroke(); ictx.fillText(String(k * 1000), x, B + 6); }
-      ictx.textAlign = 'right'; ictx.textBaseline = 'middle';
-      for (let y = B, k = 0; y > 120; y -= 100, k++){ ictx.beginPath(); ictx.moveTo(L - 4, y); ictx.lineTo(L, y); ictx.stroke(); }
-      ictx.save(); ictx.translate(12, (110 + B) / 2); ictx.rotate(-Math.PI / 2); ictx.textAlign = 'center';
-      ictx.fillText('SPACE  ←   SEOJIN LIM · DESIGN FIELD (mm)   →  DETAIL', 0, 0); ictx.restore();
-      ictx.setTransform(1,0,0,1,0,0);
+    function size(){
+      W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S); pc.width = W; pc.height = H;
+      seed = 4; blobs = Array.from({length: 7}, (_, i) => ({hx: r()*W, hy: r()*H, x:0, y:0, vx:0, vy:0, rad: (.35 + r()*.3) * Math.max(W,H), acc: i % 3 !== 2}));
+      blobs.forEach(b => { b.x = b.hx; b.y = b.hy; });
+      paintAll(1); drawText();
     }
-    function size(){ W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S); cv.width = mk.width = W; cv.height = mk.height = H; drawText(); }
+    function paintAll(a){
+      pctx.globalCompositeOperation = 'source-over';
+      pctx.fillStyle = `rgba(${BASE},${a})`; pctx.fillRect(0,0,W,H);
+      blobs.forEach(b => {
+        const c = b.acc ? cur.map(Math.round) : BASE;
+        const g = pctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.rad);
+        g.addColorStop(0, `rgba(${c},${a})`); g.addColorStop(1, `rgba(${c},0)`);
+        pctx.fillStyle = g; pctx.fillRect(0,0,W,H);
+      });
+    }
     size(); addEventListener('resize', size);
-    if (document.fonts) document.fonts.ready.then(() => { drawText(); reveal(); });
+    if (document.fonts) document.fonts.ready.then(drawText);
 
-    const target = {x: innerWidth * .62, y: innerHeight * .45};
-    let lastMove = -1e9, hue = 0, travel = 0, prev = null;
-    const blobs = [0,1,2].map(i => ({x: target.x, y: target.y, vx: 0, vy: 0, k: [.06,.035,.02][i], d: [.78,.84,.88][i], c: i * 2, r: [170,240,310][i]}));
-    const drops = [];
+    const m = {x:-999, y:-999, px:-999, py:-999};
+    addEventListener('pointermove', e => { m.x = e.clientX; m.y = e.clientY; }, {passive:true});
+    addEventListener('pointerdown', e => { m.x = e.clientX; m.y = e.clientY; }, {passive:true});
+    addEventListener('hashchange', () => setTimeout(() => { size(); }, 50));
 
-    const GRAY = [214,210,228]; let curC = COLORS[0].slice();
-    function mix(t){ // 지금 강조색 하나 + 라벤더 회색만 (레퍼런스처럼 한 가지 색으로 번짐)
-      return (Math.round(t) % 4 === 2) ? GRAY : curC.map(Math.round);
+    function erase(x, y, rad, a){
+      const g = pctx.createRadialGradient(x/S, y/S, 0, x/S, y/S, rad/S);
+      g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(.55, `rgba(0,0,0,${a*.8})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+      pctx.globalCompositeOperation = 'destination-out'; pctx.fillStyle = g;
+      pctx.beginPath(); pctx.arc(x/S, y/S, rad/S, 0, Math.PI*2); pctx.fill();
+      pctx.globalCompositeOperation = 'source-over';
     }
-    function blot(x, y, r, col, a){
-      const g = ctx.createRadialGradient(x/S, y/S, 0, x/S, y/S, r/S);
-      g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(.6, `rgba(${col},${a*.45})`); g.addColorStop(1, `rgba(${col},0)`);
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x/S, y/S, r/S, 0, Math.PI*2); ctx.fill();
-      // 같은 자리를 마스크에도 더 진하게 → 글자가 드리워질 자리
-      const m = mctx.createRadialGradient(x/S, y/S, 0, x/S, y/S, r*.85/S);
-      m.addColorStop(0, `rgba(0,0,0,${Math.min(1, a*3.2)})`); m.addColorStop(.55, `rgba(0,0,0,${Math.min(1, a*2)})`); m.addColorStop(1, 'rgba(0,0,0,0)');
-      mctx.fillStyle = m; mctx.beginPath(); mctx.arc(x/S, y/S, r*.85/S, 0, Math.PI*2); mctx.fill();
-    }
-    function reveal(){ // 글자 원본을 마스크 모양으로 오려서 보여줌
+    function frame(now){
+      if (home.hidden){ requestAnimationFrame(frame); return; }
+      // 십자선이 가까이 간 작업의 색으로 천천히 물듦
+      let near = -1, nd = 1e9;
+      WORKS.forEach((x, i) => { const b = x.el.getBoundingClientRect(), d = Math.hypot(m.x - (b.left + b.width/2), m.y - (b.top + b.height/2)); if (d < nd){ nd = d; near = i; } });
+      if (nd < 220) target = near % ACC.length;
+      cur = cur.map((v,k) => v + (ACC[target][k] - v) * .02);
+      // 색 덩어리는 커서에 밀려나고 제자리로 천천히 돌아옴
+      blobs.forEach((b, i) => {
+        const dx = b.x - m.x/S, dy = b.y - m.y/S, d = Math.hypot(dx, dy) || 1;
+        let fx = (b.hx + Math.sin(now/5000 + i)*8 - b.x) * .004, fy = (b.hy + Math.cos(now/6000 + i)*8 - b.y) * .004;
+        if (d < 60){ fx += dx/d * (60 - d) * .01; fy += dy/d * (60 - d) * .01; }
+        b.vx = (b.vx + fx) * .94; b.vy = (b.vy + fy) * .94; b.x += b.vx; b.y += b.vy;
+      });
+      // 색이 아주 천천히 다시 차오름
+      paintAll(.018);
+      // 십자선이 지나간 자리는 색이 밀려나 하얗게
+      const sp = Math.hypot(m.x - m.px, m.y - m.py);
+      if (m.x > -500){
+        const steps = Math.max(1, Math.ceil(sp / 20));
+        for (let i = 1; i <= steps; i++){ const t = i/steps; erase(m.px + (m.x - m.px)*t, m.py + (m.y - m.py)*t, 95 + Math.min(60, sp*.6), .35); }
+      }
+      m.px = m.x; m.py = m.y;
+      // 하얀 자리에만 글자 보이기: 글자 − 색
       ictx.setTransform(1,0,0,1,0,0); ictx.globalCompositeOperation = 'source-over';
       ictx.clearRect(0,0,ink.width,ink.height); ictx.drawImage(txt,0,0);
-      ictx.globalCompositeOperation = 'destination-in'; ictx.imageSmoothingEnabled = true;
-      ictx.drawImage(mk, 0, 0, ink.width, ink.height);
-      ictx.globalCompositeOperation = 'source-over'; axes();
-    }
-
-    addEventListener('pointermove', e => {
-      target.x = e.clientX; target.y = e.clientY; lastMove = performance.now();
-      if (prev){ travel += Math.hypot(e.clientX - prev.x, e.clientY - prev.y); }
-      prev = {x: e.clientX, y: e.clientY};
-      if (travel > 70 && drops.length < 60){ travel = 0; hue += .35; drops.push({x: e.clientX, y: e.clientY, t: 0, c: mix(hue).join(','), r0: 30 + Math.random()*30}); }
-    }, {passive: true});
-
-    let last = performance.now();
-    function frame(now){
-      const dt = Math.min(50, now - last) / 1000; last = now;
-      // 마우스가 멈추면 천천히 혼자 떠다님
-      if (now - lastMove > 2500){
-        const t = now / 1000;
-        target.x = innerWidth * (.55 + .3 * Math.sin(t * .23)); target.y = innerHeight * (.5 + .3 * Math.sin(t * .31 + 1));
-      }
-      // 이전 물감을 아주 천천히 지움 → 번진 자국이 남음
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.fillStyle = 'rgba(0,0,0,0.012)'; ctx.fillRect(0, 0, W, H);
-      mctx.globalCompositeOperation = 'destination-out'; mctx.fillStyle = 'rgba(0,0,0,0.014)'; mctx.fillRect(0, 0, W, H); mctx.globalCompositeOperation = 'source-over';
-      ctx.globalCompositeOperation = 'source-over';
-
-      hue += dt * .08;
-      const tc = COLORS[(window.__acc || 0) % COLORS.length]; curC = curC.map((v,k) => v + (tc[k] - v) * .03);
-      blobs.forEach((b, i) => {
-        b.vx = (b.vx + (target.x - b.x) * b.k) * b.d; b.vy = (b.vy + (target.y - b.y) * b.k) * b.d;
-        b.x += b.vx; b.y += b.vy;
-        const speed = Math.min(1, Math.hypot(b.vx, b.vy) / 25);
-        blot(b.x, b.y, b.r * (1 + speed * .6), mix(hue + b.c).join(','), .12 + speed * .08);
-      });
-      for (let i = drops.length - 1; i >= 0; i--){
-        const d = drops[i]; d.t += dt / 3.2;
-        if (d.t >= 1){ drops.splice(i, 1); continue; }
-        const e = 1 - Math.pow(1 - d.t, 3);
-        blot(d.x, d.y, d.r0 + 330 * e, d.c, .16 * (1 - d.t));
-      }
-      reveal();
-      if (!reduce) requestAnimationFrame(frame);
-    }
-    if (reduce){ // 움직임 줄이기 설정: 정지된 번짐만
-      blobs.forEach((b,i) => blot(innerWidth*(.4+.2*i), innerHeight*(.4+.15*i), 300, mix(i*2).join(','), .25)); reveal();
-    } else requestAnimationFrame(frame);
-  })();
-
-  /* ── 글자 들판: 흩어진 글자가 자석처럼 커서를 따라오고, + 표시에 가면 모여서 제목이 됨 ── */
-  (function(){
-    const cv = document.getElementById('letters'), ctx = cv.getContext('2d'), home = document.getElementById('home');
-    const PAL = ['#C23D80', '#963DC2', '#3D69C2', '#3DC2B7', '#3DC269', '#C2963D']; // 같은 채도·명도
-    const FONT = '"Futura", "Futura PT", "Jost", "Noto Sans KR", sans-serif';
-    const POOL = [...new Set(WORKS.map(x => x.t).join('').replace(/[\s:\-]/g,''))];
-    const WORDS = ['space','light','threshold','rest','walk','memory','distance','material','plan 1:100','머무름','빛','공간','짓기','stream of','noise around','thinking','queue'];
-    let w, h, dpr, T = [], seed = 3;
-    const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    const formed = new Map(), pinned = new Set(), carried = [];
-    let acc = 0; window.__acc = 0;
-    const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
-    function avoid(){
-      return [...document.querySelectorAll('.intro .name, .intro .role, .cats, .menu')].map(el => { const b = el.getBoundingClientRect(); return [b.left - 10, b.top - 10, b.right + 10, b.bottom + 10]; });
-    }
-    function build(){
-      dpr = Math.min(2, devicePixelRatio || 1); w = innerWidth; h = innerHeight;
-      cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
-      [...formed.keys()].forEach(unform); carried.length = 0;
-      T = []; seed = 3; const A = avoid(), gap = w < 640 ? 44 : 52;
-      for (let y = 26; y < h - 20; y += gap) for (let x = 26; x < w - 20; x += gap){
-        if (r() < .35) continue;
-        const hx = x + (r()-.5)*30, hy = y + (r()-.5)*30;
-        if (A.some(([l,t,rr,b]) => hx > l && hx < rr && hy > t && hy < b)) continue;
-        const word = r() < .07;
-        const ch = word ? WORDS[Math.floor(r()*WORDS.length)] : POOL[Math.floor(r()*POOL.length)];
-        T.push({hx, hy, x:hx, y:hy, vx:0, vy:0, base:ch, ch, word, busy:null, tx:0, ty:0, a:0, mag:-1, ord:0});
-      }
-    }
-    function center(work){ const b = work.el.getBoundingClientRect(); return [b.left + b.width/2, b.top + b.height/2]; }
-    // 제목을 계단처럼 흘러내리게 배치 (레퍼런스의 b r / e a / t h / e 처럼)
-    function layout(title, cx, cy){
-      const words = title.split(' '), out = [], step = w < 640 ? 18 : 24, drop = w < 640 ? 18 : 22;
-      let x = 0, y = 0, k = 0;
-      words.forEach((wd, wi) => {
-        [...wd].forEach((c, ci) => {
-          out.push({ch:c, x, y: y + (k % 2 ? -drop*.35 : drop*.35)});
-          x += step; y += drop * .55; k++;
-        });
-        x += step * .9; y += drop * .4;
-      });
-      const minx = Math.min(...out.map(p => p.x)), maxx = Math.max(...out.map(p => p.x)), maxy = Math.max(...out.map(p => p.y));
-      let ox = cx - (minx + maxx)/2, oy = cy - maxy/2;
-      ox = Math.min(Math.max(ox, 28 - minx), w - 28 - maxx); oy = Math.min(Math.max(oy, 40), h - 40 - maxy);
-      out.forEach(p => { p.x += ox; p.y += oy; });
-      return out;
-    }
-    function release(t){ const i = carried.indexOf(t); if (i >= 0) carried.splice(i, 1); t.mag = -1; }
-    function form(id){
-      if (formed.has(id)) return;
-      const wi = WORKS.findIndex(x => x.id === id), work = WORKS[wi], [cx, cy] = center(work), used = [];
-      acc = wi % PAL.length; window.__acc = acc;
-      layout(work.t, cx, cy).forEach((p, k) => {
-        let best = -1, bs = 1e9;
-        T.forEach((t, i) => {
-          if (t.busy || t.word) return;
-          const d = Math.hypot(t.x - p.x, t.y - p.y) - (t.base === p.ch ? 200 : 0) - (t.mag >= 0 ? 180 : 0);
-          if (d < bs){ bs = d; best = i; }
-        });
-        if (best < 0) return;
-        const t = T[best]; release(t); t.busy = id; t.tx = p.x; t.ty = p.y; t.ch = p.ch; t.ord = k; used.push(best);
-      });
-      formed.set(id, {used, col: PAL[acc]}); work.el.classList.add('formed');
-      [...carried].forEach(release);
-    }
-    function unform(id){
-      const f = formed.get(id); (f ? f.used : []).forEach(i => { const t = T[i]; if (t) t.busy = null; });
-      formed.delete(id); const work = WORKS.find(x => x.id === id); if (work) work.el.classList.remove('formed');
-    }
-    function cat(k){
-      pinned.clear(); [...formed.keys()].forEach(unform);
-      if (k) WORKS.filter(x => x.k === k).forEach(x => { pinned.add(x.id); form(x.id); });
-    }
-    window.__sj = {form, unform, cat};
-
-    const m = {x:-999, y:-999}, trail = []; let lastMove = 0;
-    function move(e){
-      m.x = e.clientX; m.y = e.clientY; lastMove = performance.now();
-      const p = trail[0];
-      if (!p || Math.hypot(p.x - m.x, p.y - m.y) > 5){ trail.unshift({x:m.x, y:m.y}); if (trail.length > 500) trail.pop(); }
-    }
-    addEventListener('pointermove', move, {passive:true});
-    addEventListener('pointerdown', move, {passive:true});
-    build(); addEventListener('resize', build);
-    if (document.fonts) document.fonts.ready.then(build);
-    addEventListener('hashchange', () => { pinned.clear(); [...formed.keys()].forEach(unform); });
-
-    function curve(pts, wob){ // 글자 사이를 지나는 가는 손선
-      if (pts.length < 2) return;
-      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
-      for (let i = 1; i < pts.length; i++){
-        const a = pts[i-1], b = pts[i], mx = (a.x + b.x)/2, my = (a.y + b.y)/2;
-        const nx = -(b.y - a.y), ny = (b.x - a.x), L = Math.hypot(nx, ny) || 1, s = (i % 2 ? 1 : -1) * wob;
-        ctx.quadraticCurveTo(mx + nx/L*s, my + ny/L*s, b.x, b.y);
-      }
-      ctx.stroke();
-    }
-    const MAX = 22;
-    function frame(now){
-      ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
-      if (home.hidden){ requestAnimationFrame(frame); return; }
-      WORKS.forEach(work => {
-        const [cx, cy] = center(work), d = Math.hypot(m.x - cx, m.y - cy), s = work.__h || (work.__h = {in:0, out:0});
-        if (d < 90){ s.out = 0; s.in = s.in || now; if (now - s.in > 160) form(work.id); }
-        else { s.in = 0; if (formed.has(work.id) && !pinned.has(work.id) && document.activeElement !== work.el && d > 240){ s.out = s.out || now; if (now - s.out > 700) unform(work.id); } }
-      });
-      let nearTitle = false;
-      formed.forEach((_, id) => { const [cx, cy] = center(WORKS.find(x => x.id === id)); if (Math.hypot(m.x - cx, m.y - cy) < 260) nearTitle = true; });
-      const idleLong = now - lastMove > 1600;
-      if (nearTitle) [...carried].forEach(release);
-      if (!idleLong && !nearTitle) T.forEach(t => {
-        if (carried.length >= MAX || t.busy || t.word || t.mag >= 0) return;
-        if (Math.hypot(t.x - m.x, t.y - m.y) < 40){ t.mag = 1; carried.push(t); }
-      });
-      if (idleLong && carried.length && Math.random() < .2) release(carried[carried.length - 1]);
-      const sp = 20;
-      carried.forEach((t, j) => {
-        let need = (j + 1) * sp, ac = 0, prev = {x:m.x, y:m.y}, q = trail[trail.length - 1] || prev;
-        for (let i = 0; i < trail.length; i++){ const p = trail[i], d = Math.hypot(p.x - prev.x, p.y - prev.y); if (ac + d >= need){ const f = (need - ac) / (d || 1); q = {x: prev.x + (p.x - prev.x)*f, y: prev.y + (p.y - prev.y)*f}; break; } ac += d; prev = p; q = p; }
-        t.tx = q.x; t.ty = q.y;
-      });
-      T.forEach(t => {
-        const follow = t.busy || t.mag >= 0, tx = follow ? t.tx : t.hx, ty = follow ? t.ty : t.hy;
-        const k = t.busy ? .08 : t.mag >= 0 ? .16 : .035;
-        let fx = (tx - t.x) * k, fy = (ty - t.y) * k;
-        if (!follow){ const dx = t.x - m.x, dy = t.y - m.y, d = Math.hypot(dx, dy); if (d < 60 && d > .1){ const f = (60 - d) / 60 * 1.6; fx += dx/d*f; fy += dy/d*f; } }
-        t.vx = (t.vx + fx) * .76; t.vy = (t.vy + fy) * .76; t.x += t.vx; t.y += t.vy;
-        t.a += ((follow ? 1 : 0) - t.a) * .12;
-        if (!t.busy && t.a < .5) t.ch = t.base;
-      });
-      const col = PAL[acc];
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      // 손선: 꼬리
-      ctx.strokeStyle = 'rgba(70,68,84,.45)'; ctx.lineWidth = .8; ctx.lineCap = 'round';
-      if (carried.length > 1) curve([{x:m.x, y:m.y}, ...carried.map(t => ({x:t.x, y:t.y + 9}))], 7);
-      // 손선: 제목
-      formed.forEach(f => { const pts = f.used.map(i => T[i]).filter(Boolean).sort((a,b) => a.ord - b.ord); curve(pts.map(t => ({x:t.x - 6, y:t.y + 10})), 10); });
-      // 흩어진 글자 (아주 옅은 회색)
-      T.forEach(t => {
-        if (t.a > .04) return;
-        ctx.fillStyle = t.word ? 'rgba(60,58,74,.22)' : 'rgba(60,58,74,.30)';
-        ctx.font = t.word ? `500 12px ${FONT}` : `400 14px ${FONT}`;
-        ctx.fillText(t.ch, t.x, t.y);
-      });
-      // 붙은 글자 / 제목 글자 (한 가지 색)
-      formed.forEach(f => f.used.forEach(i => { const t = T[i]; if (t) t.col = f.col; }));
-      T.forEach(t => {
-        if (t.a <= .04) return;
-        const c = t.busy ? (t.col || col) : col;
-        ctx.fillStyle = rgba(c, .35 + .65 * t.a);
-        ctx.font = `600 ${Math.round(14 + (t.busy ? 6 : 2) * t.a)}px ${FONT}`;
-        ctx.fillText(t.ch, t.x, t.y);
-      });
+      ictx.globalCompositeOperation = 'destination-out'; ictx.filter = 'blur(10px)';
+      ictx.drawImage(pc, 0, 0, ink.width, ink.height); ictx.drawImage(pc, 0, 0, ink.width, ink.height);
+      ictx.filter = 'none'; ictx.globalCompositeOperation = 'source-over';
       requestAnimationFrame(frame);
     }
+    if (m.px < -500 && !reduce) {}
     requestAnimationFrame(frame);
   })();
 
