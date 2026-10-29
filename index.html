@@ -29,15 +29,15 @@ a{color:inherit}
 
 /* ── 메뉴 (오른쪽 위 알약) ── */
 .menu{position:fixed;z-index:20;top:calc(30px + env(safe-area-inset-top,0px));right:max(26px,env(safe-area-inset-right,0px));display:flex;gap:22px;align-items:baseline}
-.menu a{color:var(--soft);text-decoration:none;font-family:var(--ui);font-size:15px;transition:color .2s}
+.menu a{color:var(--soft);text-decoration:none;font-family:var(--ui);font-size:13px;transition:color .2s}
 .menu a:hover{color:var(--ink)}
 .menu a.on{color:var(--ink);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
 
 /* ── 소개 ── */
 .intro{position:relative;z-index:5;display:inline-block;padding-top:calc(28px + env(safe-area-inset-top,0px));padding-left:12px}
 #home .cats{display:none}
-.intro .role{margin:4px 0 0;font-family:var(--ui);font-weight:400;font-size:15px;letter-spacing:.02em;color:var(--soft)}
-.intro .name{margin:0;font-family:var(--serif);font-style:normal;font-weight:400;color:var(--ink);font-size:clamp(30px,3.4vw,44px);line-height:1;letter-spacing:-.01em}
+.intro .role{margin:3px 0 0;font-family:var(--ui);font-weight:300;font-size:13px;letter-spacing:.02em;color:var(--soft)}
+.intro .name{margin:0;font-family:var(--serif);font-style:normal;font-weight:400;color:var(--ink);font-size:22px;line-height:1.1;letter-spacing:0}
 .page .lead{margin:-8px 0 36px;max-width:40em;font-family:var(--kr);font-size:clamp(17px,1.8vw,21px);line-height:1.7;color:var(--blue)}
 .page .lead em{font-style:italic;font-weight:700;color:var(--pink)}
 
@@ -52,7 +52,7 @@ a{color:inherit}
 /* ── 놀이판 ── */
 #home{position:relative;height:100vh;height:100svh;overflow:hidden}
 .stage{position:absolute;left:0;right:0;top:0;height:100%;z-index:1}
-.station{position:absolute;width:150px;height:70px;transform:translate(-50%,-50%);border-radius:999px;cursor:pointer}
+.station{position:absolute;width:140px;height:40px;transform:translate(-50%,-50%);border-radius:999px;cursor:pointer}
 .station i{display:none;position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;transition:opacity .3s,transform .3s}
 .station i::before,.station i::after{content:"";position:absolute;background:var(--pink);border-radius:1px}
 .station i::before{left:6px;top:0;width:2px;height:14px}
@@ -108,7 +108,7 @@ a{color:inherit}
 
 /* ── 물감 번짐 배경 (커서를 따라 흐름) ── */
 #ink{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
-#paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(22px);transform:scale(1.06)}
+#paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(10px);transform:scale(1.03)}
 
 /* ── 전체 화면 CAD 십자선 커서 ── */
 @media (pointer:fine){html.xh,html.xh *{cursor:none!important}}
@@ -332,14 +332,14 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
       tctx.setTransform(dpr,0,0,dpr,0,0); tctx.clearRect(0,0,w,h);
       tctx.textAlign = 'center'; tctx.textBaseline = 'middle';
       // 흩어진 얇은 단어
-      seed = 9; tctx.fillStyle = 'rgba(44,42,74,.45)'; tctx.font = `300 14px ${FONT}`;
-      for (let i = 0; i < Math.round(w*h/26000); i++) tctx.fillText(WORDS[i % WORDS.length], r()*w, r()*h);
+      seed = 9; tctx.fillStyle = 'rgba(44,42,74,.45)'; tctx.font = `300 11px ${FONT}`;
+      for (let i = 0; i < Math.round(w*h/18000); i++) tctx.fillText(WORDS[i % WORDS.length], r()*w, r()*h);
       // 작업 제목 (자리 = 클릭하면 열리는 곳)
-      const big = Math.max(26, Math.min(46, w * .034));
+      const big = w < 640 ? 15 : 16; // A4 12pt 정도
       WORKS.forEach(x => {
         const b = x.el.getBoundingClientRect(), cx = b.left + b.width/2, cy = b.top + b.height/2;
         tctx.fillStyle = 'rgba(44,42,74,.92)'; tctx.font = `300 ${big}px ${FONT}`; tctx.fillText(x.t, cx, cy);
-        tctx.fillStyle = 'rgba(44,42,74,.6)'; tctx.font = `300 13px ${FONT}`; tctx.fillText(x.sub, cx, cy + big * .78);
+        tctx.fillStyle = 'rgba(44,42,74,.6)'; tctx.font = `300 11px ${FONT}`; tctx.fillText(x.sub, cx, cy + 17);
       });
     }
     function size(){
@@ -392,14 +392,15 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
       // 십자선이 지나간 자리는 색이 밀려나 하얗게
       const sp = Math.hypot(m.x - m.px, m.y - m.py);
       if (m.x > -500){
-        const steps = Math.max(1, Math.ceil(sp / 20));
-        for (let i = 1; i <= steps; i++){ const t = i/steps; erase(m.px + (m.x - m.px)*t, m.py + (m.y - m.py)*t, 95 + Math.min(60, sp*.6), .35); }
+        const eR = Math.max(26, Math.min(44, Math.min(innerWidth, innerHeight) * .045)); // 화면 크기에 맞춘 지우개
+        const steps = Math.max(1, Math.ceil(sp / 10));
+        for (let i = 1; i <= steps; i++){ const t = i/steps; erase(m.px + (m.x - m.px)*t, m.py + (m.y - m.py)*t, eR + Math.min(eR*.5, sp*.3), .35); }
       }
       m.px = m.x; m.py = m.y;
       // 하얀 자리에만 글자 보이기: 글자 − 색
       ictx.setTransform(1,0,0,1,0,0); ictx.globalCompositeOperation = 'source-over';
       ictx.clearRect(0,0,ink.width,ink.height); ictx.drawImage(txt,0,0);
-      ictx.globalCompositeOperation = 'destination-out'; ictx.filter = 'blur(10px)';
+      ictx.globalCompositeOperation = 'destination-out'; ictx.filter = 'blur(5px)';
       ictx.drawImage(pc, 0, 0, ink.width, ink.height); ictx.drawImage(pc, 0, 0, ink.width, ink.height);
       ictx.filter = 'none'; ictx.globalCompositeOperation = 'source-over';
       requestAnimationFrame(frame);
