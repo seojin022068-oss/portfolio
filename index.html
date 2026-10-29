@@ -104,6 +104,7 @@ a{color:inherit}
 
 
 /* ── 물감 번짐 배경 (커서를 따라 흐름) ── */
+#dots{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 #ink{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 #paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(34px) saturate(1.4);mix-blend-mode:multiply;opacity:1}
 
@@ -124,6 +125,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 
 <canvas id="paint" aria-hidden="true"></canvas>
 <canvas id="ink" aria-hidden="true"></canvas>
+<canvas id="dots" aria-hidden="true"></canvas>
 <nav class="menu" aria-label="메뉴">
   <a href="#home" data-v="home">Home</a>
   <a href="#gallery" data-v="gallery">Gallery</a>
@@ -473,6 +475,69 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     if (reduce){ // 움직임 줄이기 설정: 정지된 번짐만
       blobs.forEach((b,i) => blot(innerWidth*(.4+.2*i), innerHeight*(.4+.15*i), 300, mix(i*2).join(','), .25)); reveal();
     } else requestAnimationFrame(frame);
+  })();
+
+  /* ── 점과 실: 가장자리에 줄지어 있다가 커서 주변으로 실을 끌고 모여듦 ── */
+  (function(){
+    const cv = document.getElementById('dots'), ctx = cv.getContext('2d');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const PAL = ['#8B5CF6','#FF4FA0','#4CC96A','#F2E33A','#FF8A3D','#B8E44A','#D3D2DB','#D3D2DB','#D3D2DB','#BDBCC8','#2A2838','#9E9DAA'];
+    let w, h, dpr, P = [];
+    let seed = 11; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    function perimeterPoint(t){ // t: 0~1 → 화면 테두리 위 점
+      const m = 12, W = w - m*2, H = h - m*2, L = 2*(W+H); let d = t * L;
+      if (d < W) return [m + d, m]; d -= W;
+      if (d < H) return [w - m, m + d]; d -= H;
+      if (d < W) return [w - m - d, h - m]; d -= W;
+      return [m, h - m - d];
+    }
+    function build(){
+      dpr = Math.min(2, devicePixelRatio || 1); w = innerWidth; h = innerHeight;
+      cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+      const n = Math.min(340, Math.round(2*(w+h)/13)); seed = 11;
+      P = Array.from({length:n}, (_, i) => {
+        const [hx, hy] = perimeterPoint(i / n), old = P[i];
+        return { hx, hy, x: old ? old.x : hx, y: old ? old.y : hy, vx: 0, vy: 0,
+          c: PAL[Math.floor(r()*PAL.length)], s: 4.2 + r()*2.6, k: .012 + r()*.03, d: .86 + r()*.06,
+          join: r() < .72, slot: 0, bend: (r() - .5) * 1.4, thread: r() < .55 };
+      });
+      let s = 0; P.forEach(p => { if (p.join) p.slot = s++; });
+    }
+    build(); addEventListener('resize', build);
+
+    const focus = {x: w/2, y: h/2}; let lastMove = -1e9, gathered = false;
+    addEventListener('pointermove', e => { focus.x = e.clientX; focus.y = e.clientY; lastMove = performance.now(); gathered = true; }, {passive:true});
+
+    function slotPos(i){ // 고리 모양으로 겹겹이
+      const ring = i % 4, a = i * 2.39996 + ring * .4, rad = 74 + ring * 15 + (i % 7) * 1.5;
+      return [focus.x + Math.cos(a) * rad, focus.y + Math.sin(a) * rad * .92];
+    }
+    function frame(now){
+      const away = now - lastMove > 5000; // 5초 쉬면 테두리로 돌아감
+      ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
+      // 실
+      ctx.lineWidth = .7;
+      P.forEach(p => {
+        let tx = p.hx, ty = p.hy;
+        if (gathered && !away && p.join){ [tx, ty] = slotPos(p.slot); }
+        p.vx = (p.vx + (tx - p.x) * p.k) * p.d; p.vy = (p.vy + (ty - p.y) * p.k) * p.d;
+        p.x += p.vx; p.y += p.vy;
+        const dx = p.x - p.hx, dy = p.y - p.hy, dist = Math.hypot(dx, dy);
+        if (p.thread && dist > 24){
+          const mx = (p.x + p.hx)/2 - dy * .25 * p.bend, my = (p.y + p.hy)/2 + dx * .25 * p.bend;
+          ctx.strokeStyle = p.c; ctx.globalAlpha = .42;
+          ctx.beginPath(); ctx.moveTo(p.hx, p.hy); ctx.quadraticCurveTo(mx, my, p.x, p.y); ctx.stroke();
+        }
+      });
+      ctx.globalAlpha = 1;
+      // 점 (테두리 자리 표시 + 움직이는 점)
+      P.forEach(p => {
+        if (Math.hypot(p.x - p.hx, p.y - p.hy) > 24){ ctx.fillStyle = '#E6E5EE'; ctx.beginPath(); ctx.arc(p.hx, p.hy, 2, 0, Math.PI*2); ctx.fill(); }
+        ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+      });
+      if (!reduce) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   })();
 
   /* ── 페이지 전환 (#home / #gallery / #info) ── */
