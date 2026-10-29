@@ -38,8 +38,6 @@ a{color:inherit}
 #home .cats{display:none}
 .intro .role{margin:3px 0 0;font-family:var(--ui);font-weight:300;font-size:13px;letter-spacing:.02em;color:var(--soft)}
 .intro .name{margin:0;font-family:var(--serif);font-style:normal;font-weight:400;color:var(--ink);font-size:22px;line-height:1.1;letter-spacing:0}
-.page .lead{margin:-8px 0 36px;max-width:40em;font-family:var(--kr);font-size:clamp(17px,1.8vw,21px);line-height:1.7;color:var(--blue)}
-.page .lead em{font-style:italic;font-weight:700;color:var(--pink)}
 
 /* ── 카테고리 알약 ── */
 .cats{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:22px}
@@ -65,17 +63,27 @@ a{color:inherit}
 
 .hint{position:fixed;z-index:4;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(40px + env(safe-area-inset-bottom,0px));font-family:var(--serif);font-style:italic;color:var(--soft);font-size:14px;pointer-events:none;padding-left:18px}
 
-/* ── 상세 카드 ── */
-.detail{position:fixed;z-index:30;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));width:min(380px,calc(100% - 28px));max-height:calc(100% - 120px);overflow:auto;background:var(--card);border-radius:22px;padding:20px 22px 22px;box-shadow:0 20px 50px rgba(60,50,140,.25);
-  transform-origin:bottom right;animation:pop .45s cubic-bezier(.3,1.5,.5,1)}
-@keyframes pop{from{transform:scale(.6) rotate(4deg);opacity:0}to{transform:none;opacity:1}}
-.detail .x{position:absolute;right:14px;top:10px;font-family:var(--serif);font-size:28px;line-height:1;color:var(--soft)}
-.detail .kind{display:inline-block;background:var(--pill);color:var(--pill-ink);border-radius:999px;font-size:12px;padding:1px 10px}
-.detail h2{font-family:var(--serif);font-style:italic;color:var(--pink);font-weight:400;font-size:34px;line-height:1.05;margin:10px 0 4px}
-.detail .sub{color:var(--blue);font-family:var(--kr);margin:0 0 14px}
-.ph{border:1.5px dashed rgba(91,91,232,.4);border-radius:14px;background:rgba(201,194,255,.15);color:var(--soft);padding:12px 14px;font-size:13px;margin:0}
-.ph b{color:var(--ink);font-weight:400}
-.detail .imgph{aspect-ratio:4/3;max-width:100%;display:grid;place-items:center;margin-bottom:12px;font-family:var(--serif);font-style:italic;font-size:15px}
+/* ── 프로젝트 보기 (전체 화면) ── */
+.detail{position:fixed;inset:0;z-index:30;overflow:auto;background:#F4F5F6;color:var(--ink);
+  padding:calc(28px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(80px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));
+  animation:sheet .45s cubic-bezier(.2,.7,.2,1)}
+@keyframes sheet{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.detail .in{max-width:1080px;margin:0 auto}
+.detail .x{position:sticky;top:0;float:right;font-family:var(--ui);font-weight:400;font-size:14px;color:var(--soft);padding:4px 0;background:none}
+.detail .x:hover{color:var(--ink)}
+.detail .kind{display:block;font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);margin:72px 0 10px;letter-spacing:.04em}
+.detail h2{font-family:var(--serif);font-weight:300;font-size:clamp(32px,4vw,48px);line-height:1.15;margin:0 0 8px;letter-spacing:-.01em}
+.detail .sub{font-family:var(--kr);font-weight:300;font-size:16px;color:var(--soft);margin:0 0 40px}
+.detail .meta{display:grid;grid-template-columns:130px minmax(0,1fr);gap:8px 16px;margin:0 0 40px;padding-top:20px;border-top:1px solid rgba(44,42,74,.12);max-width:760px}
+.detail .meta dt{font-family:var(--ui);font-weight:400;font-size:12px;letter-spacing:.06em;color:var(--soft);padding-top:3px}
+.detail .meta dd{margin:0;font-family:var(--kr);font-weight:300;font-size:15px;line-height:1.6}
+.detail .lead{font-family:var(--kr);font-weight:300;font-size:clamp(20px,2.2vw,26px);line-height:1.5;margin:0 0 20px;max-width:30em}
+.detail .body p{font-family:var(--kr);font-weight:300;font-size:16px;line-height:1.85;margin:0 0 14px;max-width:40em}
+.detail .link{display:inline-block;margin:6px 0 0;font-family:var(--ui);font-size:14px;color:var(--ink);text-underline-offset:4px}
+.detail .imgs{display:grid;gap:20px;margin-top:56px}
+.detail .imgs img{display:block;width:100%;max-width:100%;height:auto;background:#E3E6E8}
+@media (max-width:640px){.detail .meta{grid-template-columns:96px minmax(0,1fr)}.detail .kind{margin-top:48px}}
+.ph{display:none}
 
 /* ── 페이지 (Gallery / Info) ── */
 .page{position:relative;z-index:5;max-width:1080px;margin:0 auto;padding-block:calc(120px + env(safe-area-inset-top,0px)) 96px}
@@ -86,25 +94,30 @@ body.off-home{background:#F4F5F6}
 .tile{display:grid;gap:14px;text-align:left;padding:0;background:none}
 .tile .art{position:relative;aspect-ratio:16/9;max-width:100%;overflow:hidden;background:#DCE1E6}
 .tile .art canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tile .art img{position:absolute;left:12%;top:10%;width:76%;height:80%;object-fit:contain;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.tile:hover .art img{transform:scale(1.02)}
 .tile .cap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;align-items:baseline}
 .tile h3{font-family:var(--serif);font-style:normal;font-weight:300;color:var(--ink);font-size:40px;margin:0;line-height:1.1;letter-spacing:-.01em}
 .tile p{margin:0;font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);grid-column:1/-1}
 .tile .k{font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);letter-spacing:.04em}
 .tile h3,.tile .art{transition:opacity .3s}
-.tile:hover .art{opacity:.92}
+
 @media (max-width:640px){.tile h3{font-size:32px}.grid{gap:48px}}
 
-.block{display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;padding-block:26px;border-top:1px solid rgba(91,91,232,.2)}
-.block>h2{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--blue);font-size:28px;margin:0;line-height:1.1}
-.block>h2 small{display:block;font-family:var(--kr);font-style:normal;font-size:13px;color:var(--soft);margin-top:4px}
-.block .stack{display:grid;gap:12px;min-width:0}
-.block h3{font-family:var(--kr);font-size:15px;color:var(--ink);margin:0 0 4px;font-weight:700}
-.row{display:grid;grid-template-columns:90px minmax(0,1fr);gap:14px;align-items:start}
-.row .k{font-family:var(--serif);font-style:italic;color:var(--pink);font-size:18px;line-height:1.4}
-.contact .row{align-items:center}
-.contact .v{font-family:var(--kr);font-size:17px;color:var(--ink);user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
-.copy{background:var(--pill);color:var(--pill-ink);border-radius:999px;font-size:12px;padding:2px 10px;margin-left:8px;vertical-align:2px}
-@media (max-width:640px){.block{grid-template-columns:1fr;gap:12px}.row{grid-template-columns:70px minmax(0,1fr)}}
+.page .lead{margin:0 0 72px;max-width:24em;font-family:var(--kr);font-weight:300;font-size:clamp(24px,3vw,40px);line-height:1.35;color:var(--ink);letter-spacing:-.01em}
+.block{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding-block:28px;border-top:1px solid rgba(44,42,74,.12)}
+.block>h2{font-family:var(--ui);font-weight:400;color:var(--soft);font-size:14px;letter-spacing:.04em;margin:0;line-height:1.7}
+.block .stack{display:grid;gap:14px;min-width:0;max-width:40em}
+.block p{margin:0;font-family:var(--kr);font-weight:300;font-size:16px;line-height:1.8;color:var(--ink)}
+.block p.muted{color:var(--soft);font-size:14px}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:12px;min-width:0}
+.list li{display:grid;grid-template-columns:130px minmax(0,1fr);gap:16px;font-family:var(--kr);font-weight:300;font-size:16px;line-height:1.6;color:var(--ink)}
+.list .d{font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);font-variant-numeric:tabular-nums;padding-top:2px}
+.list small{display:block;font-size:13px;color:var(--soft)}
+.contact .v{font-family:var(--ui);font-weight:300;font-size:16px;color:var(--ink);user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
+.copy{font-family:var(--ui);font-weight:400;color:var(--soft);font-size:12px;margin-left:12px;text-decoration:underline;text-underline-offset:3px}
+.copy:hover{color:var(--ink)}
+@media (max-width:640px){.block{grid-template-columns:1fr;gap:10px}.list li{grid-template-columns:100px minmax(0,1fr)}}
 
 
 
@@ -155,44 +168,69 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 <!-- INFO -->
 <main class="page" id="info" hidden>
   <h1>Info</h1>
-  <p class="lead">임서진은 숭실대학교 실내건축학전공에서 공부하는 디자이너입니다. <em>공간 설계</em>를 중심으로 <em>가구</em>, <em>전시</em>, <em>리서치</em>와 <em>사진</em>을 오가며 작업합니다. 일상에서 지나치는 장면 속에 있는 공간의 이야기를 찾고 있습니다.</p>
+  <p class="lead">공간을 직접 보고 경험하며,<br>그 안에서 발견한 이야기를 기록해왔습니다.</p>
 
   <section class="block">
-    <h2>About<small>나의 이야기</small></h2>
+    <h2>About</h2>
     <div class="stack">
-      <div><h3>시작</h3><p class="ph"><b>여기에</b> — 공간이나 디자인에 처음 끌린 순간, 실내건축을 선택한 이유</p></div>
-      <div><h3>내가 공간을 보는 방식</h3><p class="ph"><b>여기에</b> — 설계할 때 가장 중요하게 생각하는 것, 자주 돌아가는 질문</p></div>
-      <div><h3>지금의 나</h3><p class="ph"><b>여기에</b> — 요즘 몰두하는 주제, 공부하고 있는 것</p></div>
+      <p>숭실대학교 실내건축학전공에서 공부하고 있습니다. 사람의 움직임과 시선, 빛과 색이 공간에 어떤 경험을 만드는지 배워 왔습니다.</p>
+      <p>전시 설치와 운영, 미술관·건축 프로그램 활동에 참여하며 관람객이 어디에서 멈추고 어떻게 이동하는지 살펴왔고, 그 경험을 SNS·출판·영상 작업으로 기록해왔습니다.</p>
     </div>
   </section>
 
   <section class="block">
-    <h2>Vision<small>이루고 싶은 것</small></h2>
+    <h2>Approach</h2>
     <div class="stack">
-      <p class="ph"><b>나에게 성공이란</b> — 한두 문장으로</p>
-      <div class="row"><span class="k">졸업 후</span><p class="ph"><b>여기에</b> — 첫 번째로 해보고 싶은 일</p></div>
-      <div class="row"><span class="k">5년 뒤</span><p class="ph"><b>여기에</b> — 어떤 디자이너가 되어 있고 싶은지</p></div>
-      <div class="row"><span class="k">10년 뒤</span><p class="ph"><b>여기에</b> — 남기고 싶은 공간, 만들고 싶은 영향</p></div>
+      <p>공간은 그것을 바라보는 사람의 시선과 머뭇거림, 공간에 겹쳐지는 빛과 그림자 속에서 각자 다른 경험으로 남는다고 생각합니다.</p>
+      <p>그래서 사람의 표정과 몸짓, 잠시 머무는 순간을 사진과 글, 그래픽과 영상으로 세심하게 관찰하고 기록합니다.</p>
     </div>
   </section>
 
   <section class="block">
-    <h2>Journey<small>걸어온 길</small></h2>
+    <h2>Awards</h2>
+    <ul class="list">
+      <li><span class="d">2026.10</span><span>제24회 대한민국색채대상 GREEN <small>X Prompt Edition · 김일석 · 김서영 · 임서진</small></span></li>
+      <li><span class="d">2026.06</span><span>제5회 전국 대학생 K-공간디자인캠프 은상 <small>River Floating PULSE · 팀</small></span></li>
+      <li><span class="d">2025.11</span><span>「2025 겨울, 청계천의 빛」 하모니 숏폼 페스티벌 장려상 <small>청계천팝(POP!) · 팀</small></span></li>
+      <li><span class="d">2025.09</span><span>장애예술인 전시 「달찮은 하루」 우수 서포터</span></li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>Experience</h2>
+    <ul class="list">
+      <li><span class="d">2026.07</span><span>제주 런케이션 <small>2주 현장 조사 · 공간 제안</small></span></li>
+      <li><span class="d">2026.06</span><span>K-공간디자인캠프 <small>공간 디자인 · 은상</small></span></li>
+      <li><span class="d">2026.05–06</span><span>서울공예박물관 공간 관찰 <small>동선 · 시선 · 색채 · 자연광 분석</small></span></li>
+      <li><span class="d">2025.10–26.04</span><span>『디자인과 재료×프롬프트』 <small>편집 · 디자인 팀장 · 정식 출간</small></span></li>
+      <li><span class="d">2025.10</span><span>오픈하우스서울 <small>현장 운영 · 안내 · 기록 진행요원</small></span></li>
+      <li><span class="d">2025.07–09</span><span>「달찮은 하루」 <small>전시 기획 · 운영</small></span></li>
+      <li><span class="d">2025.03–08</span><span>숭실대학교 학생상담센터 <small>공식 SNS · 홍보 콘텐츠 제작</small></span></li>
+      <li><span class="d">2025.01·11</span><span>환기미술관 자원봉사 <small>작품 및 관람 안전관리 보조 · 총 4회 21시간 20분</small></span></li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>Education</h2>
+    <ul class="list">
+      <li><span class="d">2024–</span><span>숭실대학교 실내건축학전공</span></li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>Tools</h2>
     <div class="stack">
-      <div class="row"><span class="k">2024</span><p class="ph" style="border-style:solid;background:rgba(255,255,255,.6);color:var(--ink)">숭실대학교 실내건축학전공 입학</p></div>
-      <div class="row"><span class="k">2026</span><p class="ph" style="border-style:solid;background:rgba(255,255,255,.6);color:var(--ink)">졸업전시 《계속-짓기》 기획 참여</p></div>
-      <div class="row"><span class="k">20XX</span><p class="ph"><b>공모전·수상</b> — 이름, 결과</p></div>
-      <div class="row"><span class="k">Tools</span><p class="ph"><b>여기에</b> — 다룰 수 있는 프로그램</p></div>
+      <p>Adobe Photoshop · Illustrator · InDesign<br>AutoCAD · Rhino · SketchUp · D5 Render</p>
+      <p class="muted">카드뉴스 · 포스터 · 출판 편집 · 영상 · 도면 / 다이어그램</p>
     </div>
   </section>
 
   <section class="block contact">
-    <h2>Contact<small>연락</small></h2>
-    <div class="stack">
-      <div class="row"><span class="k">학교</span><span class="v" style="user-select:text;-webkit-user-select:text">숭실대학교 실내건축학전공 · 20243040</span></div>
-      <div class="row"><span class="k">Mail</span><span><span class="v" id="mail">seojin022068@gmail.com</span><button class="copy" data-copy="mail">복사</button></span></div>
-      <div class="row"><span class="k">Tel</span><span><span class="v" id="tel">010-3933-1056</span><button class="copy" data-copy="tel">복사</button></span></div>
-    </div>
+    <h2>Contact</h2>
+    <ul class="list">
+      <li><span class="d">Mail</span><span><span class="v" id="mail">seojin022068@gmail.com</span><button class="copy" data-copy="mail">Copy</button></span></li>
+      <li><span class="d">Tel</span><span><span class="v" id="tel">010-3933-1056</span><button class="copy" data-copy="tel">Copy</button></span></li>
+    </ul>
   </section>
 </main>
 
@@ -203,17 +241,435 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 (() => {
   /* ── 작업 목록: 여기만 고치면 홈·갤러리·상세가 함께 바뀜 ── */
   const WORKS = [
-    {id:'miffy',  t:'Miffy Open House', k:'공간', sub:'성수동 공공 휴식 공간 · 스튜디오', x:76, y:28, w:116, seed:3},
-    {id:'gyesok', t:'계속-짓기',         k:'전시', sub:'2026 졸업전시 · 기획 참여',          x:92, y:44, w:92,  seed:7},
-    {id:'public', t:'비어 있는 공공성',   k:'리서치', sub:'공공디자인연구',                   x:12, y:82, w:92,  seed:11},
-    {id:'reelif', t:'REEL:IF',           k:'가구', sub:'미래가구공모전',                     x:30, y:90, w:100, seed:5},
-    {id:'skein',  t:'SKEIN',             k:'가구', sub:'가구리빙디자인공모전',               x:80, y:70, w:100, seed:13},
-    {id:'balgil', t:'발길',              k:'리서치', sub:'걷기 경로 큐레이션 앱 · 팀 프로젝트', x:94, y:88, w:86,  seed:2},
-    {id:'light',  t:'빛 관찰 일지',       k:'공간', sub:'조명계획과디자인 · 지하철 × 송은',    x:22, y:60, w:80,  seed:17},
-    {id:'popup',  t:'성수동 대기줄 연구',  k:'리서치', sub:'연구방법론',                       x:60, y:93, w:72,  seed:23},
-    {id:'photo',  t:'사진',              k:'사진', sub:'사진 에세이',                        x:66, y:44, w:78,  seed:31},
-  ];
-  const CATS = [['공간','Space'],['가구','Furniture'],['전시','Exhibition'],['리서치','Research'],['사진','Photo']];
+ {
+  "id": "miffy",
+  "t": "Miffy Open House",
+  "k": "Space Design",
+  "y": "2026",
+  "sub": "성수동 공공 화장실 · 휴식 공간",
+  "meta": [
+   [
+    "PERIOD",
+    "2026년 3학년 1학기"
+   ],
+   [
+    "SITE",
+    "서울특별시 성동구 성수동2가 연무장길 53"
+   ],
+   [
+    "TYPE",
+    "컨버전스 스튜디오 · 개별 작업"
+   ],
+   [
+    "PROGRAM",
+    "공공 화장실 · 휴식 공간"
+   ]
+  ],
+  "lead": "미피를 추상화해 토끼굴의 아늑함과 흐름을 공간으로 확장했습니다.",
+  "body": [
+   "성수동의 부족한 공공 화장실과 쉼 공간에 주목해, 이동 중 누구나 잠시 머물 수 있는 공간을 제안했습니다. 기능을 위한 공간을 사람의 이동과 시선, 머무름의 경험으로 확장하고자 했습니다."
+  ],
+  "img": [
+   "miffy-1",
+   "miffy-2"
+  ],
+  "x": 60,
+  "y0": 24
+ },
+ {
+  "id": "pulse",
+  "t": "River Floating PULSE",
+  "k": "Space Project",
+  "y": "2026",
+  "sub": "K-공간디자인캠프 · 은상",
+  "meta": [
+   [
+    "PERIOD",
+    "2026.06.26–06.27 · 1박 2일"
+   ],
+   [
+    "SITE",
+    "부산 영화의전당 · 수영강 일대"
+   ],
+   [
+    "TYPE",
+    "팀 프로젝트 · 남국인 송신양 임서진 이현지 김지아"
+   ],
+   [
+    "ROLE",
+    "현장 조사 · 시각화(모델링 & 도면)"
+   ],
+   [
+    "RESULT",
+    "제5회 전국 대학생 K-공간디자인캠프 은상"
+   ]
+  ],
+  "lead": "수영강을 생동감 있는 활동으로 잇는 공간",
+  "body": [
+   "영화의전당 야외 광장에서 수영강변(APEC 나루공원)으로 넘어가는 구간은 도로와 횡단보도 때문에 보행 흐름이 끊기고, 문화·상업 프로그램이 한쪽에 몰려 체류가 이어지지 않았습니다.",
+   "1박 2일 동안 현장을 답사하고, 워터 워킹 볼과 카누 존처럼 전 연령이 즐길 수 있는 수변 활동으로 ‘바라보는 강’을 ‘머물고 노는 강’으로 바꾸는 플로팅 공간을 팀으로 제안했습니다. 짧은 시간 안에 현장 분석부터 최종 결과물까지 완성해 은상을 받았습니다."
+  ],
+  "img": [
+   "pulse-1",
+   "pulse-2",
+   "pulse-3",
+   "pulse-4"
+  ],
+  "x": 84,
+  "y0": 40
+ },
+ {
+  "id": "jeju",
+  "t": "제주 원도심 공간 프로젝트",
+  "k": "Space Project",
+  "y": "2026",
+  "sub": "동문시장 · 산지천 · 북수구광장",
+  "meta": [
+   [
+    "PERIOD",
+    "2026.07.06–07.18 · 13일"
+   ],
+   [
+    "SITE",
+    "제주 동문시장 · 산지천 · 북수구광장 일대"
+   ],
+   [
+    "TYPE",
+    "팀 프로젝트 · 제주 런케이션"
+   ],
+   [
+    "ROLE",
+    "현장 조사 · 시각화(패널 · 모델링 · 모형 제작)"
+   ]
+  ],
+  "lead": "서로의 관찰을 모아 공간 제안으로 발전시키는 과정을 경험했습니다.",
+  "body": [
+   "제주 원도심에 머물며 동문시장과 산지천, 북수구광장 일대의 보행과 체류 방식을 관찰했습니다. 지나가는 공간을 사람들이 머물고 만나며 풍경을 경험하는 장소로 바꾸기 위한 파빌리온을 제안했습니다.",
+   "서로 다른 의견을 정리하고 역할을 조율하며, 반복적인 수정 끝에 각자의 작업을 하나의 공간 제안으로 완성했습니다. 협업은 일을 나누는 것을 넘어, 끝까지 소통하며 함께 완성하는 과정임을 배웠습니다."
+  ],
+  "img": [
+   "jeju-1",
+   "jeju-2"
+  ],
+  "x": 30,
+  "y0": 44
+ },
+ {
+  "id": "public",
+  "t": "비어 있는 공공성",
+  "k": "Research",
+  "y": "2026",
+  "sub": "채우지 않고 남겨두는 것에 대하여",
+  "meta": [
+   [
+    "COURSE",
+    "공공디자인연구"
+   ],
+   [
+    "TYPE",
+    "개별 연구"
+   ],
+   [
+    "KEYWORDS",
+    "거리 · 시선 · 기다림 · 양보"
+   ]
+  ],
+  "lead": "기억은 찾아가야만 시작되는 걸까?",
+  "body": [
+   "지하철, 벤치, 에스컬레이터, 엘리베이터에서 사람들은 아무도 시키지 않았는데도 서로 거리를 두고, 시선을 거두고, 자리를 양보합니다. 공공성이 장소의 유형이 아니라 함께 있는 방식이라면, 엘리베이터 한 칸에도 공공성이 있다고 보았습니다.",
+   "근접학(Hall), 대인거리 관찰 연구, 엘리베이터 속 시민적 무관심 연구를 바탕으로, 기념비를 세우는 대신 매일 지나가는 동선이 기억을 전달할 수 있는지 질문했습니다. 무언가를 세우는 것이 아니라 비워두는 것도 기념이 될 수 있는지 탐구한 연구입니다."
+  ],
+  "img": [
+   "public-1",
+   "public-2",
+   "public-3",
+   "public-4"
+  ],
+  "x": 14,
+  "y0": 70
+ },
+ {
+  "id": "songeun",
+  "t": "송은 × 지하철",
+  "k": "Lighting",
+  "y": "2026",
+  "sub": "같이 광원이 드러난 공간인데, 왜 경험은 달랐을까?",
+  "meta": [
+   [
+    "COURSE",
+    "조명계획과디자인"
+   ],
+   [
+    "SITE VISITS",
+    "2026.09.22–09.29 · 송은 · 지하철 7호선, 2호선, 공항철도, 인천 1호선"
+   ],
+   [
+    "METHOD",
+    "현장 관찰 · 스케치 · 비교 분석"
+   ]
+  ],
+  "lead": "광원이 보이는 것과 광원이 거슬리는 것은 무엇이 다를까?",
+  "body": [
+   "수업에서는 좋은 조명이 광원을 건축 속에 숨기는 것이라고 배웠지만, 송은에서는 선형 광원이 천장 전체에 드러나 있었습니다. 그런데도 공간은 편안했고, 지하철의 노출 선형광은 눈을 피하고 싶게 만들었습니다.",
+   "밝기와 눈부심, 그림자, 색온도, 재질의 반사를 비교하며, 송은이 공간에 따라 빛의 위계를 바꾸고 빛으로 시선과 이동 방향을 만들고 있다는 것을 관찰했습니다."
+  ],
+  "img": [
+   "songeun-1",
+   "songeun-2",
+   "songeun-3"
+  ],
+  "x": 52,
+  "y0": 58
+ },
+ {
+  "id": "onyang",
+  "t": "어두움과 밝음",
+  "k": "Lighting",
+  "y": "2026",
+  "sub": "온양민속박물관의 전시실 비교",
+  "meta": [
+   [
+    "COURSE",
+    "조명계획과디자인"
+   ],
+   [
+    "DATE",
+    "2026.10.21"
+   ],
+   [
+    "METHOD",
+    "밝기 위계 · 재료와 조명 · 렌더링 조도 비교"
+   ]
+  ],
+  "lead": "같은 박물관 안의 어두운 전시실과 밝은 전시실을 비교했습니다.",
+  "body": [
+   "어두운 전시실에서는 벽돌과 유광 타일, 루버와 반투명 필름이 빛을 어떻게 흡수하고 반사하며 광원의 노출을 줄이는지 살폈습니다. 밝은 전시실에서는 고측창의 자연광과 선형 조명, 벽 마감이 전시 배경의 밝기를 만드는 방식을 분석했습니다.",
+   "필름의 적용 여부에 따라 조도와 휘도 분포가 어떻게 달라지는지 렌더링으로 비교하고, 두 전시실의 조명 설계 원칙을 정리했습니다."
+  ],
+  "img": [
+   "onyang-1",
+   "onyang-2",
+   "onyang-3"
+  ],
+  "x": 78,
+  "y0": 72
+ },
+ {
+  "id": "crafts",
+  "t": "서울공예박물관 공간 관찰",
+  "k": "Observe",
+  "y": "2026",
+  "sub": "진입 · 동선 · 시선 · 색 · 자연광",
+  "meta": [
+   [
+    "SITE VISITS",
+    "2026.05.23 · 06.06"
+   ],
+   [
+    "METHOD",
+    "현장 답사 · 관람객 행동 관찰"
+   ],
+   [
+    "FOCUS",
+    "진입 · 동선 · 시선 · 색 · 자연광"
+   ]
+  ],
+  "lead": "저는 전시를 작품뿐 아니라, 사람이 그것을 어떻게 경험하는지의 관점으로 바라봅니다.",
+  "body": [
+   "서울공예박물관을 두 차례 답사하며 관람객의 진입과 이동, 시선의 흐름을 관찰했습니다. 열린 출입구와 내부 동선, 도자기의 색상 배열, 창과 자연광이 전시 경험에 미치는 영향을 분석했습니다."
+  ],
+  "img": [
+   "crafts-1"
+  ],
+  "x": 36,
+  "y0": 84
+ },
+ {
+  "id": "essay",
+  "t": "나는 건축을 좋아하는 사람인가?",
+  "k": "Photo Essay",
+  "y": "2026",
+  "sub": "공간디자인세미나",
+  "meta": [
+   [
+    "COURSE",
+    "공간디자인세미나"
+   ],
+   [
+    "DATE",
+    "2026.09.10"
+   ]
+  ],
+  "lead": "…건축 말고는 뭐 좋아하지?",
+  "body": [
+   "나는 건축을 좋아하는 사람인지 스스로에게 묻고, 직접 걷고 머물며 찍은 사진으로 그 답을 찾아간 포토 에세이입니다."
+  ],
+  "img": [
+   "essay-1",
+   "essay-2",
+   "essay-3",
+   "essay-4"
+  ],
+  "x": 66,
+  "y0": 90
+ },
+ {
+  "id": "dalchan",
+  "t": "달찮은 하루",
+  "k": "Exhibition",
+  "y": "2025",
+  "sub": "장애예술인 전시 · 노들섬",
+  "meta": [
+   [
+    "PERIOD",
+    "2025.07.01–09.12"
+   ],
+   [
+    "VENUE",
+    "노들섬"
+   ],
+   [
+    "TYPE",
+    "팀 프로젝트"
+   ],
+   [
+    "ROLE",
+    "전시 기획 · 설치 · 운영 · 인스타그램 콘텐츠 제작"
+   ],
+   [
+    "RESULT",
+    "우수 서포터 선정"
+   ]
+  ],
+  "lead": "하나의 전시가 만들어지고 관람객과 만나는 전 과정을 경험했습니다.",
+  "body": [
+   "장애예술인의 작품과 이야기를 소개하는 전시 「달찮은 하루」의 기획·설치·운영에 참여했습니다. 작품의 크기와 내용, 관람 동선을 고려해 배치안을 만들고 현장 설치와 운영을 함께했습니다.",
+   "작가의 작업 공간에서 들은 이야기와 분위기를 글·사진·그래픽으로 정리해 인스타그램 매거진과 후원사 홍보 콘텐츠로 완성했으며, 활동 결과 우수 서포터로 선정되었습니다."
+  ],
+  "img": [
+   "dalchan-1",
+   "dalchan-2"
+  ],
+  "x": 22,
+  "y0": 28
+ },
+ {
+  "id": "book",
+  "t": "디자인과 재료×프롬프트",
+  "k": "Publication",
+  "y": "2026",
+  "sub": "34 creators · 8 chapters · 1 book",
+  "meta": [
+   [
+    "PRODUCTION",
+    "2025.10–2026.03"
+   ],
+   [
+    "PUBLISHED",
+    "2026.04"
+   ],
+   [
+    "ROLE",
+    "편집 · 디자인 팀장"
+   ],
+   [
+    "SCOPE",
+    "학생 크리에이터 34명 · 8개 챕터 · 301쪽"
+   ],
+   [
+    "RESULT",
+    "정식 출간"
+   ]
+  ],
+  "lead": "약 6개월간 반복되는 수정과 검수를 끝까지 책임지며, 한 권의 책을 실제 출판물로 완성했습니다.",
+  "body": [
+   "편집·디자인 팀장으로 교수님의 원고와 34명 학생 크리에이터의 작품을 8개 챕터로 구성하고, 전체 레이아웃과 제작 일정을 조율했습니다. 작업 후반까지 이어진 원고와 작품의 변경 사항을 반영하며 페이지 순서와 오탈자, 이미지 해상도와 최종 인쇄 데이터를 끝까지 검수해 301쪽의 책으로 출간했습니다."
+  ],
+  "link": [
+   "교보문고에서 보기",
+   "http://product.kyobobook.co.kr/detail/S000219544310"
+  ],
+  "img": [
+   "book-1",
+   "book-2"
+  ],
+  "x": 86,
+  "y0": 18
+ },
+ {
+  "id": "pop",
+  "t": "청계천팝(POP!)",
+  "k": "Short Form",
+  "y": "2025",
+  "sub": "청계천의 빛 하모니 숏폼 페스티벌 · 장려상",
+  "meta": [
+   [
+    "COMPETITION",
+    "「2025 겨울, 청계천의 빛」 하모니 숏폼 페스티벌"
+   ],
+   [
+    "SUBMISSION",
+    "2025.11.29"
+   ],
+   [
+    "TEAM",
+    "SSUNG-POP · 박승원 · 임서진 · 김진"
+   ],
+   [
+    "TOOLS",
+    "Generative AI & Canva"
+   ],
+   [
+    "RESULT",
+    "장려상"
+   ]
+  ],
+  "lead": "공간의 빛과 분위기를 짧은 영상의 흐름으로 담았습니다.",
+  "body": [
+   "청계천의 겨울 야간경관을 짧고 생동감 있게 보여 주기 위해 영상의 콘셉트와 장면을 구성했습니다. 빛과 움직임을 이미지와 음악, 편집으로 재구성한 작품으로 장려상을 받았습니다."
+  ],
+  "img": [
+   "pop-1"
+  ],
+  "x": 44,
+  "y0": 32
+ },
+ {
+  "id": "counsel",
+  "t": "학생상담센터 SNS",
+  "k": "Content",
+  "y": "2025",
+  "sub": "숭실대학교 학생상담센터 공식 SNS",
+  "meta": [
+   [
+    "PERIOD",
+    "2025.03–08"
+   ],
+   [
+    "ORGANIZATION",
+    "숭실대학교 학생상담센터"
+   ],
+   [
+    "ROLE",
+    "공식 SNS 운영 · 카드뉴스 · 포스터 · 배너 제작"
+   ],
+   [
+    "TARGET",
+    "대학생"
+   ]
+  ],
+  "lead": "핵심 정보를 짧은 시간 안에 이해할 수 있도록 내용의 순서와 시각적 위계를 정리했습니다.",
+  "body": [
+   "학생상담센터의 프로그램을 대학생에게 알리기 위해 카드뉴스와 포스터, 배너를 제작했습니다. INFORMATION → ORGANIZE → DESIGN → UPLOAD"
+  ],
+  "img": [
+   "counsel-1"
+  ],
+  "x": 90,
+  "y0": 90
+ }
+];
+  const CATS = [['Space Design','Space'],['Space Project','Project'],['Research','Research'],['Lighting','Lighting'],['Exhibition','Exhibition']];
 
   const $ = s => document.querySelector(s);
   const stage = $('#stage'), detail = $('#detail'), cats = $('#cats'), grid = $('#grid');
@@ -230,11 +686,11 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     el.addEventListener('blur',  () => window.__sj && window.__sj.unform(w.id));
     stage.append(el); w.el = el;
   });
-  const PHONE_POS = [[50,30],[28,40],[72,48],[30,57],[70,64],[34,72],[66,80],[40,88],[64,94]];
+  const PHONE_POS = [[50,22],[30,28],[70,34],[34,41],[66,47],[36,53],[64,59],[38,65],[62,71],[36,77],[64,83],[44,91]];
   function place(){
     const phone = isPhone();
     WORKS.forEach((w,i) => {
-      const [x,y] = phone ? PHONE_POS[i % PHONE_POS.length] : [w.x, w.y];
+      const [x,y] = phone ? PHONE_POS[i % PHONE_POS.length] : [w.x, w.y0];
       w.el.style.left = x + '%'; w.el.style.top = y + '%';
     });
   }
@@ -255,22 +711,27 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     cats.append(b);
   });
 
-  /* ── 상세 카드 ── */
+  /* ── 프로젝트 보기 ── */
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let lastFocus = null;
   function open(id){
-    const w = WORKS.find(x => x.id === id);
-    detail.innerHTML = `
-      <button class="x" aria-label="닫기">×</button>
-      <span class="kind">${w.k}</span>
-      <h2>${w.t}</h2>
-      <p class="sub">${w.sub}</p>
-      <div class="ph imgph">대표 이미지 자리</div>
-      <p class="ph"><b>여기에</b> — 프로젝트 개요, 맡은 역할, 기간, 하고 싶었던 이야기</p>`;
-    detail.hidden = false;
-    detail.style.animation = 'none'; detail.offsetHeight; detail.style.animation = '';
+    const w = WORKS.find(x => x.id === id); lastFocus = document.activeElement;
+    detail.innerHTML = `<div class="in">
+      <button class="x" aria-label="닫기">Close ✕</button>
+      <span class="kind">${esc(w.k)} · ${esc(w.y)}</span>
+      <h2>${esc(w.t)}</h2>
+      <p class="sub">${esc(w.sub)}</p>
+      <dl class="meta">${w.meta.map(([a,b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>
+      <p class="lead">${esc(w.lead)}</p>
+      <div class="body">${w.body.map(p => `<p>${esc(p)}</p>`).join('')}${w.link ? `<a class="link" href="${esc(w.link[1])}" target="_blank" rel="noopener">${esc(w.link[0])} ↗</a>` : ''}</div>
+      <div class="imgs">${w.img.map(src => `<img src="images/${src}.jpg" alt="${esc(w.t)} 작업 이미지" loading="lazy">`).join('')}</div>
+    </div>`;
+    detail.hidden = false; detail.scrollTop = 0; document.body.style.overflow = 'hidden';
     detail.querySelector('.x').focus();
   }
-  detail.addEventListener('click', e => { if (e.target.closest('.x')) detail.hidden = true; });
-  addEventListener('keydown', e => { if (e.key === 'Escape') detail.hidden = true; });
+  function close(){ detail.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus?.(); }
+  detail.addEventListener('click', e => { if (e.target.closest('.x')) close(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !detail.hidden) close(); });
 
   /* ── 갤러리: 회색 화면 위 가는 흰 선과 점, 반투명 덩어리 ── */
   const ARTBG = ['#DCE1E6','#E7ECEB','#DFE3E0','#E3E1E8'];
@@ -316,7 +777,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
   WORKS.forEach((w, i) => {
     const t = document.createElement('button');
     t.className = 'tile';
-    t.innerHTML = `<div class="art"><canvas aria-hidden="true"></canvas></div><div class="cap"><h3>${w.t}</h3><span class="k">${w.k}</span><p>${w.sub}</p></div>`;
+    t.innerHTML = `<div class="art"><canvas aria-hidden="true"></canvas><img src="images/${w.img[0]}.jpg" alt="" loading="lazy"></div><div class="cap"><h3>${w.t}</h3><span class="k">${w.k} · ${w.y}</span><p>${w.sub}</p></div>`;
     t.addEventListener('click', () => open(w.id));
     grid.append(t);
     const cv = t.querySelector('canvas'), a = {cv, seed: i + 2, hover: false};
@@ -334,7 +795,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
   /* ── 복사 버튼 ── */
   document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', () => {
     const el = document.getElementById(b.dataset.copy), text = el.textContent;
-    const ok = () => { b.textContent = '복사됨'; setTimeout(() => b.textContent = '복사', 1400); };
+    const ok = () => { b.textContent = 'Copied'; setTimeout(() => b.textContent = 'Copy', 1400); };
     try { navigator.clipboard.writeText(text).then(ok, () => select(el)); } catch(_) { select(el); }
   }));
   function select(el){ const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
