@@ -35,13 +35,13 @@ a{color:inherit}
 
 /* ── 소개 ── */
 .intro{position:relative;z-index:5;max-width:min(640px,calc(100% - 110px));padding-top:calc(14px + env(safe-area-inset-top,0px))}
-.intro p{margin:0;font-family:var(--kr);font-size:clamp(16px,1.6vw,20px);line-height:1.45;color:var(--blue)}
-.intro .name{font-family:var(--serif);font-style:italic;font-weight:700;color:var(--pink);font-size:clamp(46px,6.4vw,78px);line-height:.9;letter-spacing:-.03em;margin-right:.18em;vertical-align:-.08em}
-.intro .name .kr{font-family:var(--kr);font-style:normal;font-size:.42em;letter-spacing:0;margin-left:.2em;vertical-align:.5em}
-.intro em{font-family:var(--serif);font-style:italic;color:var(--pink);font-size:1.12em}
+.intro .role{margin:6px 0 0;font-family:var(--ui);font-weight:500;font-size:clamp(16px,1.8vw,22px);letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
+.intro .name{margin:0;font-family:var(--serif);font-style:italic;font-weight:900;color:var(--pink);font-size:clamp(56px,9vw,120px);line-height:.95;letter-spacing:-.04em}
+.page .lead{margin:-8px 0 36px;max-width:40em;font-family:var(--kr);font-size:clamp(17px,1.8vw,21px);line-height:1.7;color:var(--blue)}
+.page .lead em{font-style:italic;font-weight:700;color:var(--pink)}
 
 /* ── 카테고리 알약 ── */
-.cats{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:14px}
+.cats{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:22px}
 .cat{background:rgba(255,255,255,.5);border:1px solid rgba(91,91,232,.25);color:var(--blue);font-family:var(--ui);font-size:13px;padding:2px 12px 3px;border-radius:999px;display:inline-flex;gap:6px;align-items:center;transition:all .25s}
 .cat i{font-style:normal;font-family:var(--serif);font-size:17px;line-height:1;transition:transform .3s}
 .cat:hover{background:#fff}
@@ -135,7 +135,8 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
   <div class="stage" id="stage" aria-label="작업 오브제들">
   </div>
   <header class="intro">
-    <p><span class="name">Seojin Lim<span class="kr">임서진</span></span>은 숭실대학교 실내건축학전공에서 공부하는 디자이너입니다. <em>공간 설계</em>를 중심으로 <em>가구</em>, <em>전시</em>, <em>리서치</em>와 <em>사진</em>을 오가며 작업합니다. 일상에서 지나치는 장면 속에 있는 공간의 이야기를 찾고 있습니다.</p>
+    <h1 class="name">Seojin Lim</h1>
+    <p class="role">Designer</p>
     <div class="cats" id="cats" role="group" aria-label="카테고리"></div>
   </header>
   <p class="hint">오브제를 끌어서 옮기고, 눌러서 열어보세요</p>
@@ -150,6 +151,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 <!-- INFO -->
 <main class="page" id="info" hidden>
   <h1>Info</h1>
+  <p class="lead">임서진은 숭실대학교 실내건축학전공에서 공부하는 디자이너입니다. <em>공간 설계</em>를 중심으로 <em>가구</em>, <em>전시</em>, <em>리서치</em>와 <em>사진</em>을 오가며 작업합니다. 일상에서 지나치는 장면 속에 있는 공간의 이야기를 찾고 있습니다.</p>
 
   <section class="block">
     <h2>About<small>나의 이야기</small></h2>
