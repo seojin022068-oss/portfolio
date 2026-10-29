@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>임서진 포트폴리오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 한 장의 놀이판 — 왼쪽 위 소개 문장, 오른쪽 위 노란 알약 메뉴, 화면 전체에 떠다니는 작업 오브제. 단일 테마(라벤더 하늘) */
+:root{
+  --sky-top:#C9C2FF; --sky-mid:#E6E3FF; --sky-low:#FBFAFF;
+  --pink:#E3489E; --blue:#5B5BE8; --ink:#2C2A4A; --soft:#7A78A6;
+  --pill:#FFF27A; --pill-ink:#3A3510; --card:#FFFFFF;
+  --serif:"Instrument Serif","Gowun Batang",serif;
+  --kr:"Gowun Batang","Instrument Serif",serif;
+  --mono:"DM Mono",ui-monospace,Menlo,monospace;
+  --ui:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 38%,var(--sky-low) 78%) fixed,var(--sky-low);color:var(--ink);font-family:var(--ui);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow-x:hidden}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:999px}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+a{color:inherit}
+
+/* ── 메뉴 (오른쪽 위 알약) ── */
+.menu{position:fixed;z-index:20;top:calc(14px + env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.menu a{background:var(--pill);color:var(--pill-ink);text-decoration:none;font-family:var(--serif);font-size:17px;padding:3px 16px 4px;border-radius:999px;box-shadow:0 1px 0 rgba(58,53,16,.15);transition:transform .25s cubic-bezier(.3,1.6,.5,1),background .2s}
+.menu a:hover{transform:translateX(-4px) rotate(-2deg)}
+.menu a.on{background:var(--blue);color:#fff}
+
+/* ── 소개 ── */
+.intro{position:relative;z-index:5;max-width:min(640px,calc(100% - 110px));padding-top:calc(14px + env(safe-area-inset-top,0px))}
+.intro p{margin:0;font-family:var(--kr);font-size:clamp(16px,1.6vw,20px);line-height:1.45;color:var(--blue)}
+.intro .name{font-family:var(--serif);font-style:italic;color:var(--pink);font-size:clamp(46px,6.4vw,78px);line-height:.9;letter-spacing:-.01em;margin-right:.18em;vertical-align:-.08em}
+.intro .name .kr{font-family:var(--kr);font-style:normal;font-size:.42em;letter-spacing:0;margin-left:.2em;vertical-align:.5em}
+.intro em{font-family:var(--serif);font-style:italic;color:var(--pink);font-size:1.12em}
+
+/* ── 카테고리 알약 ── */
+.cats{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:14px}
+.cat{background:rgba(255,255,255,.5);border:1px solid rgba(91,91,232,.25);color:var(--blue);font-family:var(--ui);font-size:13px;padding:2px 12px 3px;border-radius:999px;display:inline-flex;gap:6px;align-items:center;transition:all .25s}
+.cat i{font-style:normal;font-family:var(--serif);font-size:17px;line-height:1;transition:transform .3s}
+.cat:hover{background:#fff}
+.cat[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
+.cat[aria-pressed="true"] i{transform:rotate(45deg)}
+
+/* ── 놀이판 ── */
+#home{position:relative;min-height:max(100vh,740px)}
+.stage{position:absolute;left:0;right:0;top:0;height:100%;z-index:1}
+.obj{position:absolute;display:flex;flex-direction:column;align-items:center;gap:2px;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;
+  transition:opacity .4s,filter .4s;transform:translate(-50%,-50%)}
+.obj:active{cursor:grabbing}
+.obj .float{animation:bob var(--dur,6s) ease-in-out infinite;animation-delay:var(--delay,0s)}
+.obj svg{display:block;width:var(--w,110px);height:auto;overflow:visible;transition:transform .35s cubic-bezier(.3,1.6,.5,1);filter:drop-shadow(0 8px 10px rgba(60,50,140,.18))}
+.obj:hover svg,.obj:focus-visible svg{transform:scale(1.12) rotate(var(--tilt,4deg))}
+.obj .cap{font-family:var(--serif);font-style:italic;color:var(--blue);font-size:13px;white-space:nowrap;text-shadow:0 0 8px var(--sky-low)}
+.obj .cap small{display:block;text-align:center;font-family:var(--ui);font-style:normal;font-size:10px;color:var(--soft);opacity:0;transform:translateY(-4px);transition:.25s}
+.obj:hover .cap small{opacity:1;transform:none}
+.obj.dim{opacity:.18;filter:grayscale(1)}
+.obj.dragging .float{animation-play-state:paused}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(-3deg)}}
+
+.hint{position:fixed;z-index:4;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));font-family:var(--serif);font-style:italic;color:var(--soft);font-size:14px;pointer-events:none}
+
+/* ── 상세 카드 ── */
+.detail{position:fixed;z-index:30;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));width:min(380px,calc(100% - 28px));max-height:calc(100% - 120px);overflow:auto;background:var(--card);border-radius:22px;padding:20px 22px 22px;box-shadow:0 20px 50px rgba(60,50,140,.25);
+  transform-origin:bottom right;animation:pop .45s cubic-bezier(.3,1.5,.5,1)}
+@keyframes pop{from{transform:scale(.6) rotate(4deg);opacity:0}to{transform:none;opacity:1}}
+.detail .x{position:absolute;right:14px;top:10px;font-family:var(--serif);font-size:28px;line-height:1;color:var(--soft)}
+.detail .kind{display:inline-block;background:var(--pill);color:var(--pill-ink);border-radius:999px;font-size:12px;padding:1px 10px}
+.detail h2{font-family:var(--serif);font-style:italic;color:var(--pink);font-weight:400;font-size:34px;line-height:1.05;margin:10px 0 4px}
+.detail .sub{color:var(--blue);font-family:var(--kr);margin:0 0 14px}
+.ph{border:1.5px dashed rgba(91,91,232,.4);border-radius:14px;background:rgba(201,194,255,.15);color:var(--soft);padding:12px 14px;font-size:13px;margin:0}
+.ph b{color:var(--ink);font-weight:400}
+.detail .imgph{aspect-ratio:4/3;max-width:100%;display:grid;place-items:center;margin-bottom:12px;font-family:var(--serif);font-style:italic;font-size:15px}
+
+/* ── 페이지 (Gallery / Info) ── */
+.page{position:relative;z-index:5;max-width:860px;margin:0 auto;padding-block:calc(120px + env(safe-area-inset-top,0px)) 80px}
+.page h1{font-family:var(--serif);font-style:italic;color:var(--pink);font-weight:400;font-size:clamp(48px,8vw,84px);line-height:1;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.tile{background:rgba(255,255,255,.65);border-radius:22px;padding:16px;display:grid;gap:6px;text-align:left;transition:transform .35s cubic-bezier(.3,1.5,.5,1),background .2s}
+.tile:hover{transform:translateY(-6px) rotate(-1deg);background:#fff}
+.tile .art{display:grid;place-items:center;aspect-ratio:4/3;max-width:100%;background:linear-gradient(160deg,var(--sky-mid),var(--sky-low));border-radius:14px}
+.tile .art svg{width:46%;height:auto;overflow:visible}
+.tile h3{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--pink);font-size:24px;margin:4px 0 0;line-height:1.1}
+.tile p{margin:0;font-size:13px;color:var(--soft)}
+
+.block{display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;padding-block:26px;border-top:1px solid rgba(91,91,232,.2)}
+.block>h2{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--blue);font-size:28px;margin:0;line-height:1.1}
+.block>h2 small{display:block;font-family:var(--kr);font-style:normal;font-size:13px;color:var(--soft);margin-top:4px}
+.block .stack{display:grid;gap:12px;min-width:0}
+.block h3{font-family:var(--kr);font-size:15px;color:var(--ink);margin:0 0 4px;font-weight:700}
+.row{display:grid;grid-template-columns:90px minmax(0,1fr);gap:14px;align-items:start}
+.row .k{font-family:var(--serif);font-style:italic;color:var(--pink);font-size:18px;line-height:1.4}
+.contact .row{align-items:center}
+.contact .v{font-family:var(--kr);font-size:17px;color:var(--ink);user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
+.copy{background:var(--pill);color:var(--pill-ink);border-radius:999px;font-size:12px;padding:2px 10px;margin-left:8px;vertical-align:2px}
+@media (max-width:640px){.block{grid-template-columns:1fr;gap:12px}.row{grid-template-columns:70px minmax(0,1fr)}}
+
+
+
+/* ── 전체 화면 CAD 십자선 커서 ── */
+@media (pointer:fine){html.xh,html.xh *{cursor:none!important}}
+.xh-v,.xh-h{position:fixed;z-index:100;pointer-events:none;opacity:0;transition:opacity .2s}
+.xh-v{top:0;bottom:0;left:0;width:0;border-left:1px dashed var(--pink)}
+.xh-h{left:0;right:0;top:0;height:0;border-top:1px dashed var(--pink)}
+.xh-box{position:fixed;z-index:101;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border:1.5px solid var(--pink);pointer-events:none;opacity:0;
+  transition:width .2s,height .2s,margin .2s,background .2s,opacity .2s}
+.xh-box.hot{width:22px;height:22px;margin:-11px 0 0 -11px;background:rgba(227,72,158,.12)}
+.xh-tag{position:fixed;z-index:101;left:0;top:0;pointer-events:none;opacity:0;font-family:var(--mono);font-size:11px;color:var(--pink);background:rgba(255,255,255,.85);border-radius:4px;padding:1px 6px;white-space:nowrap;font-variant-numeric:tabular-nums;transition:opacity .2s}
+html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:1}
+@media (prefers-reduced-motion:reduce){.obj .float,.detail{animation:none}}
+</style>
+</head>
+<body>
+
+<nav class="menu" aria-label="메뉴">
+  <a href="#home" data-v="home">Home</a>
+  <a href="#gallery" data-v="gallery">Gallery</a>
+  <a href="#info" data-v="info">Info</a>
+</nav>
+
+<!-- HOME -->
+<div id="home">
+  <div class="stage" id="stage" aria-label="작업 오브제들">
+  </div>
+  <header class="intro">
+    <p><span class="name">Seojin Lim<span class="kr">임서진</span></span>은 숭실대학교 실내건축학전공에서 공부하는 디자이너입니다. <em>공간 설계</em>를 중심으로 <em>가구</em>, <em>전시</em>, <em>리서치</em>와 <em>사진</em>을 오가며 작업합니다. 일상에서 지나치는 장면 속에 있는 공간의 이야기를 찾고 있습니다.</p>
+    <div class="cats" id="cats" role="group" aria-label="카테고리"></div>
+  </header>
+  <p class="hint">오브제를 끌어서 옮기고, 눌러서 열어보세요</p>
+</div>
+
+<!-- GALLERY -->
+<main class="page" id="gallery" hidden>
+  <h1>Gallery</h1>
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- INFO -->
+<main class="page" id="info" hidden>
+  <h1>Info</h1>
+
+  <section class="block">
+    <h2>About<small>나의 이야기</small></h2>
+    <div class="stack">
+      <div><h3>시작</h3><p class="ph"><b>여기에</b> — 공간이나 디자인에 처음 끌린 순간, 실내건축을 선택한 이유</p></div>
+      <div><h3>내가 공간을 보는 방식</h3><p class="ph"><b>여기에</b> — 설계할 때 가장 중요하게 생각하는 것, 자주 돌아가는 질문</p></div>
+      <div><h3>지금의 나</h3><p class="ph"><b>여기에</b> — 요즘 몰두하는 주제, 공부하고 있는 것</p></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Vision<small>이루고 싶은 것</small></h2>
+    <div class="stack">
+      <p class="ph"><b>나에게 성공이란</b> — 한두 문장으로</p>
+      <div class="row"><span class="k">졸업 후</span><p class="ph"><b>여기에</b> — 첫 번째로 해보고 싶은 일</p></div>
+      <div class="row"><span class="k">5년 뒤</span><p class="ph"><b>여기에</b> — 어떤 디자이너가 되어 있고 싶은지</p></div>
+      <div class="row"><span class="k">10년 뒤</span><p class="ph"><b>여기에</b> — 남기고 싶은 공간, 만들고 싶은 영향</p></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Journey<small>걸어온 길</small></h2>
+    <div class="stack">
+      <div class="row"><span class="k">2024</span><p class="ph" style="border-style:solid;background:rgba(255,255,255,.6);color:var(--ink)">숭실대학교 실내건축학전공 입학</p></div>
+      <div class="row"><span class="k">2026</span><p class="ph" style="border-style:solid;background:rgba(255,255,255,.6);color:var(--ink)">졸업전시 《계속-짓기》 기획 참여</p></div>
+      <div class="row"><span class="k">20XX</span><p class="ph"><b>공모전·수상</b> — 이름, 결과</p></div>
+      <div class="row"><span class="k">Tools</span><p class="ph"><b>여기에</b> — 다룰 수 있는 프로그램</p></div>
+    </div>
+  </section>
+
+  <section class="block contact">
+    <h2>Contact<small>연락</small></h2>
+    <div class="stack">
+      <div class="row"><span class="k">학교</span><span class="v" style="user-select:text;-webkit-user-select:text">숭실대학교 실내건축학전공 · 20243040</span></div>
+      <div class="row"><span class="k">Mail</span><span><span class="v" id="mail">seojin022068@gmail.com</span><button class="copy" data-copy="mail">복사</button></span></div>
+      <div class="row"><span class="k">Tel</span><span><span class="v" id="tel">010-3933-1056</span><button class="copy" data-copy="tel">복사</button></span></div>
+    </div>
+  </section>
+</main>
+
+<aside class="detail" id="detail" hidden aria-live="polite"></aside>
+<div class="xh-v" id="xhv" aria-hidden="true"></div><div class="xh-h" id="xhh" aria-hidden="true"></div><div class="xh-box" id="xhb" aria-hidden="true"></div><div class="xh-tag" id="xht" aria-hidden="true"></div>
+
+<script>
+(() => {
+  /* ── 작업 목록: 여기만 고치면 홈·갤러리·상세가 함께 바뀜 ── */
+  const WORKS = [
+    {id:'miffy',  t:'Miffy Open House', k:'공간', sub:'성수동 공공 휴식 공간 · 스튜디오', x:76, y:28, w:116, seed:3},
+    {id:'gyesok', t:'계속-짓기',         k:'전시', sub:'2026 졸업전시 · 기획 참여',          x:92, y:44, w:92,  seed:7},
+    {id:'public', t:'비어 있는 공공성',   k:'리서치', sub:'공공디자인연구',                   x:12, y:82, w:92,  seed:11},
+    {id:'reelif', t:'REEL:IF',           k:'가구', sub:'미래가구공모전',                     x:30, y:90, w:100, seed:5},
+    {id:'skein',  t:'SKEIN',             k:'가구', sub:'가구리빙디자인공모전',               x:80, y:70, w:100, seed:13},
+    {id:'balgil', t:'발길',              k:'리서치', sub:'걷기 경로 큐레이션 앱 · 팀 프로젝트', x:94, y:88, w:86,  seed:2},
+    {id:'light',  t:'빛 관찰 일지',       k:'공간', sub:'조명계획과디자인 · 지하철 × 송은',    x:22, y:60, w:80,  seed:17},
+    {id:'popup',  t:'성수동 대기줄 연구',  k:'리서치', sub:'연구방법론',                       x:60, y:93, w:72,  seed:23},
+    {id:'photo',  t:'사진',              k:'사진', sub:'사진 에세이',                        x:66, y:44, w:78,  seed:31},
+  ];
+  const CATS = [['공간','Space'],['가구','Furniture'],['전시','Exhibition'],['리서치','Research'],['사진','Photo']];
+
+  /* ── 장난감 같은 오브제 생성 (seed마다 다른 모양) ── */
+  const PAL = ['#FF6FB5','#FFD23F','#7B6CFF','#3EC6A8','#FF8A3D','#9FE3FF','#C46BFF','#FF5A5A','#B8F15A'];
+  function rnd(s){ return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+  function toy(seed){
+    const r = rnd(seed * 9301 + 49297), c = () => PAL[Math.floor(r() * PAL.length)];
+    const type = seed % 4; let g = '';
+    if (type === 0){ // 꽃
+      const n = 5 + Math.floor(r()*4), pr = 22 + r()*10, col = c();
+      g += `<path d="M50 62 C ${48+r()*8} 90, ${44+r()*10} 120, 50 150" stroke="${c()}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+      g += `<ellipse cx="${36}" cy="118" rx="14" ry="6" fill="${c()}" transform="rotate(-30 36 118)"/>`;
+      for (let i=0;i<n;i++){ const a = i/n*360; g += `<ellipse cx="50" cy="${50-pr}" rx="${10+r()*4}" ry="${pr*.75}" fill="${i%2?col:c()}" transform="rotate(${a} 50 50)"/>`; }
+      g += `<circle cx="50" cy="50" r="${11+r()*4}" fill="${c()}"/><circle cx="50" cy="50" r="5" fill="#fff" opacity=".7"/>`;
+    } else if (type === 1){ // 쌓인 블록
+      let y = 140; for (let i=0;i<4;i++){ const w = 70 - i*10 + r()*14, h = 18 + r()*14; y -= h; g += `<rect x="${50-w/2+(r()-.5)*10}" y="${y}" width="${w}" height="${h}" rx="${r()*10+2}" fill="${c()}"/>`; }
+      g += `<circle cx="${50+(r()-.5)*10}" cy="${y-14}" r="14" fill="${c()}"/>`;
+    } else if (type === 2){ // 풍선 덩어리
+      for (let i=0;i<6;i++){ const cx = 30 + r()*40, cy = 30 + r()*55, rr = 14 + r()*16; g += `<circle cx="${cx}" cy="${cy}" r="${rr}" fill="${c()}" opacity=".95"/>`; }
+      g += `<path d="M50 90 Q 40 120 55 150" stroke="${c()}" stroke-width="3" fill="none"/>`;
+      g += `<circle cx="42" cy="40" r="5" fill="#fff" opacity=".6"/>`;
+    } else { // 별 + 고리
+      const pts = []; const R = 40, rr = 18 + r()*6, n = 5 + Math.floor(r()*3);
+      for (let i=0;i<n*2;i++){ const a = Math.PI*i/n - Math.PI/2, d = i%2?rr:R; pts.push((50+d*Math.cos(a)).toFixed(1)+','+(70+d*Math.sin(a)).toFixed(1)); }
+      g += `<ellipse cx="50" cy="70" rx="48" ry="14" fill="none" stroke="${c()}" stroke-width="5" transform="rotate(-18 50 70)"/>`;
+      g += `<polygon points="${pts.join(' ')}" fill="${c()}" stroke="${c()}" stroke-width="3" stroke-linejoin="round"/>`;
+      g += `<circle cx="50" cy="70" r="8" fill="${c()}"/>`;
+    }
+    return `<svg viewBox="0 0 100 155" aria-hidden="true">${g}</svg>`;
+  }
+
+  const $ = s => document.querySelector(s);
+  const stage = $('#stage'), detail = $('#detail'), cats = $('#cats'), grid = $('#grid');
+  const isPhone = () => innerWidth < 640;
+
+  /* ── 홈 오브제 배치 ── */
+  WORKS.forEach((w,i) => {
+    const el = document.createElement('button');
+    el.className = 'obj'; el.dataset.id = w.id; el.dataset.k = w.k;
+    el.style.cssText = `--w:${w.w}px;--dur:${5+(i%4)}s;--delay:${-i*0.7}s;--tilt:${i%2?5:-6}deg`;
+    el.setAttribute('aria-label', `${w.t} 열기`);
+    el.innerHTML = `<span class="float">${toy(w.seed)}</span><span class="cap">${w.t}<small>${w.k}</small></span>`;
+    stage.append(el); w.el = el;
+  });
+  function place(){
+    const phone = isPhone();
+    $('#home').style.minHeight = phone ? '1500px' : '';
+    WORKS.forEach((w,i) => {
+      if (w.moved) return;
+      let x = w.x, y = w.y;
+      if (phone){ x = [28,72,50][i%3] + (i%2?6:-6); y = 40 + i * 6.6; }
+      w.el.style.left = x + '%'; w.el.style.top = y + '%';
+      w.el.style.setProperty('--w', (phone ? Math.round(w.w*.8) : w.w) + 'px');
+    });
+  }
+  place(); addEventListener('resize', place);
+
+  /* ── 드래그 & 클릭 ── */
+  let drag = null;
+  stage.addEventListener('pointerdown', e => {
+    const el = e.target.closest('.obj'); if (!el) return;
+    const r = stage.getBoundingClientRect();
+    drag = {el, sx:e.clientX, sy:e.clientY, ox:el.offsetLeft, oy:el.offsetTop, w:r.width, h:r.height, moved:false};
+    el.setPointerCapture(e.pointerId);
+  });
+  stage.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+    if (!drag.moved && Math.hypot(dx,dy) < 6) return;
+    drag.moved = true; drag.el.classList.add('dragging');
+    drag.el.style.left = ((drag.ox + dx) / drag.w * 100) + '%';
+    drag.el.style.top  = ((drag.oy + dy) / drag.h * 100) + '%';
+    drag.el.style.zIndex = 3;
+  });
+  stage.addEventListener('pointerup', e => {
+    if (!drag) return;
+    const {el, moved} = drag; el.classList.remove('dragging');
+    if (moved) WORKS.find(w => w.id === el.dataset.id).moved = true;
+    else open(el.dataset.id);
+    drag = null;
+  });
+  stage.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.obj')){ e.preventDefault(); open(e.target.closest('.obj').dataset.id); } });
+
+  /* ── 카테고리 필터 ── */
+  let active = null;
+  CATS.forEach(([k,en]) => {
+    const b = document.createElement('button');
+    b.className = 'cat'; b.setAttribute('aria-pressed','false');
+    b.innerHTML = `${en} <span style="opacity:.7">${k}</span><i>+</i>`;
+    b.addEventListener('click', () => {
+      active = active === k ? null : k;
+      cats.querySelectorAll('.cat').forEach(x => x.setAttribute('aria-pressed', 'false'));
+      if (active) b.setAttribute('aria-pressed','true');
+      WORKS.forEach(w => w.el.classList.toggle('dim', !!active && w.k !== active));
+    });
+    cats.append(b);
+  });
+
+  /* ── 상세 카드 ── */
+  function open(id){
+    const w = WORKS.find(x => x.id === id);
+    detail.innerHTML = `
+      <button class="x" aria-label="닫기">×</button>
+      <span class="kind">${w.k}</span>
+      <h2>${w.t}</h2>
+      <p class="sub">${w.sub}</p>
+      <div class="ph imgph">대표 이미지 자리</div>
+      <p class="ph"><b>여기에</b> — 프로젝트 개요, 맡은 역할, 기간, 하고 싶었던 이야기</p>`;
+    detail.hidden = false;
+    detail.style.animation = 'none'; detail.offsetHeight; detail.style.animation = '';
+    detail.querySelector('.x').focus();
+  }
+  detail.addEventListener('click', e => { if (e.target.closest('.x')) detail.hidden = true; });
+  addEventListener('keydown', e => { if (e.key === 'Escape') detail.hidden = true; });
+
+  /* ── 갤러리 ── */
+  WORKS.forEach(w => {
+    const t = document.createElement('button');
+    t.className = 'tile';
+    t.innerHTML = `<div class="art">${toy(w.seed)}</div><h3>${w.t}</h3><p>${w.k} · ${w.sub}</p>`;
+    t.addEventListener('click', () => open(w.id));
+    grid.append(t);
+  });
+
+  /* ── 복사 버튼 ── */
+  document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', () => {
+    const el = document.getElementById(b.dataset.copy), text = el.textContent;
+    const ok = () => { b.textContent = '복사됨'; setTimeout(() => b.textContent = '복사', 1400); };
+    try { navigator.clipboard.writeText(text).then(ok, () => select(el)); } catch(_) { select(el); }
+  }));
+  function select(el){ const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+
+
+
+  /* ── 전체 화면 CAD 십자선 커서 (마우스 쓰는 기기에서만) ── */
+  if (matchMedia('(pointer:fine)').matches){
+    const root = document.documentElement, v = $('#xhv'), h = $('#xhh'), b = $('#xhb'), t = $('#xht');
+    root.classList.add('xh');
+    let x = 0, y = 0, raf = 0, target = null;
+    const paint = () => {
+      raf = 0;
+      v.style.transform = `translateX(${x}px)`; h.style.transform = `translateY(${y}px)`;
+      b.style.transform = `translate(${x}px,${y}px)`;
+      const flip = x > innerWidth - 150, down = y < 40;
+      t.style.transform = `translate(${flip ? x - 142 : x + 14}px,${down ? y + 14 : y - 26}px)`;
+      const X = String(Math.round((x + scrollX) * 10)).padStart(5,'0'), Y = String(Math.round((root.scrollHeight - (y + scrollY)) * 10)).padStart(5,'0');
+      t.textContent = `X ${X}  Y ${Y}`;
+      b.classList.toggle('hot', !!(target && target.closest('a,button,.obj')));
+    };
+    addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; x = e.clientX; y = e.clientY; target = e.target; root.classList.add('in'); if (!raf) raf = requestAnimationFrame(paint); }, {passive:true});
+    document.addEventListener('pointerleave', () => root.classList.remove('in'));
+    addEventListener('blur', () => root.classList.remove('in'));
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(paint); }, {passive:true});
+  }
+
+  /* ── 페이지 전환 (#home / #gallery / #info) ── */
+  function route(){
+    const v = ['gallery','info'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
+    $('#home').hidden = v !== 'home'; $('#gallery').hidden = v !== 'gallery'; $('#info').hidden = v !== 'info';
+    document.querySelectorAll('.menu a').forEach(a => a.classList.toggle('on', a.dataset.v === v));
+    detail.hidden = true; scrollTo(0,0);
+  }
+  addEventListener('hashchange', route); route();
+})();
+</script>
+
+</body>
+</html>
