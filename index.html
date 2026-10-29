@@ -103,6 +103,9 @@ a{color:inherit}
 
 
 
+/* ── 물감 번짐 배경 (커서를 따라 흐름) ── */
+#paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(28px) saturate(1.15);mix-blend-mode:multiply;opacity:.9}
+
 /* ── 전체 화면 CAD 십자선 커서 ── */
 @media (pointer:fine){html.xh,html.xh *{cursor:none!important}}
 .xh-v,.xh-h{position:fixed;z-index:100;pointer-events:none;opacity:0;transition:opacity .2s}
@@ -118,6 +121,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 </head>
 <body>
 
+<canvas id="paint" aria-hidden="true"></canvas>
 <nav class="menu" aria-label="메뉴">
   <a href="#home" data-v="home">Home</a>
   <a href="#gallery" data-v="gallery">Gallery</a>
@@ -356,6 +360,71 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     addEventListener('blur', () => root.classList.remove('in'));
     addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(paint); }, {passive:true});
   }
+
+  /* ── 물감 번짐: 커서(십자선)를 따라 색이 번지고 흘러감 ── */
+  (function(){
+    const cv = document.getElementById('paint'), ctx = cv.getContext('2d');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const S = 4; // 1/4 해상도로 그리고 CSS 블러로 번지게
+    const COLORS = [[227,72,158],[255,196,60],[110,110,240],[62,198,168],[255,138,61],[196,107,255]];
+    let W = 0, H = 0;
+    function size(){ W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S); cv.width = W; cv.height = H; }
+    size(); addEventListener('resize', size);
+
+    const target = {x: innerWidth * .62, y: innerHeight * .45};
+    let lastMove = -1e9, hue = 0, travel = 0, prev = null;
+    const blobs = [0,1,2].map(i => ({x: target.x, y: target.y, vx: 0, vy: 0, k: [.06,.035,.02][i], d: [.78,.84,.88][i], c: i * 2, r: [120,170,220][i]}));
+    const drops = [];
+
+    function mix(t){ // 팔레트를 부드럽게 순환
+      const n = COLORS.length, i = Math.floor(t) % n, j = (i + 1) % n, f = t - Math.floor(t);
+      return COLORS[i].map((v,k) => Math.round(v + (COLORS[j][k] - v) * f));
+    }
+    function blot(x, y, r, col, a){
+      const g = ctx.createRadialGradient(x/S, y/S, 0, x/S, y/S, r/S);
+      g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(.6, `rgba(${col},${a*.45})`); g.addColorStop(1, `rgba(${col},0)`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x/S, y/S, r/S, 0, Math.PI*2); ctx.fill();
+    }
+
+    addEventListener('pointermove', e => {
+      target.x = e.clientX; target.y = e.clientY; lastMove = performance.now();
+      if (prev){ travel += Math.hypot(e.clientX - prev.x, e.clientY - prev.y); }
+      prev = {x: e.clientX, y: e.clientY};
+      if (travel > 70 && drops.length < 60){ travel = 0; hue += .35; drops.push({x: e.clientX, y: e.clientY, t: 0, c: mix(hue).join(','), r0: 30 + Math.random()*30}); }
+    }, {passive: true});
+
+    let last = performance.now();
+    function frame(now){
+      const dt = Math.min(50, now - last) / 1000; last = now;
+      // 마우스가 멈추면 천천히 혼자 떠다님
+      if (now - lastMove > 2500){
+        const t = now / 1000;
+        target.x = innerWidth * (.55 + .3 * Math.sin(t * .23)); target.y = innerHeight * (.5 + .3 * Math.sin(t * .31 + 1));
+      }
+      // 이전 물감을 아주 천천히 지움 → 번진 자국이 남음
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0,0,0,0.035)'; ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'source-over';
+
+      hue += dt * .08;
+      blobs.forEach((b, i) => {
+        b.vx = (b.vx + (target.x - b.x) * b.k) * b.d; b.vy = (b.vy + (target.y - b.y) * b.k) * b.d;
+        b.x += b.vx; b.y += b.vy;
+        const speed = Math.min(1, Math.hypot(b.vx, b.vy) / 25);
+        blot(b.x, b.y, b.r * (1 + speed * .6), mix(hue + b.c).join(','), .07 + speed * .05);
+      });
+      for (let i = drops.length - 1; i >= 0; i--){
+        const d = drops[i]; d.t += dt / 3.2;
+        if (d.t >= 1){ drops.splice(i, 1); continue; }
+        const e = 1 - Math.pow(1 - d.t, 3);
+        blot(d.x, d.y, d.r0 + 240 * e, d.c, .10 * (1 - d.t));
+      }
+      if (!reduce) requestAnimationFrame(frame);
+    }
+    if (reduce){ // 움직임 줄이기 설정: 정지된 번짐만
+      blobs.forEach((b,i) => blot(innerWidth*(.4+.2*i), innerHeight*(.4+.15*i), 300, mix(i*2).join(','), .25));
+    } else requestAnimationFrame(frame);
+  })();
 
   /* ── 페이지 전환 (#home / #gallery / #info) ── */
   function route(){
