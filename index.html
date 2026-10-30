@@ -118,6 +118,7 @@ body.off-home{background:#FFFFFF}
 .tile .art canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .tile .art canvas{display:none}
 .tile .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.tile .art .noimg{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--kr);font-weight:300;font-size:clamp(28px,4vw,48px);color:var(--ink);background:linear-gradient(135deg,#EFBDD6,#DFBDEF 35%,#BDCEEF 65%,#BDEFEB)}
 .tile:hover .art img{transform:scale(1.03)}
 .tile .cap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;align-items:baseline}
 .tile h3{font-family:var(--serif);font-style:normal;font-weight:300;color:var(--ink);font-size:40px;margin:0;line-height:1.1;letter-spacing:-.01em}
@@ -310,6 +311,8 @@ button,a{-webkit-tap-highlight-color:transparent}
 (() => {
   /* ── 작업 목록: 여기만 고치면 홈·갤러리·상세가 함께 바뀜 ── */
   const WORKS = [
+ {"id": "gyesok", "t": "계속-짓기", "k": "Exhibition · Publication", "y": "2026", "sub": "숭실대 실내건축학과 졸업전시 도록 · 졸업전시위원회", "meta": [["EXHIBITION", "2026 숭실대학교 실내건축학과 졸업전시 《계속-짓기》"], ["ROLE", "졸업전시위원회 · 전시 기획 · 도록 제작"], ["BOOK", "학생(팀)별 도록 · 표지 발전 과정을 담은 부록 도록(270×200)"]], "lead": "한 사람, 한 팀마다 다른 색과 모양의 표지.", "body": ["졸업전시위원회로 2026 숭실대학교 실내건축학과 졸업전시 《계속-짓기》를 기획했습니다. 학생과 팀마다 색과 모양이 다른 표지로 각자의 도록을 만들었고, 그 표지 디자인이 어떻게 발전해 왔는지를 설명하는 부록 도록(270×200)을 따로 만들었습니다."], "link": ["계속-짓기 전시 페이지 보기", "https://claude.ai/artifact/JeyMqfdrcUpUKxznmt2wCy"], "img": [], "x": 84, "y0": 40},
+ {"id": "xprompt", "t": "X Prompt Edition", "k": "Color Design", "y": "2026", "sub": "제24회 대한민국색채대상 GREEN · ESA DESIGN", "meta": [["AWARD", "제24회 대한민국색채대상 GREEN (2026)"], ["TEAM", "ESA DESIGN · 김일석(아트 디렉터) · 김서영 · 임서진(디자이너)"], ["AUTHOR", "김주연"], ["WORK", "『실내건축사례분석 × 프롬프트』 · 『디자인과 재료 × 프롬프트』 2권 시리즈"]], "lead": "Color Spectrum : Your Best Reference Choice\n두 책은, 하나의 시스템이다.", "body": ["X Prompt Edition은 실내건축사례분석과 디자인과 재료, 두 권의 책을 하나의 색채 시스템으로 묶은 편집 디자인입니다. 시대와 재료라는 두 가지 출발점에서 색을 뽑아, 부·장·본문·창작자·프롬프트·QR까지 이어지는 정보의 위계를 색으로 구분했습니다.", "『실내건축사례분석 × 프롬프트』는 모란디 색계를 기준으로 시대의 흐름을 색상환으로 반영했고, 『디자인과 재료 × 프롬프트』는 콘크리트와 산화구리의 산화 변화에서 추출한 자유형 그라데이션으로 재료의 물성과 질감을 담았습니다. 색은 정보를 읽게 하고, 콘텐츠의 성격을 구별하며, 정보의 범위에 따라 다채롭게 구성됩니다.", "QR 코드를 통해 각 사례의 공간 연출을 영상으로 연결해, 책 속 한 장면에서 공간 기획의 스토리텔링까지 이어지도록 했습니다."], "link": ["『디자인과 재료×프롬프트』 교보문고에서 보기", "http://product.kyobobook.co.kr/detail/S000219544310"], "img": ["xp-panel", "xp-p01", "xp-p02", "xp-p03", "xp-p04", "xp-p05", "xp-p06", "xp-p07"], "x": 22, "y0": 26},
  {
   "id": "miffy",
   "t": "Miffy Open House",
@@ -726,7 +729,7 @@ button,a{-webkit-tap-highlight-color:transparent}
     el.addEventListener('blur',  () => window.__sj && window.__sj.unform(w.id));
     stage.append(el); w.el = el;
   });
-  const PHONE_POS = [[50,22],[30,28],[70,34],[34,41],[66,47],[36,53],[64,59],[38,65],[62,71],[36,77],[64,83],[44,91]];
+  const PHONE_POS = [[70, 20.0], [30, 25.8], [70, 31.6], [30, 37.4], [70, 43.2], [30, 49.0], [70, 54.8], [30, 60.6], [70, 66.4], [30, 72.2], [70, 78.0], [30, 83.8], [70, 89.6]];
   function place(){
     const phone = isPhone();
     WORKS.forEach((w,i) => {
@@ -817,7 +820,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   WORKS.forEach((w, i) => {
     const t = document.createElement('button');
     t.className = 'tile';
-    t.innerHTML = `<div class="art"><canvas aria-hidden="true"></canvas><img src="images/${w.img[0]}.jpg" alt="" loading="lazy"></div><div class="cap"><h3>${w.t}</h3><span class="k">${w.k} · ${w.y}</span><p>${w.sub}</p></div>`;
+    t.innerHTML = `<div class="art"><canvas aria-hidden="true"></canvas>${w.img[0] ? `<img src="images/${w.img[0]}.jpg" alt="" loading="lazy">` : `<span class="noimg">${w.t}</span>`}</div><div class="cap"><h3>${w.t}</h3><span class="k">${w.k} · ${w.y}</span><p>${w.sub}</p></div>`;
     t.addEventListener('click', () => open(w.id));
     grid.append(t);
     const cv = t.querySelector('canvas'), a = {cv, seed: i + 2, hover: false};
