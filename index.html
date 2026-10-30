@@ -96,6 +96,7 @@ a{color:inherit}
 .detail .bh{font-family:var(--kr);font-weight:400;font-size:20px;margin:48px 0 16px}
 .detail .link{display:inline-block;margin:6px 0 0;font-family:var(--ui);font-size:14px;color:var(--ink);text-underline-offset:4px}
 .detail .imgs{display:grid;gap:20px;margin-top:56px}
+.detail .imgs.full{gap:0;border:1px solid rgba(44,42,74,.1)}
 .detail .imgs img{display:block;width:100%;max-width:100%;height:auto;background:#E3E6E8}
 @media (max-width:640px){.detail .meta{grid-template-columns:96px minmax(0,1fr)}.detail .kind{margin-top:48px}}
 .ph{display:none}
@@ -731,7 +732,7 @@ body:not(.off-home) .menu a{font-size:20px}
       <dl class="meta">${w.meta.map(([a,b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>
       <p class="lead">${esc(w.lead)}</p>
       <div class="body">${w.body.map((p, i) => (w.sec || []).includes(i) ? `<h3 class="bh">${esc(p)}</h3>` : `<p>${esc(p)}</p>`).join('')}${w.link ? `<a class="link" href="${esc(w.link[1])}" target="_blank" rel="noopener">${esc(w.link[0])} ↗</a>` : ''}</div>
-      <div class="imgs">${w.img.map(src => `<img src="images/${src}.jpg" alt="${esc(w.t)} 작업 이미지" loading="lazy">`).join('')}</div>
+      <div class="imgs${w.full ? ' full' : ''}">${w.img.map(src => `<img src="images/${src}.jpg" alt="${esc(w.t)} 작업 이미지" loading="lazy">`).join('')}</div>
     </div>`;
     detail.hidden = false; detail.scrollTop = 0; document.body.style.overflow = 'hidden';
     detail.querySelector('.x').focus();
@@ -1008,17 +1009,17 @@ body:not(.off-home) .menu a{font-size:20px}
            '그런데 샘도 정말 많았다. 세 살 때는 오빠가 칭찬받는 게 샘나서 오빠 배꼽을 깨물었다고 들었다. 오빠가 매운 걸 못 먹는다고 하니까 이기고 싶어서 중국집에서 맨날 짬뽕을 먹었던 기억이 난다. 지금 보면 정말 고집도 세고 욕심도 많은 아이였던 것 같다. 남이 해놓은 것보다 내가 직접 만들고 해보는 게 좋았던 고집은 지금도 그러한 것 같다.'],
      sec:[3],
      img:['j02-map']},
-    {id:'j01', no:'01', date:'2026.09.10', t:'나는 건축을 좋아하는 사람인가?', k:'Journal 01', y:'2026.09.10', sub:'공간디자인세미나',
+    {id:'j01', thumb:'essay-1', no:'01', date:'2026.09.10', t:'나는 건축을 좋아하는 사람인가?', k:'Journal 01', y:'2026.09.10', sub:'공간디자인세미나',
      meta:[['COURSE','공간디자인세미나'],['DATE','2026.09.10'],['TYPE','포토 에세이']],
      lead:'…건축 말고는 뭐 좋아하지?',
      body:['나는 건축을 좋아하는 사람인지 스스로에게 묻고, 직접 걷고 머물며 찍은 사진으로 그 답을 찾아간 포토 에세이입니다.'],
-     img:['essay-1','essay-2','essay-3','essay-4']},
+     full:true, img:['essay-p01','essay-p02','essay-p03','essay-p04','essay-p05','essay-p06','essay-p07','essay-p08','essay-p09','essay-p10','essay-p11','essay-p12','essay-p13','essay-p14','essay-p15','essay-p16','essay-p17','essay-p18','essay-p19','essay-p20']},
   ];
   const jlist = $('#jlist');
   JOURNAL.forEach(j => {
     const li = document.createElement('li'), b = document.createElement('button');
     b.className = 'jentry';
-    b.innerHTML = `<span class="d"><b>NO. ${j.no}</b>${j.date}</span><span><h3>${j.t}</h3><p>${j.lead}</p></span>${j.img[0] ? `<span class="th"><img src="images/${j.img[0]}.jpg" alt="" loading="lazy"></span>` : '<span class="th none"></span>'}`;
+    b.innerHTML = `<span class="d"><b>NO. ${j.no}</b>${j.date}</span><span><h3>${j.t}</h3><p>${j.lead}</p></span>${j.img[0] ? `<span class="th"><img src="images/${j.thumb || j.img[0]}.jpg" alt="" loading="lazy"></span>` : '<span class="th none"></span>'}`;
     b.addEventListener('click', () => open(j));
     li.append(b); jlist.append(li);
   });
