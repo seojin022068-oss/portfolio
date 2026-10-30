@@ -457,8 +457,8 @@ button,a{-webkit-tap-highlight-color:transparent}
    "public-3",
    "public-4"
   ],
-  "x": 52,
-  "y0": 42
+  "x": 22,
+  "y0": 82
  },
  {
   "id": "songeun",
@@ -636,8 +636,8 @@ button,a{-webkit-tap-highlight-color:transparent}
    "book-1",
    "book-2"
   ],
-  "x": 22,
-  "y0": 82
+  "x": 52,
+  "y0": 42
  },
  {
   "id": "pop",
@@ -733,7 +733,8 @@ button,a{-webkit-tap-highlight-color:transparent}
   function place(){
     const phone = isPhone();
     WORKS.forEach((w,i) => {
-      const [x,y] = phone ? PHONE_POS[i % PHONE_POS.length] : [w.x, w.y0];
+      const SW = {public:'book', book:'public'}, j = SW[w.id] ? WORKS.findIndex(x => x.id === SW[w.id]) : i;
+      const [x,y] = phone ? PHONE_POS[j % PHONE_POS.length] : [w.x, w.y0];
       w.el.style.left = x + '%'; w.el.style.top = y + '%';
     });
   }
