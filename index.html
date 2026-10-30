@@ -163,6 +163,37 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
 @media (prefers-reduced-motion:reduce){.detail{animation:none}}
 
 body:not(.off-home) .menu a{font-size:20px}
+
+/* ── 반응형: 태블릿 (641–1024px) ── */
+@media (max-width:1024px) and (min-width:641px){
+  .page{padding-inline:8px}
+  .block{grid-template-columns:160px minmax(0,1fr)}
+  .jentry{grid-template-columns:110px minmax(0,1fr) 200px;gap:20px}
+  .grid{gap:48px 24px}
+}
+/* ── 반응형: 휴대폰 (≤640px) ── */
+@media (max-width:640px){
+  .menu{top:calc(18px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));gap:16px}
+  .menu a,body:not(.off-home) .menu a{font-size:14px}
+  .intro{padding-top:calc(60px + env(safe-area-inset-top,0px));padding-left:2px}
+  .intro .name{font-size:28px}
+  .intro .role{font-size:16px}
+  .page{padding-block:calc(84px + env(safe-area-inset-top,0px)) 64px}
+  .page h1{font-size:32px;margin-bottom:32px}
+  .page .jsub{margin:-20px 0 36px}
+  .page .lead{font-size:22px;margin-bottom:48px}
+  .jentry .th.none{display:none}
+  .detail{padding-top:calc(16px + env(safe-area-inset-top,0px))}
+  .detail .kind{margin-top:40px}
+}
+/* ── 터치 기기 ── */
+#home{touch-action:none;-webkit-user-select:none;user-select:none}
+.touch-hint{position:fixed;z-index:6;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);pointer-events:none;transition:opacity .6s;white-space:nowrap}
+@media (hover:hover) and (pointer:fine){.touch-hint{display:none}}
+body.off-home .touch-hint{display:none}
+.touch-hint.gone{opacity:0}
+@media (hover:none){.tile:hover .art img,.jentry:hover .th img{transform:none}.tile:active .art img{transform:scale(1.02)}}
+button,a{-webkit-tap-highlight-color:transparent}
 </style>
 </head>
 <body>
@@ -170,6 +201,7 @@ body:not(.off-home) .menu a{font-size:20px}
 <canvas id="paint" aria-hidden="true"></canvas>
 <canvas id="ink" aria-hidden="true"></canvas>
 <canvas id="glow" aria-hidden="true"></canvas>
+<p class="touch-hint" aria-hidden="true">화면을 손가락으로 문질러 보세요</p>
 <nav class="menu" aria-label="메뉴">
   <a href="#home" data-v="home">Home</a>
   <a href="#gallery" data-v="gallery">Gallery</a>
@@ -882,7 +914,9 @@ body:not(.off-home) .menu a{font-size:20px}
 
     const m = {x:-999, y:-999, px:-999, py:-999};
     addEventListener('pointermove', e => { m.x = e.clientX; m.y = e.clientY; }, {passive:true});
-    addEventListener('pointerdown', e => { m.x = e.clientX; m.y = e.clientY; }, {passive:true});
+    addEventListener('pointerdown', e => { m.x = m.px = e.clientX; m.y = m.py = e.clientY; }, {passive:true});
+    const lift = e => { if (e.pointerType !== 'mouse'){ m.x = m.px = -999; m.y = m.py = -999; } };
+    addEventListener('pointerup', lift); addEventListener('pointercancel', lift);
     addEventListener('hashchange', () => setTimeout(() => { size(); }, 50));
 
     function erase(x, y, rad, a){ // 지운 자리는 따로 기록 (hole)
@@ -942,6 +976,9 @@ body:not(.off-home) .menu a{font-size:20px}
       if (last) travel += Math.hypot(e.clientX - last.x, e.clientY - last.y);
       last = {x: e.clientX, y: e.clientY}; m.x = e.clientX; m.y = e.clientY;
     }, {passive: true});
+    addEventListener('touchmove', e => { const t = e.touches[0]; if (!t) return;
+      if (last) travel += Math.hypot(t.clientX - last.x, t.clientY - last.y);
+      last = {x: t.clientX, y: t.clientY}; m.x = t.clientX; m.y = t.clientY; }, {passive: true});
     const blobs = [{k:.08, d:.82, r:.30}, {k:.035, d:.88, r:.42}].map(b => ({...b, x: m.x, y: m.y, vx: 0, vy: 0}));
     const mix = t => { const n = ACC.length, i = ((Math.floor(t) % n) + n) % n, j = (i + 1) % n, f = t - Math.floor(t); return ACC[i].map((v, k) => Math.round(v + (ACC[j][k] - v) * f)); };
     function frame(now){
@@ -1023,6 +1060,13 @@ body:not(.off-home) .menu a{font-size:20px}
     b.addEventListener('click', () => open(j));
     li.append(b); jlist.append(li);
   });
+
+  /* ── 터치: 홈 안내 문구, Info 색 번짐도 손가락으로 ── */
+  (function(){
+    const hint = document.querySelector('.touch-hint');
+    const hide = () => hint && hint.classList.add('gone');
+    document.getElementById('home').addEventListener('pointerdown', hide, {once:true});
+  })();
 
   /* ── 페이지 전환 (#home / #gallery / #info) ── */
   function route(){
