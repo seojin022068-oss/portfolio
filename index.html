@@ -73,6 +73,7 @@ a{color:inherit}
 .jentry p{margin:0;font-family:var(--kr);font-weight:300;font-size:15px;line-height:1.75;color:var(--soft);max-width:34em}
 .jentry .th{aspect-ratio:4/3;max-width:100%;overflow:hidden;background:#E9EBED}
 .jentry .th img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.jentry .th.none{background:none}
 .jentry:hover .th img{transform:scale(1.04)}
 .jentry:hover h3{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
 @media (max-width:760px){.jentry{grid-template-columns:1fr;gap:12px}.jentry .th{order:-1}}
@@ -135,6 +136,8 @@ body.off-home{background:#FFFFFF}
 .list li{display:grid;grid-template-columns:130px minmax(0,1fr);gap:16px;font-family:var(--kr);font-weight:300;font-size:16px;line-height:1.6;color:var(--ink)}
 .list .d{font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);font-variant-numeric:tabular-nums;padding-top:2px}
 .list small{display:block;font-size:13px;color:var(--soft)}
+.list .out{display:inline-block;margin-top:4px;font-family:var(--ui);font-size:13px;color:var(--ink);text-underline-offset:3px}
+.list .out:hover{color:var(--pink)}
 .contact .v{font-family:var(--ui);font-weight:300;font-size:16px;color:var(--ink);user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
 .copy{font-family:var(--ui);font-weight:400;color:var(--soft);font-size:12px;margin-left:12px;text-decoration:underline;text-underline-offset:3px}
 .copy:hover{color:var(--ink)}
@@ -231,10 +234,11 @@ body:not(.off-home) .menu a{font-size:20px}
   <section class="block">
     <h2>Experience</h2>
     <ul class="list">
+      <li><span class="d">2026</span><span>숭실대학교 실내건축학과 졸업전시위원회 <small>2026 졸업전시 《계속-짓기》 기획 · 도록 제작</small><a class="out" href="https://claude.ai/artifact/JeyMqfdrcUpUKxznmt2wCy" target="_blank" rel="noopener">계속-짓기 전시 페이지 보기 ↗</a></span></li>
       <li><span class="d">2026.07</span><span>제주 런케이션 <small>2주 현장 조사 · 공간 제안</small></span></li>
       <li><span class="d">2026.06</span><span>K-공간디자인캠프 <small>공간 디자인 · 은상</small></span></li>
       <li><span class="d">2026.05–06</span><span>서울공예박물관 공간 관찰 <small>동선 · 시선 · 색채 · 자연광 분석</small></span></li>
-      <li><span class="d">2025.10–26.04</span><span>『디자인과 재료×프롬프트』 <small>편집 · 디자인 팀장 · 정식 출간</small></span></li>
+      <li><span class="d">2025.10–26.04</span><span>『디자인과 재료×프롬프트』 <small>편집 · 디자인 팀장 · 정식 출간</small><a class="out" href="http://product.kyobobook.co.kr/detail/S000219544310" target="_blank" rel="noopener">교보문고에서 보기 ↗</a></span></li>
       <li><span class="d">2025.10</span><span>오픈하우스서울 <small>현장 운영 · 안내 · 기록 진행요원</small></span></li>
       <li><span class="d">2025.07–09</span><span>「달찮은 하루」 <small>전시 기획 · 운영</small></span></li>
       <li><span class="d">2025.03–08</span><span>숭실대학교 학생상담센터 <small>공식 SNS · 홍보 콘텐츠 제작</small></span></li>
@@ -960,6 +964,25 @@ body:not(.off-home) .menu a{font-size:20px}
 
   /* ── Journal: 공간디자인세미나 저널. 새 글은 이 목록 맨 앞에 추가 ── */
   const JOURNAL = [
+    {id:'j04', no:'04', date:'2026', t:'진로 고민 체크리스트', k:'Journal 04', y:'2026', sub:'공간디자인세미나 · 나는 어떤 디자이너가 되고 싶은가',
+     meta:[['COURSE','공간디자인세미나'],['TYPE','진로 체크리스트'],['KEYWORDS','실내건축 · 파라메트릭 디자인 · 패브리케이션 · 학석사 연계']],
+     lead:'더 배우고 싶은 것이 많다. 어떤 공간을 만들고 싶은지 깊이 고민할 시간을 갖고 싶다.',
+     body:['나는 어떤 디자이너가 되고 싶은가',
+       '건물의 형태와 구조를 설계하는 건축도 좋아하지만, 지금은 건물 내부의 공간을 구성하고 채우는 실내건축에 더 관심이 간다.',
+       '파라메트릭 디자인이나 디지털 패브리케이션 전문가만 되고 싶은 것은 아니다. 다양한 설계 방법을 활용할 수 있는 실내건축 디자이너가 되고 싶다. 재료와 형태를 실험하고 새로운 설계 방법을 시도하는 일, 하나의 업무보다 공간이 만들어지는 전 과정에 참여하는 일을 하고 싶다. 곡선을 쓰더라도 실제로 제작할 수 있게 설계하는 디자이너가 되고 싶다.',
+       '왜 학석사 연계를 선택했는가',
+       '취업에 유리한 학위나 연구자가 되기 위해서라기보다, 취업하기 전에 지금보다 더 깊이 공부하고 직접 설계와 실험을 고민해 볼 시간을 가지고 싶어서 선택했다. 왜 그렇게 설계하는지 이유를 찾고, 직접 실험하면서 실제 제작 가능한 곡선을 쓰는 디자이너가 되고 싶다.',
+       '지금까지의 경험',
+       '다른 사람의 작품을 보고 이해하고 기록하는 것을 좋아했다. 잡지가 많은 카페에서 오래 읽다 오기도 했고, 출판 편집 작업에도 참여했다. 그렇지만 긴 출판 프로젝트와 계속 이어지는 아카이빙 작업에 조금씩 지치기도 했다.',
+       '3학년까지 전시 기획, 현장 운영, 공모전, 출판, 졸업준비위원회까지 다양한 활동을 했다. 다만 여러 활동을 병행하며 당장의 결과물을 완성하는 데 집중하다 보니, 하나의 설계를 충분히 고민하고 실험할 시간은 부족했다. 지금 가장 하고 싶은 건 그래스호퍼로 알고리즘을 만들고 하나의 설계를 오래 고민하며 발전시키는 것, 새로운 재료와 설계 방법을 직접 실험하는 것이다.',
+       '앞으로의 진로',
+       '건축과 실내건축 사이에서 고민했지만, 선배님의 강연을 듣고 실내건축 쪽으로 마음이 기울었다. 설계뿐 아니라 현장에도 나가고 사람들과 직접 소통하며 다양한 일을 하시는 모습을 보며 그렇게 일해보고 싶다는 생각이 들었다. 나는 공간을 비워내는 것보다 채우고 구성하는 일에 더 관심이 있는 것 같다. 선배님이 직접 화병을 만들고 판매 사이트를 만드신 것처럼, 나도 파라메트릭 디자인으로 무언가를 직접 만들어 팔아보고 싶다.',
+       '리모델링, 파라메트릭 디자인, 패브리케이션에는 여전히 관심이 있지만, 진로를 그 분야로만 한정하고 싶지는 않다. 기술 자체보다 그것으로 어떤 공간을 설계할 수 있는지를 더 고민하고 싶다.',
+       '아직 답하지 못한 질문',
+       'AI가 발전하면서 설계자의 역할은 어떻게 변할까. 모델링 능력 외에 어떤 전문성을 갖춰야 할까. 실제 실내건축 회사에서는 어떤 설계 능력을 중요하게 생각할까.',
+       '지금은 설계, 현장, 소통까지 폭넓게 경험하면서 계속 배우고 성장할 수 있는 실내건축 디자인 스튜디오에 관심이 있다. 건축과 실내, 실험적인 설계, 그리고 출판과 아카이빙이 함께 있는 곳. 어떤 규모와 방식의 회사가 나에게 맞을지는 실무자들의 이야기를 더 들어보고 생각해 보고 싶다.'],
+     sec:[0,3,5,8,11],
+     img:[]},
     {id:'j03', no:'03', date:'2026.10.15', t:'브랜딩은 인식에 형태를 부여하는 일', k:'Journal 03', y:'2026.10.15', sub:'공간디자인세미나 · 특강 이재옥 (도머스파트너스)',
      meta:[['COURSE','공간디자인세미나'],['DATE','2026.10.15'],['LECTURE','이재옥 · 도머스파트너스 대표'],['TOPIC','브랜딩 전략 · 브랜드 아이덴티티']],
      lead:'제품은 건축물이다. 브랜드는 그 안에서 사람들이 경험할 공간의 의미이다.',
@@ -991,7 +1014,7 @@ body:not(.off-home) .menu a{font-size:20px}
   JOURNAL.forEach(j => {
     const li = document.createElement('li'), b = document.createElement('button');
     b.className = 'jentry';
-    b.innerHTML = `<span class="d"><b>NO. ${j.no}</b>${j.date}</span><span><h3>${j.t}</h3><p>${j.lead}</p></span><span class="th"><img src="images/${j.img[0]}.jpg" alt="" loading="lazy"></span>`;
+    b.innerHTML = `<span class="d"><b>NO. ${j.no}</b>${j.date}</span><span><h3>${j.t}</h3><p>${j.lead}</p></span>${j.img[0] ? `<span class="th"><img src="images/${j.img[0]}.jpg" alt="" loading="lazy"></span>` : '<span class="th none"></span>'}`;
     b.addEventListener('click', () => open(j));
     li.append(b); jlist.append(li);
   });
