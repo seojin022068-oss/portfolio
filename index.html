@@ -139,7 +139,7 @@ body.off-home{background:#FFFFFF}
 
 /* ── 물감 번짐 배경 (커서를 따라 흐름) ── */
 #ink{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
-#paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(10px);transform:scale(1.03)}
+#paint{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:blur(22px);transform:scale(1.06)}
 
 /* ── 전체 화면 CAD 십자선 커서 ── */
 @media (pointer:fine){html.xh,html.xh *{cursor:none!important}}
@@ -907,7 +907,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
       // 하얀 자리에만 글자 보이기: 글자 − 색
       ictx.setTransform(1,0,0,1,0,0); ictx.globalCompositeOperation = 'source-over';
       ictx.clearRect(0,0,ink.width,ink.height); ictx.drawImage(txt,0,0);
-      ictx.globalCompositeOperation = 'destination-out'; ictx.filter = 'blur(5px)';
+      ictx.globalCompositeOperation = 'destination-out'; ictx.filter = 'blur(10px)';
       ictx.drawImage(pc, 0, 0, ink.width, ink.height); ictx.drawImage(pc, 0, 0, ink.width, ink.height);
       ictx.filter = 'none'; ictx.globalCompositeOperation = 'source-over';
       requestAnimationFrame(frame);
