@@ -823,7 +823,8 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
   /* ── 색 밀어내기: 화면을 덮은 색을 십자선이 밀어내면 하얀 자리에 얇은 글자가 드러남 ── */
   (function(){
     const home = document.getElementById('home');
-    const pc = document.getElementById('paint'), pctx = pc.getContext('2d');   // 보이는 색 (저해상도 + 블러)
+    const pc = document.getElementById('paint'), pctx = pc.getContext('2d');
+    const hole = document.createElement('canvas'), hctx = hole.getContext('2d');   // 보이는 색 (저해상도 + 블러)
     const ink = document.getElementById('ink'), ictx = ink.getContext('2d');   // 드러나는 글자
     const txt = document.createElement('canvas'), tctx = txt.getContext('2d'); // 글자 원본
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -850,7 +851,7 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
       });
     }
     function size(){
-      W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S); pc.width = W; pc.height = H;
+      W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S); pc.width = W; pc.height = H; hole.width = W; hole.height = H;
       seed = 4; blobs = Array.from({length: 7}, (_, i) => ({hx: r()*W, hy: r()*H, x:0, y:0, vx:0, vy:0, rad: (.35 + r()*.3) * Math.max(W,H), acc: i % 3 !== 2}));
       blobs.forEach(b => { b.x = b.hx; b.y = b.hy; });
       paintAll(1); drawText();
@@ -873,12 +874,10 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
     addEventListener('pointerdown', e => { m.x = e.clientX; m.y = e.clientY; }, {passive:true});
     addEventListener('hashchange', () => setTimeout(() => { size(); }, 50));
 
-    function erase(x, y, rad, a){
-      const g = pctx.createRadialGradient(x/S, y/S, 0, x/S, y/S, rad/S);
+    function erase(x, y, rad, a){ // 지운 자리는 따로 기록 (hole)
+      const g = hctx.createRadialGradient(x/S, y/S, 0, x/S, y/S, rad/S);
       g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(.55, `rgba(0,0,0,${a*.8})`); g.addColorStop(1, 'rgba(0,0,0,0)');
-      pctx.globalCompositeOperation = 'destination-out'; pctx.fillStyle = g;
-      pctx.beginPath(); pctx.arc(x/S, y/S, rad/S, 0, Math.PI*2); pctx.fill();
-      pctx.globalCompositeOperation = 'source-over';
+      hctx.fillStyle = g; hctx.beginPath(); hctx.arc(x/S, y/S, rad/S, 0, Math.PI*2); hctx.fill();
     }
     function frame(now){
       if (home.hidden){ requestAnimationFrame(frame); return; }
@@ -895,20 +894,23 @@ html.xh.in .xh-v,html.xh.in .xh-h,html.xh.in .xh-box,html.xh.in .xh-tag{opacity:
         b.vx = (b.vx + fx) * .94; b.vy = (b.vy + fy) * .94; b.x += b.vx; b.y += b.vy;
       });
       // 색이 아주 천천히 다시 차오름
-      paintAll(.018);
+      // 지운 자리는 천천히 다시 메워짐 (자국 없이)
+      hctx.globalCompositeOperation = 'destination-out'; hctx.fillStyle = 'rgba(0,0,0,.035)'; hctx.fillRect(0,0,W,H); hctx.globalCompositeOperation = 'source-over';
       // 십자선이 지나간 자리는 색이 밀려나 하얗게
       const sp = Math.hypot(m.x - m.px, m.y - m.py);
       if (m.x > -500){
-        const eR = Math.max(26, Math.min(44, Math.min(innerWidth, innerHeight) * .045)); // 화면 크기에 맞춘 지우개
-        const steps = Math.max(1, Math.ceil(sp / 10));
-        for (let i = 1; i <= steps; i++){ const t = i/steps; erase(m.px + (m.x - m.px)*t, m.py + (m.y - m.py)*t, eR + Math.min(eR*.5, sp*.3), .35); }
+        const steps = Math.max(1, Math.ceil(sp / 20));
+        for (let i = 1; i <= steps; i++){ const t = i/steps; erase(m.px + (m.x - m.px)*t, m.py + (m.y - m.py)*t, 95 + Math.min(60, sp*.6), .45); }
       }
       m.px = m.x; m.py = m.y;
+      // 색은 매 프레임 새로 그리고, 지운 자리만 빼기
+      pctx.globalCompositeOperation = 'source-over'; pctx.clearRect(0,0,W,H); paintAll(1);
+      pctx.globalCompositeOperation = 'destination-out'; pctx.drawImage(hole, 0, 0); pctx.globalCompositeOperation = 'source-over';
       // 하얀 자리에만 글자 보이기: 글자 − 색
       ictx.setTransform(1,0,0,1,0,0); ictx.globalCompositeOperation = 'source-over';
       ictx.clearRect(0,0,ink.width,ink.height); ictx.drawImage(txt,0,0);
       ictx.globalCompositeOperation = 'destination-out'; ictx.filter = 'blur(10px)';
-      ictx.drawImage(pc, 0, 0, ink.width, ink.height); ictx.drawImage(pc, 0, 0, ink.width, ink.height);
+      ictx.drawImage(pc, 0, 0, ink.width, ink.height); ictx.drawImage(pc, 0, 0, ink.width, ink.height); ictx.drawImage(pc, 0, 0, ink.width, ink.height);
       ictx.filter = 'none'; ictx.globalCompositeOperation = 'source-over';
       requestAnimationFrame(frame);
     }
