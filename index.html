@@ -92,6 +92,7 @@ a{color:inherit}
 .detail .meta dd{margin:0;font-family:var(--kr);font-weight:300;font-size:15px;line-height:1.6}
 .detail .lead{font-family:var(--kr);font-weight:300;font-size:clamp(20px,2.2vw,26px);line-height:1.5;margin:0 0 20px;max-width:30em}
 .detail .body p{font-family:var(--kr);font-weight:300;font-size:16px;line-height:1.85;margin:0 0 14px;max-width:40em}
+.detail .bh{font-family:var(--kr);font-weight:400;font-size:20px;margin:48px 0 16px}
 .detail .link{display:inline-block;margin:6px 0 0;font-family:var(--ui);font-size:14px;color:var(--ink);text-underline-offset:4px}
 .detail .imgs{display:grid;gap:20px;margin-top:56px}
 .detail .imgs img{display:block;width:100%;max-width:100%;height:auto;background:#E3E6E8}
@@ -304,8 +305,8 @@ body:not(.off-home) .menu a{font-size:20px}
    "miffy-1",
    "miffy-2"
   ],
-  "x": 60,
-  "y0": 24
+  "x": 50,
+  "y0": 20
  },
  {
   "id": "pulse",
@@ -346,8 +347,8 @@ body:not(.off-home) .menu a{font-size:20px}
    "pulse-3",
    "pulse-4"
   ],
-  "x": 84,
-  "y0": 40
+  "x": 82,
+  "y0": 28
  },
  {
   "id": "jeju",
@@ -382,8 +383,8 @@ body:not(.off-home) .menu a{font-size:20px}
    "jeju-1",
    "jeju-2"
   ],
-  "x": 30,
-  "y0": 44
+  "x": 20,
+  "y0": 36
  },
  {
   "id": "public",
@@ -416,8 +417,8 @@ body:not(.off-home) .menu a{font-size:20px}
    "public-3",
    "public-4"
   ],
-  "x": 14,
-  "y0": 70
+  "x": 52,
+  "y0": 42
  },
  {
   "id": "songeun",
@@ -449,8 +450,8 @@ body:not(.off-home) .menu a{font-size:20px}
    "songeun-2",
    "songeun-3"
   ],
-  "x": 52,
-  "y0": 58
+  "x": 84,
+  "y0": 52
  },
  {
   "id": "onyang",
@@ -482,8 +483,8 @@ body:not(.off-home) .menu a{font-size:20px}
    "onyang-2",
    "onyang-3"
   ],
-  "x": 78,
-  "y0": 72
+  "x": 22,
+  "y0": 58
  },
  {
   "id": "crafts",
@@ -512,8 +513,8 @@ body:not(.off-home) .menu a{font-size:20px}
   "img": [
    "crafts-1"
   ],
-  "x": 36,
-  "y0": 84
+  "x": 55,
+  "y0": 66
  },
  {
   "id": "dalchan",
@@ -552,8 +553,8 @@ body:not(.off-home) .menu a{font-size:20px}
    "dalchan-1",
    "dalchan-2"
   ],
-  "x": 22,
-  "y0": 28
+  "x": 84,
+  "y0": 76
  },
  {
   "id": "book",
@@ -595,8 +596,8 @@ body:not(.off-home) .menu a{font-size:20px}
    "book-1",
    "book-2"
   ],
-  "x": 86,
-  "y0": 18
+  "x": 22,
+  "y0": 82
  },
  {
   "id": "pop",
@@ -633,8 +634,8 @@ body:not(.off-home) .menu a{font-size:20px}
   "img": [
    "pop-1"
   ],
-  "x": 44,
-  "y0": 32
+  "x": 52,
+  "y0": 88
  },
  {
   "id": "counsel",
@@ -667,8 +668,8 @@ body:not(.off-home) .menu a{font-size:20px}
   "img": [
    "counsel-1"
   ],
-  "x": 90,
-  "y0": 90
+  "x": 82,
+  "y0": 94
  }
 ];
   const CATS = [['Space Design','Space'],['Space Project','Project'],['Research','Research'],['Lighting','Lighting'],['Exhibition','Exhibition']];
@@ -725,7 +726,7 @@ body:not(.off-home) .menu a{font-size:20px}
       <p class="sub">${esc(w.sub)}</p>
       <dl class="meta">${w.meta.map(([a,b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>
       <p class="lead">${esc(w.lead)}</p>
-      <div class="body">${w.body.map(p => `<p>${esc(p)}</p>`).join('')}${w.link ? `<a class="link" href="${esc(w.link[1])}" target="_blank" rel="noopener">${esc(w.link[0])} ↗</a>` : ''}</div>
+      <div class="body">${w.body.map((p, i) => (w.sec || []).includes(i) ? `<h3 class="bh">${esc(p)}</h3>` : `<p>${esc(p)}</p>`).join('')}${w.link ? `<a class="link" href="${esc(w.link[1])}" target="_blank" rel="noopener">${esc(w.link[0])} ↗</a>` : ''}</div>
       <div class="imgs">${w.img.map(src => `<img src="images/${src}.jpg" alt="${esc(w.t)} 작업 이미지" loading="lazy">`).join('')}</div>
     </div>`;
     detail.hidden = false; detail.scrollTop = 0; document.body.style.overflow = 'hidden';
@@ -847,7 +848,6 @@ body:not(.off-home) .menu a{font-size:20px}
       tctx.textAlign = 'center'; tctx.textBaseline = 'middle';
       // 흩어진 얇은 단어
       seed = 9; tctx.fillStyle = 'rgba(44,42,74,.45)'; tctx.font = `300 13px ${FONT}`;
-      for (let i = 0; i < Math.round(w*h/18000); i++) tctx.fillText(WORDS[i % WORDS.length], r()*w, r()*h);
       // 작업 제목 (자리 = 클릭하면 열리는 곳)
       const big = w < 640 ? 18 : 19;
       WORKS.forEach(x => {
@@ -960,6 +960,27 @@ body:not(.off-home) .menu a{font-size:20px}
 
   /* ── Journal: 공간디자인세미나 저널. 새 글은 이 목록 맨 앞에 추가 ── */
   const JOURNAL = [
+    {id:'j03', no:'03', date:'2026.10.15', t:'브랜딩은 인식에 형태를 부여하는 일', k:'Journal 03', y:'2026.10.15', sub:'공간디자인세미나 · 특강 이재옥 (도머스파트너스)',
+     meta:[['COURSE','공간디자인세미나'],['DATE','2026.10.15'],['LECTURE','이재옥 · 도머스파트너스 대표'],['TOPIC','브랜딩 전략 · 브랜드 아이덴티티']],
+     lead:'제품은 건축물이다. 브랜드는 그 안에서 사람들이 경험할 공간의 의미이다.',
+     body:['건축이 공간에 형태를 부여하는 일이라면, 브랜딩은 인식에 감정적 형태를 부여하는 일이라는 말이 가장 오래 남았다. 제품은 기능을 만들고, 브랜드는 의미를 만든다. 결국 소비자의 경험을 디자인하고, 그 사람의 마음을 설계하는 일이다.',
+           '카스 이야기가 기억에 남는다. 맥주에 빨강을 쓰지 않고 파랑으로 시원함과 젊음을 말했고, 따는 소리까지 브랜드가 되었다. 차별화를 이루기 전에 먼저 맥주다움을 가지고 시작해야 한다는 것, 브랜드는 우연이 아니라 계약이고 기준이고 관계라는 것.',
+           '건축도 마찬가지라고 느꼈다. “이 공간에서 이렇게 놀아!”라고 정해주는 것이 아니라, 이상을 그려볼 수 있게 해주는 것이 좋은 공간이고 가져야 할 책임이다. 내가 지금 어디에 있는지 알아야 하고, 넘버원보다 온리원을 찾아야 한다.',
+           '그리고 팁 하나. 누군가의 사상을 3년 이상 매일 습득해 보라고, 그러면 그 사람이 잘하는 것과 재미있는 것을 찾을 수 있다고 하셨다.'],
+     img:['j03-lecture','j03-note1','j03-note2']},
+    {id:'j02', no:'02', date:'2026', t:'나에게 성공이란?', k:'Journal 02', y:'2026', sub:'공간디자인세미나 · 인생 목표 마인드맵',
+     meta:[['COURSE','공간디자인세미나'],['TYPE','에세이 · 마인드맵'],['KEYWORDS','일 · 휴식 · 가족 · 인간관계 · 자기계발']],
+     lead:'좋아하는 사람들과 좋아하는 일을 하면서, 쉬고 싶을 때 쉴 수 있는 삶.',
+     body:['나는 나중에 마음이 맞는 디자이너 친구들과 우리만의 디자인 스튜디오를 만들고 싶다. 우리 팀은 자율 출근제다! 각자 편한 시간에 일하면서도 회사가 잘 돌아갔으면 좋겠다.',
+           '그리고 누군가가 먼저 “임서진 디자이너님, 이 공간 디자인해 주세요!” 하고 찾아오는 사람이 되고 싶다. 여기저기서 제안이 들어오면 그중에서 우리가 하고 싶은 프로젝트를 고를 수 있고, 내가 어떤 일을 할지 결정할 수 있는 사람이 되고 싶다.',
+           '일상에서는 아기자기하게 꾸민 집에서 콩꼬물(강아지)이랑 살고 싶다. 낮에는 같이 산책하고, 졸리면 나른하게 낮잠도 자고, 달달한 디저트나 사고 싶은 옷도 고민 없이 살 수 있었으면 좋겠다. 나에게 성공이란 좋아하는 사람들과 좋아하는 일을 하면서, 쉬고 싶을 때 쉴 수 있는 삶인 것 같다. 내 일과 시간을 내가 결정할 수 있는 자유가 있으면 좋겠다.',
+           '만드는 걸 좋아했던 어린 시절',
+           '나는 어릴 때부터 뭔가 만드는 걸 정말 좋아했다. 아이클레이랑 이쑤시개로 무한 동력 자동차를 만들겠다고 별짓을 다 했고, 생활의 달인에 나오고 싶어서 베란다에 아이클레이를 하나씩 붙여 꾸미다가 엄마한테 들켜서 전부 떼인 적도 있다.',
+           '엄마가 자석 블록을 사주셨을 때도 기억난다. 학습지를 하고 돌아오니 엄마가 미리 뭔가를 만들어 놓으셨는데, 그게 괜히 심술이 났다. 내가 직접 처음으로 만들고 싶어서였는지 일부러 블록을 만들다가 엄마가 만든 삼각형이 필요해질 때까지 기다렸다가, 블록이 없어라고 하면서 엄마 작품을 부숴 버렸다… 지금 생각하면 참 골통이었다.',
+           '하루 종일 인형놀이도 했다. 점심부터 엄마가 저녁밥을 줄 때까지 인형 옷을 만들고 그림을 그리면서 놀았다. 만드는 게 재미있으면 시간 가는 줄도 몰랐던 것 같다.',
+           '그런데 샘도 정말 많았다. 세 살 때는 오빠가 칭찬받는 게 샘나서 오빠 배꼽을 깨물었다고 들었다. 오빠가 매운 걸 못 먹는다고 하니까 이기고 싶어서 중국집에서 맨날 짬뽕을 먹었던 기억이 난다. 지금 보면 정말 고집도 세고 욕심도 많은 아이였던 것 같다. 남이 해놓은 것보다 내가 직접 만들고 해보는 게 좋았던 고집은 지금도 그러한 것 같다.'],
+     sec:[3],
+     img:['j02-map']},
     {id:'j01', no:'01', date:'2026.09.10', t:'나는 건축을 좋아하는 사람인가?', k:'Journal 01', y:'2026.09.10', sub:'공간디자인세미나',
      meta:[['COURSE','공간디자인세미나'],['DATE','2026.09.10'],['TYPE','포토 에세이']],
      lead:'…건축 말고는 뭐 좋아하지?',
