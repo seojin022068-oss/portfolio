@@ -111,7 +111,8 @@ body.off-home{background:#FFFFFF}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px 32px}
 @media (max-width:760px){.grid{grid-template-columns:1fr}}
 .grid .tile .cap{grid-template-columns:1fr;gap:4px}
-.grid .tile h3{font-size:28px}
+.grid .tile h3 .ko,.detail h2 .ko{font-weight:500}
+.tile h3{font-size:28px}
 .grid .tile .k{order:-1;font-size:13px}
 .tile{display:grid;gap:14px;text-align:left;padding:0;background:none}
 .tile .art{position:relative;aspect-ratio:16/9;max-width:100%;overflow:hidden;background:#E9EBED}
@@ -756,6 +757,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   });
 
   /* ── 프로젝트 보기 ── */
+  const koMed = s => String(s).replace(/([가-힣]+)/g, '<span class="ko">$1</span>'); // 한글만 미디엄
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let lastFocus = null;
   function open(id){
@@ -763,7 +765,7 @@ button,a{-webkit-tap-highlight-color:transparent}
     detail.innerHTML = `<div class="in">
       <button class="x" aria-label="닫기">Close ✕</button>
       <span class="kind">${esc(w.k)} · ${esc(w.y)}</span>
-      <h2>${esc(w.t)}</h2>
+      <h2>${koMed(esc(w.t))}</h2>
       <p class="sub">${esc(w.sub)}</p>
       <dl class="meta">${w.meta.map(([a,b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>
       <p class="lead">${esc(w.lead)}</p>
@@ -821,7 +823,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   WORKS.forEach((w, i) => {
     const t = document.createElement('button');
     t.className = 'tile';
-    t.innerHTML = `<div class="art"><canvas aria-hidden="true"></canvas>${w.img[0] ? `<img src="images/${w.img[0]}.jpg" alt="" loading="lazy">` : `<span class="noimg">${w.t}</span>`}</div><div class="cap"><h3>${w.t}</h3><span class="k">${w.k} · ${w.y}</span><p>${w.sub}</p></div>`;
+    t.innerHTML = `<div class="art"><canvas aria-hidden="true"></canvas>${w.img[0] ? `<img src="images/${w.img[0]}.jpg" alt="" loading="lazy">` : `<span class="noimg">${w.t}</span>`}</div><div class="cap"><h3>${koMed(w.t)}</h3><span class="k">${w.k} · ${w.y}</span><p>${w.sub}</p></div>`;
     t.addEventListener('click', () => open(w.id));
     grid.append(t);
     const cv = t.querySelector('canvas'), a = {cv, seed: i + 2, hover: false};
