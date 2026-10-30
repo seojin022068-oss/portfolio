@@ -890,11 +890,11 @@ button,a{-webkit-tap-highlight-color:transparent}
       // 흩어진 얇은 단어
       seed = 9; tctx.fillStyle = 'rgba(44,42,74,.45)'; tctx.font = `300 13px ${FONT}`;
       // 작업 제목 (자리 = 클릭하면 열리는 곳)
-      const big = w < 640 ? 18 : 19;
+      const big = w < 640 ? 10 : 19, sm = w < 640 ? 8 : 13; // 폰에서는 절반 크기
       WORKS.forEach(x => {
         const b = x.el.getBoundingClientRect(), cx = b.left + b.width/2, cy = b.top + b.height/2;
         tctx.fillStyle = 'rgba(44,42,74,.92)'; tctx.font = `300 ${big}px ${FONT}`; tctx.fillText(x.t, cx, cy);
-        tctx.fillStyle = 'rgba(44,42,74,.6)'; tctx.font = `300 13px ${FONT}`; tctx.fillText(x.sub, cx, cy + 21);
+        tctx.fillStyle = 'rgba(44,42,74,.6)'; tctx.font = `300 ${sm}px ${FONT}`; tctx.fillText(x.sub, cx, cy + Math.round(big * 1.1));
       });
     }
     function size(){
