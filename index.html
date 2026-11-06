@@ -138,7 +138,7 @@ body.off-home{background:#FFFFFF}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px 32px}
 @media (max-width:760px){.grid{grid-template-columns:1fr}}
 .grid .tile .cap{grid-template-columns:1fr;gap:4px}
-.grid .tile h3 .ko,.detail h2 .ko{font-weight:500}
+.grid .tile h3 .ko,.detail h2 .ko{font-weight:300}
 .tile h3{font-size:28px}
 .grid .tile .k{order:-1;font-size:13px}
 .tile{display:grid;gap:14px;text-align:left;padding:0;background:none}
@@ -790,7 +790,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   });
 
   /* ── 프로젝트 보기 ── */
-  const koMed = s => String(s).replace(/([가-힣]+)/g, '<span class="ko">$1</span>'); // 한글만 미디엄
+  const koMed = s => String(s).replace(/([가-힣]+)/g, '<span class="ko">$1</span>'); // 한글 제목 굵기(영문 Futura와 맞춤)
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let lastFocus = null;
   const carHTML = (img, label, caps) => !img || !img.length ? '' : `<div class="car${caps ? ' cap' : ''}" aria-roledescription="carousel" aria-label="${esc(label)} 이미지">
