@@ -479,13 +479,14 @@ button,a{-webkit-tap-highlight-color:transparent}
   "lead": "기억은 찾아가야만 시작되는 걸까?",
   "body": [
    "지하철, 벤치, 에스컬레이터, 엘리베이터에서 사람들은 아무도 시키지 않았는데도 서로 거리를 두고, 시선을 거두고, 자리를 양보합니다. 공공성이 장소의 유형이 아니라 함께 있는 방식이라면, 엘리베이터 한 칸에도 공공성이 있다고 보았습니다.",
-   "근접학(Hall), 대인거리 관찰 연구, 엘리베이터 속 시민적 무관심 연구를 바탕으로, 기념비를 세우는 대신 매일 지나가는 동선이 기억을 전달할 수 있는지 질문했습니다. 무언가를 세우는 것이 아니라 비워두는 것도 기념이 될 수 있는지 탐구한 연구입니다."
+   "근접학(Hall), 대인거리 관찰 연구, 엘리베이터 속 시민적 무관심 연구를 바탕으로, 기념비를 세우는 대신 매일 지나가는 동선이 기억을 전달할 수 있는지 질문했습니다. 무언가를 세우는 것이 아니라 비워두는 것도 기념이 될 수 있는지 탐구한 연구입니다.",
+   "2에서는 이 질문을 이태원역에서 기억과 안전의 길까지 이어지는 동선에 적용했습니다. 찾아가서 보는 기념비 대신, 승강장에서 1번 출구를 지나 걷는 일상적인 이동 안에서 조금씩 기억하게 하는 장면을 제안했습니다."
   ],
-  "img": [
-   "public-1",
-   "public-2",
-   "public-3",
-   "public-4"
+  "img": [],
+  "cover": "public-1",
+  "groups": [
+   {"h": "01  비어 있는 공공성", "sub": "공공디자인연구 · 1차 발표", "lead": "공공성은 장소의 유형이 아니라, 함께 있는 방식이다.", "img": ["public-1", "public-2", "public-3", "public-4"]},
+   {"h": "02  기억을 위한 여백", "sub": "공공디자인연구 · 중간고사", "lead": "이태원역에서 기억과 안전의 길까지, 일상적 이동을 추모의 시퀀스로.", "img": ["public2-01", "public2-02", "public2-03", "public2-04", "public2-05", "public2-06", "public2-07", "public2-08", "public2-09", "public2-10", "public2-11", "public2-12", "public2-13", "public2-14", "public2-15", "public2-16", "public2-17", "public2-18", "public2-19", "public2-20", "public2-21", "public2-22", "public2-23", "public2-24", "public2-25", "public2-26", "public2-27", "public2-28", "public2-29", "public2-30"]}
   ],
   "x": 22,
   "y0": 82
@@ -874,7 +875,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   WORKS.forEach((w, i) => {
     const t = document.createElement('button');
     t.className = 'tile' + (w.contain ? ' contain' : '');
-    t.innerHTML = `<div class="art"><canvas aria-hidden="true"></canvas>${w.img[0] ? `<img src="images/${w.img[0]}.jpg" alt="" loading="lazy">` : `<span class="noimg">${w.t}</span>`}</div><div class="cap"><h3>${koMed(w.t)}</h3><span class="k">${w.k} · ${w.y}</span><p>${w.sub}</p></div>`;
+    t.innerHTML = `<div class="art"><canvas aria-hidden="true"></canvas>${(w.cover || w.img[0]) ? `<img src="images/${w.cover || w.img[0]}.jpg" alt="" loading="lazy">` : `<span class="noimg">${w.t}</span>`}</div><div class="cap"><h3>${koMed(w.t)}</h3><span class="k">${w.k} · ${w.y}</span><p>${w.sub}</p></div>`;
     t.addEventListener('click', () => open(w.id));
     grid.append(t);
     const cv = t.querySelector('canvas'), a = {cv, seed: i + 2, hover: false};
