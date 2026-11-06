@@ -842,7 +842,7 @@ button,a{-webkit-tap-highlight-color:transparent}
     const w = typeof id === 'object' ? id : WORKS.find(x => x.id === id); lastFocus = document.activeElement;
     const isJ = JOURNAL.includes(w), list = isJ ? JOURNAL : WORKS;
     // 본문 사이사이에 이미지가 세로로 이어짐 (pages가 있으면 pages 전체, 시리즈 작업은 시리즈별 앨범)
-    const flow = w.pages ? [] : (w.groups ? [] : (w.img || []).slice(1));
+    const flow = []; // 이미지는 위 썸네일(+N)에서만 봄 — 스크롤 길이 줄임
     let fi = 0;
     const fig = src => `<figure class="fl"><img src="images/${src}.jpg" alt="${esc(w.t)}" loading="lazy"></figure>`;
     const body = (w.body || []).map((p, i) => {
