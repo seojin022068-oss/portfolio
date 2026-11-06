@@ -123,6 +123,38 @@ a{color:inherit}
 .detail .car .dots i.on{background:var(--ink)}
 @media (hover:none){.detail .car .nav{display:none}}
 @media (max-width:640px){.detail .slide{height:min(56vh,480px)}.detail .slide img{max-height:min(56vh,480px)}.detail .car{margin-left:-8px;margin-right:-8px}}
+.detail .crumb{font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);margin:72px 0 12px;letter-spacing:.02em;display:flex;gap:8px;flex-wrap:wrap}
+.detail .crumb a{color:var(--soft);text-decoration:none}.detail .crumb a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+.detail .album{margin:8px 0 48px}
+.detail .album .hero{position:relative;margin:0;background:#F3F4F6;height:min(68vh,640px);display:grid;place-items:center;overflow:hidden}
+.detail .album .hero img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+.detail .album .nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.88);border:1px solid rgba(44,42,74,.12);font-size:24px;line-height:1;color:var(--ink);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .2s}
+.detail .album .hero:hover .nav{opacity:1}.detail .album .prev{left:12px}.detail .album .next{right:12px}
+.detail .album .count{position:absolute;right:12px;bottom:10px;font-family:var(--ui);font-size:12px;color:var(--soft);background:rgba(255,255,255,.85);border-radius:999px;padding:2px 9px;font-variant-numeric:tabular-nums}
+.detail .album .count b{font-weight:400;color:var(--ink)}
+.detail .album .fc{font-family:var(--kr);font-weight:500;font-size:16px;margin:12px 0 0}
+.detail .thumbs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:12px}
+.detail .thumbs .th{position:relative;aspect-ratio:1/1;padding:0;border:0;background:#E9EBED;cursor:pointer;overflow:hidden;opacity:.72;transition:opacity .2s}
+.detail .thumbs .th img{width:100%;height:100%;object-fit:cover;display:block}
+.detail .thumbs .th:hover,.detail .thumbs .th.on{opacity:1}.detail .thumbs .th.on{outline:1px solid var(--ink);outline-offset:-1px}
+.detail .thumbs .th.extra{display:none}.detail .album.open .thumbs .th.extra{display:block}
+.detail .thumbs .plus{position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,20,30,.45);color:#fff;font-family:var(--ui);font-size:clamp(20px,3vw,34px);font-weight:400}
+.detail .album.open .thumbs .plus{display:none}
+.detail .fl{margin:32px 0 40px;max-width:100%}.detail .fl img{display:block;width:100%;height:auto;background:#E9EBED}
+.detail .flow{margin-top:8px}
+.detail .more{margin-top:120px;padding-top:28px;border-top:1px solid rgba(44,42,74,.12)}
+.detail .more .mh{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:20px}
+.detail .more h3{font-family:var(--ui);font-weight:400;font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin:0;color:var(--ink)}
+.detail .more .mh a{font-family:var(--ui);font-size:14px;color:var(--soft);text-decoration:none}.detail .more .mh a:hover{color:var(--ink)}
+.detail .mg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.detail .mc{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:0;border:0;background:none;text-align:left;cursor:pointer;color:inherit;font:inherit}
+.detail .mc .mt{display:block;width:100%;aspect-ratio:4/3;overflow:hidden;background:#E9EBED}.detail .mc .mt.none{background:#F3F4F6}
+.detail .mc .mt img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.detail .mc:hover .mt img{transform:scale(1.04)}
+.detail .mc .mk{font-family:var(--ui);font-size:12px;color:var(--soft);margin-top:4px}
+.detail .mc .mn{font-family:var(--serif);font-weight:300;font-size:18px;line-height:1.3}.detail .mc .mn .ko{font-weight:300}
+@media (max-width:760px){.detail .mg{grid-template-columns:repeat(2,minmax(0,1fr))}.detail .thumbs{gap:6px}.detail .album .hero{height:auto;aspect-ratio:16/10}.detail .crumb{margin-top:44px}}
+@media (hover:none){.detail .album .nav{display:none}}
 .detail .pages{margin-top:96px;padding-top:24px;border-top:1px solid rgba(44,42,74,.12)}
 .detail .pages .bh{margin:0 0 24px}.detail .pages .bh small{font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);margin-left:8px}
 .detail .pages img{display:block;width:100%;height:auto;margin:0 0 16px;background:#E3E6E8}
@@ -798,39 +830,63 @@ button,a{-webkit-tap-highlight-color:transparent}
   const koMed = s => String(s).replace(/([가-힣]+)/g, '<span class="ko">$1</span>'); // 한글 제목 굵기(영문 Futura와 맞춤)
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let lastFocus = null;
-  const carHTML = (img, label, caps) => !img || !img.length ? '' : `<div class="car${caps ? ' cap' : ''}" aria-roledescription="carousel" aria-label="${esc(label)} 이미지">
-        <div class="track" tabindex="0">${img.map((src, i) => `<figure class="slide"><img src="images/${src}.jpg" alt="${esc(caps ? caps[i] : label + ' ' + (i + 1))}" ${i > 1 ? 'loading="lazy"' : ''}>${caps ? `<figcaption>${esc(caps[i])}</figcaption>` : ''}</figure>`).join('')}</div>
-        ${img.length > 1 ? `<button class="nav prev" aria-label="이전 이미지">‹</button><button class="nav next" aria-label="다음 이미지">›</button><div class="count"><span class="cur">1</span> / ${img.length}</div><div class="dots">${img.map((_, i) => `<i${i ? '' : ' class="on"'}></i>`).join('')}</div>` : ''}
+  const thumbOf = w => w.cover || w.thumb || (w.img && w.img[0]) || (w.groups && w.groups[0].img[0]) || (w.pages && w.pages[0]);
+  // 앨범: 큰 대표 이미지 + 썸네일 줄(5개 넘으면 +N 눌러 펼침)
+  const album = (img, label, caps) => !img || !img.length ? '' : `<div class="album${caps ? ' cap' : ''}">
+        <figure class="hero"><img src="images/${img[0]}.jpg" alt="${esc(label)} 1">
+          ${img.length > 1 ? `<button class="nav prev" aria-label="이전 이미지">‹</button><button class="nav next" aria-label="다음 이미지">›</button><span class="count"><b>1</b> / ${img.length}</span>` : ''}
+        </figure>${caps ? `<p class="fc">${esc(caps[0])}</p>` : ''}
+        ${img.length > 1 ? `<div class="thumbs">${img.map((src, i) => `<button class="th${i ? '' : ' on'}${i >= 5 ? ' extra' : ''}" data-i="${i}" aria-label="${i + 1}번 이미지 보기"><img src="images/${src}.jpg" alt="" loading="lazy">${i === 4 && img.length > 5 ? `<span class="plus">+${img.length - 5}</span>` : ''}</button>`).join('')}</div>` : ''}
       </div>`;
   function open(id){
     const w = typeof id === 'object' ? id : WORKS.find(x => x.id === id); lastFocus = document.activeElement;
+    const isJ = JOURNAL.includes(w), list = isJ ? JOURNAL : WORKS;
+    // 본문 사이사이에 이미지가 세로로 이어짐 (pages가 있으면 pages 전체, 시리즈 작업은 시리즈별 앨범)
+    const flow = w.pages ? [] : (w.groups ? [] : (w.img || []).slice(1));
+    let fi = 0;
+    const fig = src => `<figure class="fl"><img src="images/${src}.jpg" alt="${esc(w.t)}" loading="lazy"></figure>`;
+    const body = (w.body || []).map((p, i) => {
+      if ((w.sec || []).includes(i)) return `<h3 class="bh">${esc(p)}</h3>`;
+      return `<p>${esc(p)}</p>` + (!isJ && fi < flow.length ? fig(flow[fi++]) : '');
+    }).join('');
+    const links = [w.link, w.link2].filter(Boolean).map(l => `<a class="link" href="${esc(l[1])}" target="_blank" rel="noopener">${esc(l[0])} ↗</a>`).join('<br>');
+    const rest = flow.slice(fi).map(fig).join('');
+    const i0 = list.indexOf(w), more = [1, 2, 3, 4].map(k => list[(i0 + k) % list.length]).filter(x => x && x !== w);
     detail.innerHTML = `<div class="in">
       <button class="x" aria-label="닫기">Close ✕</button>
-      <span class="kind">${esc(w.k)} · ${esc(w.y)}</span>
+      <nav class="crumb"><a href="#${isJ ? 'journal' : 'gallery'}" data-close>${isJ ? 'Journal' : 'Gallery'}</a><span>›</span>${esc(w.k)}<span>·</span>${esc(w.y)}</nav>
       <h2>${koMed(esc(w.t))}</h2>
       <p class="sub">${esc(w.sub)}</p>
-      <dl class="meta">${w.meta.map(([a,b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>
+      ${w.groups ? album(w.img && w.img.length ? w.img : w.groups[0].img, w.t) : album(w.img, w.t)}
+      <dl class="meta">${(w.meta || []).map(([a,b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>
       <p class="lead">${esc(w.lead)}</p>
-      <div class="body">${w.body.map((p, i) => (w.sec || []).includes(i) ? `<h3 class="bh">${esc(p)}</h3>` : `<p>${esc(p)}</p>`).join('')}${[w.link, w.link2].filter(Boolean).map(l => `<a class="link" href="${esc(l[1])}" target="_blank" rel="noopener">${esc(l[0])} ↗</a>`).join('<br>')}</div>
-      ${carHTML(w.img, w.t)}
-      ${w.reps ? carHTML(w.reps.img, w.t, w.reps.cap) : ''}
-      ${(w.groups || []).map(g => `<section class="grp"><h3 class="gh">${esc(g.h)}</h3><p class="gs">${esc(g.sub)}</p><p class="gl">${esc(g.lead)}</p>${carHTML(g.img, g.h)}</section>`).join('')}
+      <div class="body">${body}${links}</div>
+      ${rest ? `<div class="flow">${rest}</div>` : ''}
+      ${w.reps ? `<section class="grp">${album(w.reps.img, w.t, w.reps.cap)}</section>` : ''}
+      ${(w.groups || []).map(g => `<section class="grp"><h3 class="gh">${esc(g.h)}</h3><p class="gs">${esc(g.sub)}</p><p class="gl">${esc(g.lead)}</p>${album(g.img, g.h)}</section>`).join('')}
       ${w.pages ? `<section class="pages"><h3 class="bh">전체 보기 <small>${w.pages.length}p</small></h3>${w.pages.map((src, k) => `<img src="images/${src}.jpg" alt="${esc(w.t)} ${k + 1}쪽" loading="lazy">`).join('')}</section>` : ''}
+      ${more.length ? `<section class="more"><div class="mh"><h3>${isJ ? 'More Journal' : 'More Projects'}</h3><a href="#${isJ ? 'journal' : 'gallery'}" data-close>${isJ ? 'Journal' : 'Gallery'} 전체 보기 →</a></div>
+        <div class="mg">${more.map(m => `<button class="mc" data-id="${esc(m.id)}">${thumbOf(m) ? `<span class="mt"><img src="images/${thumbOf(m)}.jpg" alt="" loading="lazy"></span>` : '<span class="mt none"></span>'}<span class="mk">${esc(m.k)}</span><span class="mn">${koMed(esc(m.t))}</span></button>`).join('')}</div></section>` : ''}
     </div>`;
     detail.hidden = false; detail.scrollTop = 0; document.body.style.overflow = 'hidden';
-    // 옆으로 넘기는 이미지
-    detail.querySelectorAll('.car').forEach(car => { if (!car.querySelector('.nav')) return; {
-      const track = car.querySelector('.track'), cur = car.querySelector('.cur'), dots = [...car.querySelectorAll('.dots i')], n = dots.length;
-      const idx = () => Math.round(track.scrollLeft / track.clientWidth);
-      const go = i => track.scrollTo({left: Math.max(0, Math.min(n - 1, i)) * track.clientWidth, behavior: 'smooth'});
-      const sync = () => { const i = idx(); cur.textContent = i + 1; dots.forEach((d, k) => d.classList.toggle('on', k === i));
-        car.querySelector('.prev').disabled = i === 0; car.querySelector('.next').disabled = i === n - 1; };
-      car.querySelector('.prev').addEventListener('click', () => go(idx() - 1));
-      car.querySelector('.next').addEventListener('click', () => go(idx() + 1));
-      track.addEventListener('scroll', () => requestAnimationFrame(sync), {passive: true});
-      track.addEventListener('keydown', e => { if (e.key === 'ArrowRight'){ e.preventDefault(); go(idx() + 1); } if (e.key === 'ArrowLeft'){ e.preventDefault(); go(idx() - 1); } });
-      sync();
-    } });
+    // 앨범 동작
+    detail.querySelectorAll('.album').forEach(al => {
+      const ths = [...al.querySelectorAll('.th')], n = ths.length; if (!n) return;
+      const hero = al.querySelector('.hero img'), cnt = al.querySelector('.count b'), fc = al.querySelector('.fc');
+      const caps = al.classList.contains('cap') ? (w.reps || {}).cap : null;
+      let cur = 0;
+      const show = i => { cur = (i + n) % n; hero.src = ths[cur].querySelector('img').src; cnt.textContent = cur + 1;
+        if (fc && caps) fc.textContent = caps[cur];
+        ths.forEach((t, k) => t.classList.toggle('on', k === cur)); if (cur >= 5) al.classList.add('open'); };
+      ths.forEach((t, k) => t.addEventListener('click', () => { if (k === 4 && n > 5 && !al.classList.contains('open')) { al.classList.add('open'); return; } show(k); }));
+      al.querySelector('.prev').addEventListener('click', () => show(cur - 1));
+      al.querySelector('.next').addEventListener('click', () => show(cur + 1));
+      let sx = null; const h = al.querySelector('.hero');
+      h.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, {passive: true});
+      h.addEventListener('touchend', e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1)); sx = null; });
+    });
+    detail.querySelectorAll('.mc').forEach(b => b.addEventListener('click', () => { const m = list.find(x => x.id === b.dataset.id); if (m) open(m); }));
+    detail.querySelectorAll('[data-close]').forEach(a => a.addEventListener('click', () => close()));
     detail.querySelector('.x').focus();
   }
   function close(){ detail.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus?.(); }
