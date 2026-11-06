@@ -1171,7 +1171,7 @@ button,a{-webkit-tap-highlight-color:transparent}
     $('#home').hidden = v !== 'home'; $('#gallery').hidden = v !== 'gallery'; $('#info').hidden = v !== 'info'; $('#journal').hidden = v !== 'journal';
     document.body.classList.toggle('off-home', v !== 'home'); document.body.classList.toggle('on-info', v === 'info'); if (v === 'gallery') requestAnimationFrame(drawArts);
     document.querySelectorAll('.menu a').forEach(a => a.classList.toggle('on', a.dataset.v === v));
-    detail.hidden = true; scrollTo(0,0);
+    detail.hidden = true; document.body.style.overflow = ''; scrollTo(0,0);
   }
   addEventListener('hashchange', route); route();
 })();
