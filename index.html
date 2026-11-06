@@ -95,6 +95,14 @@ a{color:inherit}
 .detail .body p{font-family:var(--kr);font-weight:300;font-size:16px;line-height:1.85;margin:0 0 14px;max-width:40em}
 .detail .bh{font-family:var(--kr);font-weight:400;font-size:20px;margin:48px 0 16px}
 .detail .link{display:inline-block;margin:6px 0 0;font-family:var(--ui);font-size:14px;color:var(--ink);text-underline-offset:4px}
+.detail .car:not(:has(.nav)) .slide{height:auto}
+.detail .car:not(:has(.nav)) .slide img{max-height:none;width:100%}
+.detail .car:not(:has(.nav)) .track{background:none}
+.detail .car.cap .track{background:none;border:0}
+.detail .car.cap .slide{height:auto;display:flex;flex-direction:column;align-items:stretch;gap:14px}
+.detail .car.cap .slide img{width:100%;max-height:none;aspect-ratio:2/1;object-fit:cover}
+.detail .car.cap .slide figcaption{font-family:var(--kr);font-weight:500;font-size:16px;color:var(--ink)}
+.detail .car.cap .nav{top:calc((min(860px,100vw - 32px) / 2) / 2)}
 .detail .grp{margin-top:88px;padding-top:28px;border-top:1px solid rgba(44,42,74,.12);max-width:860px}
 .detail .grp .gh{font-family:var(--kr);font-weight:500;font-size:24px;margin:0 0 4px}
 .detail .grp .gs{font-family:var(--ui);font-size:14px;color:var(--soft);margin:0 0 14px}
@@ -700,7 +708,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   "x": 52,
   "y0": 88
  },
- {"id": "stair", "t": "STAIR AS A PLACE", "k": "실내건축사례분석", "y": "2026", "sub": "휴식공간과 계단실 · 사조별 공간 변형 6개 시리즈", "meta": [["COURSE", "실내건축사례분석"], ["SITE", "숭실대학교 문화관 리모델링 · 휴식공간과 계단실"], ["PERIOD", "2026.09.15 – 10.28 · 6주"], ["METHOD", "사조 원리 분석 → AI 이미지 생성"]], "lead": "계단은 지나가는 통로가 아니라 눈치 보지 않고 머무는 휴식공간이다.", "body": ["숭실대학교 문화관 리모델링에서 휴식공간과 계단실을 주제로 잡았습니다. 보이드를 감싸는 순환 계단의 랜딩을 통과존·전이존·정지존으로 나누고, 계단과 참을 넓혀 머무는 공간을 만들었습니다.", "매주 하나의 사조를 공부하고, 그 시대의 원리로 같은 계단실을 다르게 바꿔 AI 이미지로 만들었습니다. 여섯 시대의 원리로 머무름의 방식을 바꿔 보는 경험이었습니다."], "img": ["ai-panel"], "groups": [{"h": "01  유리 온실 계단실", "sub": "산업혁명 · 빅토리아 · 아트앤크래프트 · 2026.09.15", "lead": "반복되는 계단참마다 식물과 쉼이 머무는 유리 온실 계단실.", "img": ["ai-03", "ai-04", "ai-05", "ai-06", "ai-07", "ai-08", "ai-09", "ai-10", "ai-11", "ai-12"]}, {"h": "02  수직 공공 휴게공간", "sub": "토탈 디자인 · Frank Lloyd Wright · 2026.09.22", "lead": "유기적 건축의 원리를 적용한 수직 공공 휴게공간.", "img": ["ai-13", "ai-14", "ai-15", "ai-16", "ai-17", "ai-18", "ai-19", "ai-20", "ai-21", "ai-22", "ai-23"]}, {"h": "03  큐비즘 전시 아트리움", "sub": "근대적 개념의 실내디자인 · 큐비즘 · 2026.09.29", "lead": "분절된 장면을 재구성하는 전시 아트리움.", "img": ["ai-24", "ai-25", "ai-26", "ai-27", "ai-28", "ai-29", "ai-30", "ai-31", "ai-32", "ai-33", "ai-34", "ai-35"]}, {"h": "04  관계로 확장되는 공공공간", "sub": "기계미학의 실내디자인 · 바우하우스 · 2026.10.05", "lead": "머무름이 관계로 확장되는 공공공간.", "img": ["ai-36", "ai-37", "ai-38", "ai-39", "ai-40", "ai-41", "ai-42", "ai-43", "ai-44", "ai-45", "ai-46"]}, {"h": "05  입체적 독서 풍경", "sub": "현대적 감각의 실내디자인 · 2026.10.12", "lead": "수직적 동선을 따라 펼쳐지는 입체적 독서와 휴식의 풍경.", "img": ["ai-47", "ai-48", "ai-49", "ai-50", "ai-51", "ai-52", "ai-53", "ai-54", "ai-55", "ai-56", "ai-57"]}, {"h": "06  유선형 동선의 공항 라운지", "sub": "혁신적인 기술을 이용한 실내디자인 · 스트림라인 모던 · 2026.10.28", "lead": "유선형 동선 속 이동과 휴식이 공존하는 공항 라운지.", "img": ["ai-58", "ai-59", "ai-60", "ai-61", "ai-62", "ai-63", "ai-64", "ai-65", "ai-66", "ai-67", "ai-68"]}], "x": 50, "y0": 11, "contain": true},
+ {"id": "stair", "t": "STAIR AS A PLACE", "k": "실내건축사례분석", "y": "2026", "sub": "휴식공간과 계단실 · 사조별 공간 변형 6개 시리즈", "meta": [["COURSE", "실내건축사례분석"], ["SITE", "숭실대학교 문화관 리모델링 · 휴식공간과 계단실"], ["PERIOD", "2026.09.15 – 10.28 · 6주"], ["METHOD", "사조 원리 분석 → AI 이미지 생성"]], "lead": "계단은 지나가는 통로가 아니라 눈치 보지 않고 머무는 휴식공간이다.", "body": ["숭실대학교 문화관 리모델링에서 휴식공간과 계단실을 주제로 잡았습니다. 보이드를 감싸는 순환 계단의 랜딩을 통과존·전이존·정지존으로 나누고, 계단과 참을 넓혀 머무는 공간을 만들었습니다.", "매주 하나의 사조를 공부하고, 그 시대의 원리로 같은 계단실을 다르게 바꿔 AI 이미지로 만들었습니다. 여섯 시대의 원리로 머무름의 방식을 바꿔 보는 경험이었습니다."], "img": ["ai-panel"], "groups": [{"h": "01  유리 온실 계단실", "sub": "산업혁명 · 빅토리아 · 아트앤크래프트 · 2026.09.15", "lead": "반복되는 계단참마다 식물과 쉼이 머무는 유리 온실 계단실.", "img": ["ai-03", "ai-04", "ai-05", "ai-06", "ai-07", "ai-08", "ai-09", "ai-10", "ai-11", "ai-12"]}, {"h": "02  수직 공공 휴게공간", "sub": "토탈 디자인 · Frank Lloyd Wright · 2026.09.22", "lead": "유기적 건축의 원리를 적용한 수직 공공 휴게공간.", "img": ["ai-13", "ai-14", "ai-15", "ai-16", "ai-17", "ai-18", "ai-19", "ai-20", "ai-21", "ai-22", "ai-23"]}, {"h": "03  큐비즘 전시 아트리움", "sub": "근대적 개념의 실내디자인 · 큐비즘 · 2026.09.29", "lead": "분절된 장면을 재구성하는 전시 아트리움.", "img": ["ai-24", "ai-25", "ai-26", "ai-27", "ai-28", "ai-29", "ai-30", "ai-31", "ai-32", "ai-33", "ai-34", "ai-35"]}, {"h": "04  관계로 확장되는 공공공간", "sub": "기계미학의 실내디자인 · 바우하우스 · 2026.10.05", "lead": "머무름이 관계로 확장되는 공공공간.", "img": ["ai-36", "ai-37", "ai-38", "ai-39", "ai-40", "ai-41", "ai-42", "ai-43", "ai-44", "ai-45", "ai-46"]}, {"h": "05  입체적 독서 풍경", "sub": "현대적 감각의 실내디자인 · 2026.10.12", "lead": "수직적 동선을 따라 펼쳐지는 입체적 독서와 휴식의 풍경.", "img": ["ai-47", "ai-48", "ai-49", "ai-50", "ai-51", "ai-52", "ai-53", "ai-54", "ai-55", "ai-56", "ai-57"]}, {"h": "06  유선형 동선의 공항 라운지", "sub": "혁신적인 기술을 이용한 실내디자인 · 스트림라인 모던 · 2026.10.28", "lead": "유선형 동선 속 이동과 휴식이 공존하는 공항 라운지.", "img": ["ai-58", "ai-59", "ai-60", "ai-61", "ai-62", "ai-63", "ai-64", "ai-65", "ai-66", "ai-67", "ai-68"]}], "x": 50, "y0": 11, "contain": true, "reps": {"img": ["ia-rep1", "ia-rep2", "ia-rep3", "ia-rep4", "ia-rep5", "ia-rep6"], "cap": ["01  유리 온실 계단실", "02  유기적 건축의 원리를 적용한 공공 휴게공간", "03  분절된 장면을 재구성하는 전시 아트리움", "04  머무름이 관계로 확장되는 공공공간", "05  수직적 동선을 따라 펼쳐지는 입체적 독서와 휴식의 풍경", "06  유선형 동선 속 이동과 휴식이 공존하는 공항 라운지"]}},
  {
   "id": "counsel",
   "t": "학생상담센터 홍보 디자인",
@@ -784,8 +792,8 @@ button,a{-webkit-tap-highlight-color:transparent}
   const koMed = s => String(s).replace(/([가-힣]+)/g, '<span class="ko">$1</span>'); // 한글만 미디엄
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let lastFocus = null;
-  const carHTML = (img, label) => !img || !img.length ? '' : `<div class="car" aria-roledescription="carousel" aria-label="${esc(label)} 이미지">
-        <div class="track" tabindex="0">${img.map((src, i) => `<figure class="slide"><img src="images/${src}.jpg" alt="${esc(label)} ${i + 1}" ${i > 1 ? 'loading="lazy"' : ''}></figure>`).join('')}</div>
+  const carHTML = (img, label, caps) => !img || !img.length ? '' : `<div class="car${caps ? ' cap' : ''}" aria-roledescription="carousel" aria-label="${esc(label)} 이미지">
+        <div class="track" tabindex="0">${img.map((src, i) => `<figure class="slide"><img src="images/${src}.jpg" alt="${esc(caps ? caps[i] : label + ' ' + (i + 1))}" ${i > 1 ? 'loading="lazy"' : ''}>${caps ? `<figcaption>${esc(caps[i])}</figcaption>` : ''}</figure>`).join('')}</div>
         ${img.length > 1 ? `<button class="nav prev" aria-label="이전 이미지">‹</button><button class="nav next" aria-label="다음 이미지">›</button><div class="count"><span class="cur">1</span> / ${img.length}</div><div class="dots">${img.map((_, i) => `<i${i ? '' : ' class="on"'}></i>`).join('')}</div>` : ''}
       </div>`;
   function open(id){
@@ -799,6 +807,7 @@ button,a{-webkit-tap-highlight-color:transparent}
       <p class="lead">${esc(w.lead)}</p>
       <div class="body">${w.body.map((p, i) => (w.sec || []).includes(i) ? `<h3 class="bh">${esc(p)}</h3>` : `<p>${esc(p)}</p>`).join('')}${[w.link, w.link2].filter(Boolean).map(l => `<a class="link" href="${esc(l[1])}" target="_blank" rel="noopener">${esc(l[0])} ↗</a>`).join('<br>')}</div>
       ${carHTML(w.img, w.t)}
+      ${w.reps ? carHTML(w.reps.img, w.t, w.reps.cap) : ''}
       ${(w.groups || []).map(g => `<section class="grp"><h3 class="gh">${esc(g.h)}</h3><p class="gs">${esc(g.sub)}</p><p class="gl">${esc(g.lead)}</p>${carHTML(g.img, g.h)}</section>`).join('')}
     </div>`;
     detail.hidden = false; detail.scrollTop = 0; document.body.style.overflow = 'hidden';
