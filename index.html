@@ -269,17 +269,22 @@ body.off-home .touch-hint{display:none}
 button,a{-webkit-tap-highlight-color:transparent}
 .colophon{grid-column:1/-1;justify-self:end;margin-top:40px}
 .colophon figure{margin:0;width:max-content;max-width:100%}
-.colophon img{display:block;width:228px;height:auto;margin-bottom:14px}
+.colophon .cx{position:relative;width:180px;height:110px;margin-bottom:14px;overflow:hidden}
+.cx .v{position:absolute;left:58px;top:0;bottom:0;border-left:1px dashed var(--pink)}
+.cx .h{position:absolute;left:0;right:0;top:72px;border-top:1px dashed var(--pink)}
+.cx .b{position:absolute;left:58px;top:72px;width:12px;height:12px;margin:-6px 0 0 -6px;border:1.5px solid var(--pink);box-sizing:border-box}
+.cx .t{position:absolute;left:72px;top:46px;font-family:var(--mono);font-size:11px;color:var(--pink);background:rgba(255,255,255,.85);border-radius:4px;padding:1px 6px;white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (min-width:1025px){.colophon .cx{zoom:1.25}}
 .colophon h2{margin:0;font-family:var(--ui);font-weight:400;color:var(--soft);font-size:14px;letter-spacing:.04em;line-height:25.6px}
 .colophon p{margin:12px 0 0;font-family:var(--kr);font-weight:300;font-size:14px;line-height:25.6px;color:var(--ink)}
 .colophon p.f{margin-top:0;font-family:var(--ui);color:var(--soft)}
 @media (max-width:640px){.colophon{justify-self:start}}
-/* 넓은 화면: Contact와 같은 가로줄에 이어 붙임 — 위 선 연장, 제목은 Contact와, 첫 줄은 Tel과 같은 높이, 이미지 아래 끝은 선 위에 */
+/* 넓은 화면: Contact 줄 오른쪽 — 제목은 Contact와, 첫 줄은 Tel과 같은 높이, 십자선은 그 위에 */
 @media (min-width:1240px){
   .contact{position:relative}
-  .colophon{position:absolute;top:-1px;left:calc(100% + 48px);margin:0;padding-top:28px;border-top:1px solid rgba(44,42,74,.12)}
+  .colophon{position:absolute;top:0;left:calc(100% + 48px);margin:0;padding-top:28px}
   .colophon figure{position:static}
-  .colophon img{position:absolute;left:0;bottom:100%;width:180px;margin:0}
+  .colophon .cx{position:absolute;left:0;bottom:100%;margin:0}
 }
 </style>
 </head>
@@ -390,7 +395,7 @@ button,a{-webkit-tap-highlight-color:transparent}
     </ul>
     <aside class="colophon" aria-label="Colophon">
       <figure>
-        <img src="images/colophon-cursor.png" alt="CAD 좌표가 붙은 십자선 커서" width="452" height="274" loading="lazy">
+        <div class="cx" aria-hidden="true"><i class="v"></i><i class="h"></i><i class="b"></i><span class="t" id="cxt"></span></div>
         <h2>Colophon</h2>
         <p>홈의 십자선은 안내선을 대고<br>계속 맞춰 보는 제 습관입니다.</p>
         <p class="f">Futura · Noto Sans KR</p>
@@ -638,6 +643,17 @@ button,a{-webkit-tap-highlight-color:transparent}
     addEventListener('blur', () => root.classList.remove('in'));
     addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(paint); }, {passive:true});
   }
+
+  /* ── Colophon 십자선: 실제 커서를 그 자리에 두었을 때 보이는 좌표 ── */
+  (function(){
+    const t = document.getElementById('cxt'); if (!t) return;
+    const b = t.parentNode.querySelector('.b'), root = document.documentElement;
+    const upd = () => { const r = b.getBoundingClientRect(); if (!r.width) return;
+      const x = r.left + r.width/2 + scrollX, y = r.top + r.height/2 + scrollY;
+      t.textContent = `X ${String(Math.round(x*10)).padStart(5,'0')}  Y ${String(Math.round((root.scrollHeight - y)*10)).padStart(5,'0')}`; };
+    addEventListener('resize', upd); addEventListener('hashchange', () => setTimeout(upd, 60)); addEventListener('load', upd);
+    if (document.fonts) document.fonts.ready.then(upd); upd();
+  })();
 
   /* ── 색 밀어내기: 화면을 덮은 색을 십자선이 밀어내면 하얀 자리에 얇은 글자가 드러남 ── */
   (function(){
