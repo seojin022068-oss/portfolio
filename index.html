@@ -267,15 +267,20 @@ body.off-home .touch-hint{display:none}
 .touch-hint.gone{opacity:0}
 @media (hover:none){.tile:hover .art img,.jentry:hover .th img{transform:none}.tile:active .art img{transform:scale(1.02)}}
 button,a{-webkit-tap-highlight-color:transparent}
-.colophon{display:flex;justify-content:flex-end;margin-top:72px}
-.colophon figure{margin:0;width:max-content;max-width:100%;text-align:left}
+.colophon{grid-column:1/-1;justify-self:end;margin-top:40px}
+.colophon figure{margin:0;width:max-content;max-width:100%}
 .colophon img{display:block;width:228px;height:auto;margin-bottom:14px}
-.colophon h2{margin:0 0 6px;font-family:var(--ui);font-weight:300;font-size:13px;letter-spacing:.06em;color:var(--soft)}
-.colophon p{margin:0;font-family:var(--kr);font-weight:300;font-size:13px;line-height:1.7;color:var(--ink)}
-.colophon p.f{margin-top:4px;font-family:var(--ui);color:var(--soft)}
-@media (max-width:640px){.colophon{justify-content:flex-start;margin-top:48px}}
-/* 넓은 화면: 본문 칸 바깥 오른쪽 여백, Tools와 Contact 사이 높이에 */
-@media (min-width:1240px){.colophon{position:absolute;left:calc(100% + 40px);bottom:150px;margin:0;display:block}.colophon img{width:180px}}
+.colophon h2{margin:0;font-family:var(--ui);font-weight:400;color:var(--soft);font-size:14px;letter-spacing:.04em;line-height:25.6px}
+.colophon p{margin:12px 0 0;font-family:var(--kr);font-weight:300;font-size:14px;line-height:25.6px;color:var(--ink)}
+.colophon p.f{margin-top:0;font-family:var(--ui);color:var(--soft)}
+@media (max-width:640px){.colophon{justify-self:start}}
+/* 넓은 화면: Contact와 같은 가로줄에 이어 붙임 — 위 선 연장, 제목은 Contact와, 첫 줄은 Tel과 같은 높이, 이미지 아래 끝은 선 위에 */
+@media (min-width:1240px){
+  .contact{position:relative}
+  .colophon{position:absolute;top:-1px;left:calc(100% + 48px);margin:0;padding-top:28px;border-top:1px solid rgba(44,42,74,.12)}
+  .colophon figure{position:static}
+  .colophon img{position:absolute;left:0;bottom:100%;width:180px;margin:0}
+}
 </style>
 </head>
 <body>
@@ -383,15 +388,15 @@ button,a{-webkit-tap-highlight-color:transparent}
       <li><span class="d">Mail</span><span><span class="v" id="mail">seojin022068@gmail.com</span><button class="copy" data-copy="mail">Copy</button></span></li>
       <li><span class="d">Tel</span><span><span class="v" id="tel">010-3933-1056</span><button class="copy" data-copy="tel">Copy</button></span></li>
     </ul>
+    <aside class="colophon" aria-label="Colophon">
+      <figure>
+        <img src="images/colophon-cursor.png" alt="CAD 좌표가 붙은 십자선 커서" width="452" height="274" loading="lazy">
+        <h2>Colophon</h2>
+        <p>홈의 십자선은 안내선을 대고<br>계속 맞춰 보는 제 습관입니다.</p>
+        <p class="f">Futura · Noto Sans KR</p>
+      </figure>
+    </aside>
   </section>
-  <aside class="colophon" aria-label="Colophon">
-    <figure>
-      <img src="images/colophon-cursor.png" alt="CAD 좌표가 붙은 십자선 커서" width="452" height="274" loading="lazy">
-      <h2>Colophon</h2>
-      <p>홈의 십자선은 안내선을 대고<br>계속 맞춰 보는 제 습관입니다.</p>
-      <p class="f">Futura · Noto Sans KR</p>
-    </figure>
-  </aside>
 </main>
 
 <aside class="detail" id="detail" hidden aria-live="polite"></aside>
