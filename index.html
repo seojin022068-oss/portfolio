@@ -209,6 +209,7 @@ body.off-home{background:#FFFFFF}
 .list{list-style:none;margin:0;padding:0;display:grid;gap:12px;min-width:0}
 .list li{display:grid;grid-template-columns:130px minmax(0,1fr);gap:16px;font-family:var(--kr);font-weight:300;font-size:16px;line-height:1.6;color:var(--ink)}
 .list .d{font-family:var(--ui);font-weight:300;font-size:14px;color:var(--soft);font-variant-numeric:tabular-nums;padding-top:2px}
+.list .hp{margin-left:-.5em}
 .list small{display:block;font-size:13px;color:var(--soft)}
 .list .out{display:inline-block;margin:4px 14px 0 0;font-family:var(--ui);font-size:13px;color:var(--ink);text-underline-offset:3px}
 .list .out:hover{color:var(--pink)}
@@ -266,6 +267,13 @@ body.off-home .touch-hint{display:none}
 .touch-hint.gone{opacity:0}
 @media (hover:none){.tile:hover .art img,.jentry:hover .th img{transform:none}.tile:active .art img{transform:scale(1.02)}}
 button,a{-webkit-tap-highlight-color:transparent}
+.colophon{display:flex;justify-content:flex-end;margin-top:72px}
+.colophon figure{margin:0;width:max-content;max-width:100%;text-align:left}
+.colophon img{display:block;width:228px;height:auto;margin-bottom:14px}
+.colophon h2{margin:0 0 6px;font-family:var(--ui);font-weight:300;font-size:13px;letter-spacing:.06em;color:var(--soft)}
+.colophon p{margin:0;font-family:var(--kr);font-weight:300;font-size:13px;line-height:1.7;color:var(--ink)}
+.colophon p.f{margin-top:4px;font-family:var(--ui);color:var(--soft)}
+@media (max-width:640px){.colophon{justify-content:flex-start;margin-top:48px}}
 </style>
 </head>
 <body>
@@ -331,7 +339,7 @@ button,a{-webkit-tap-highlight-color:transparent}
       <li><span class="d">2026.10</span><span>제24회 대한민국색채대상 GREEN <small>X Prompt Edition · 김일석 · 김서영 · 임서진</small></span></li>
       <li><span class="d">2026.09</span><span>2026-1 숭실 6대 핵심역량 오픈배지 디자인 공모전 최우수상 <small>숭실대학교 대학교육혁신원 · 개인</small></span></li>
       <li><span class="d">2026.06</span><span>제5회 전국 대학생 K-공간디자인캠프 은상 <small>River Floating PULSE · 팀</small></span></li>
-      <li><span class="d">2025.11</span><span>「2025 겨울, 청계천의 빛」 하모니 숏폼 페스티벌 장려상 <small>청계천팝(POP!) · 팀</small></span></li>
+      <li><span class="d">2025.11</span><span><span class="hp">「</span>2025 겨울, 청계천의 빛」 하모니 숏폼 페스티벌 장려상 <small>청계천팝(POP!) · 팀</small></span></li>
       <li><span class="d">2025.09</span><span>장애예술인 전시 「달찮은 하루」 우수 서포터</span></li>
     </ul>
   </section>
@@ -344,9 +352,9 @@ button,a{-webkit-tap-highlight-color:transparent}
       <li><span class="d">2026.07</span><span>제주 런케이션 <small>2주 현장 조사 · 공간 제안</small></span></li>
       <li><span class="d">2026.06</span><span>K-공간디자인캠프 <small>공간 디자인 · 은상</small></span></li>
       <li><span class="d">2026.05–06</span><span>서울공예박물관 공간 관찰 <small>동선 · 시선 · 색채 · 자연광 분석</small></span></li>
-      <li><span class="d">2025.10–26.04</span><span>『디자인과 재료×프롬프트』 <small>편집 · 디자인 팀장 · 정식 출간</small><a class="out" href="http://product.kyobobook.co.kr/detail/S000219544310" target="_blank" rel="noopener">교보문고에서 보기 ↗</a> <a class="out" href="https://xprompt-three.vercel.app/" target="_blank" rel="noopener">X PROMPT 사이트 보기 ↗</a></span></li>
+      <li><span class="d">2025.10–26.04</span><span><span class="hp">『</span>디자인과 재료×프롬프트』 <small>편집 · 디자인 팀장 · 정식 출간</small><a class="out" href="http://product.kyobobook.co.kr/detail/S000219544310" target="_blank" rel="noopener">교보문고에서 보기 ↗</a> <a class="out" href="https://xprompt-three.vercel.app/" target="_blank" rel="noopener">X PROMPT 사이트 보기 ↗</a></span></li>
       <li><span class="d">2025.10</span><span>오픈하우스서울 <small>현장 운영 · 안내 · 기록 진행요원</small></span></li>
-      <li><span class="d">2025.07–09</span><span>「달찮은 하루」 <small>전시 기획 · 운영</small></span></li>
+      <li><span class="d">2025.07–09</span><span><span class="hp">「</span>달찮은 하루」 <small>전시 기획 · 운영</small></span></li>
       <li><span class="d">2025.03–08</span><span>숭실대학교 학생상담센터 <small>공식 SNS · 홍보 콘텐츠 제작</small></span></li>
       <li><span class="d">2025.01·11</span><span>환기미술관 자원봉사 <small>작품 및 관람 안전관리 보조 · 총 4회 21시간 20분</small></span></li>
     </ul>
@@ -374,6 +382,14 @@ button,a{-webkit-tap-highlight-color:transparent}
       <li><span class="d">Tel</span><span><span class="v" id="tel">010-3933-1056</span><button class="copy" data-copy="tel">Copy</button></span></li>
     </ul>
   </section>
+  <aside class="colophon" aria-label="Colophon">
+    <figure>
+      <img src="images/colophon-cursor.png" alt="CAD 좌표가 붙은 십자선 커서" width="452" height="274" loading="lazy">
+      <h2>Colophon</h2>
+      <p>홈의 십자선은 안내선을 대고 계속 맞춰 보는 제 습관입니다.</p>
+      <p class="f">Futura · Noto Sans KR</p>
+    </figure>
+  </aside>
 </main>
 
 <aside class="detail" id="detail" hidden aria-live="polite"></aside>
