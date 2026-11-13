@@ -274,6 +274,8 @@ button,a{-webkit-tap-highlight-color:transparent}
 .colophon p{margin:0;font-family:var(--kr);font-weight:300;font-size:13px;line-height:1.7;color:var(--ink)}
 .colophon p.f{margin-top:4px;font-family:var(--ui);color:var(--soft)}
 @media (max-width:640px){.colophon{justify-content:flex-start;margin-top:48px}}
+/* 넓은 화면: 본문 칸 바깥 오른쪽 여백, Tools와 Contact 사이 높이에 */
+@media (min-width:1240px){.colophon{position:absolute;left:calc(100% + 40px);bottom:150px;margin:0;display:block}.colophon img{width:180px}}
 </style>
 </head>
 <body>
@@ -386,7 +388,7 @@ button,a{-webkit-tap-highlight-color:transparent}
     <figure>
       <img src="images/colophon-cursor.png" alt="CAD 좌표가 붙은 십자선 커서" width="452" height="274" loading="lazy">
       <h2>Colophon</h2>
-      <p>홈의 십자선은 안내선을 대고 계속 맞춰 보는 제 습관입니다.</p>
+      <p>홈의 십자선은 안내선을 대고<br>계속 맞춰 보는 제 습관입니다.</p>
       <p class="f">Futura · Noto Sans KR</p>
     </figure>
   </aside>
