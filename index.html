@@ -77,7 +77,9 @@ a{color:inherit}
 .jentry:hover .th img{transform:scale(1.04)}
 .jentry:hover h3{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
 @media (max-width:760px){.jentry{grid-template-columns:1fr;gap:12px}.jentry .th{order:-1}}
-/* ── Journal 06 · 밑줄 타임라인 ── */
+/* 한글 단어가 줄 끝에서 쪼개지지 않게 (예: 이수/정) */
+body{word-break:keep-all;overflow-wrap:break-word}
+/* ── Journal 09 · 밑줄 타임라인 ── */
 .detail .tl{margin-top:64px;border-top:1px solid rgba(44,42,74,.12);text-align:right}
 .detail .tl-y{font-family:var(--ui);font-weight:400;font-size:15px;letter-spacing:.06em;color:var(--ink);margin:56px 0 0;padding-bottom:8px;border-bottom:1px solid var(--ink)}
 .detail .tl-y:first-child{margin-top:32px}
